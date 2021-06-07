@@ -3,11 +3,24 @@ from django.db.models.base import Model
 from django.db.models.fields import BigIntegerField, CharField
 
 # URLField ?
-# people missed
-#
-#
 
 # Create your models here.
+class Person(models.Model):
+    idPerson = models.CharField()
+    role = models.CharField()
+    email = models.CharField()
+    name = models.CharField()
+class Admin(Person):
+    charge = models.CharField()
+
+class Student(Person):
+    carrer = models.CharField()
+
+class Teacher(Person):
+    departmentDoc = models.CharField()
+
+class PairEvaluator(Person):
+    institution = models.CharField()
 class Assignment(models.Model):
     idAssignment = models.BigIntegerField()
     idDocument = models.BigIntegerField()
@@ -25,7 +38,7 @@ class AutoEvaluationCourse(models.Model):
     codeCourse = models.BigIntegerField()
     codeRubric = models.BigIntegerField()
     autoPeriod = models.CharField()
-    idPerson = models.BigIntegerField()
+    idDocument = models.CharField()()
     numberStudents = models.IntegerField()
 
 class CoEvaluation(models.Model):
@@ -54,12 +67,12 @@ class Group(models.Model):
     course = models.BigIntegerField()
 
 class GroupStudent(models.Model):
-    idPerson = models.BigIntegerField()
+    idDocument = models.CharField()()
     numGroup = models.BigIntegerField()
     course = models.BigIntegerField()
 
 class HomeworkStudent(models.Model):
-    idPerson = models.BigIntegerField()
+    idDocument = models.CharField()()
     idHomework = models.BigIntegerField()
 
 class ImprovementPlan(models.Model):
@@ -81,7 +94,7 @@ class MeasurementEduResult(models.Model):
 class MonitoringPlan(models.Model):
     period = CharField()
     reference = models.IntegerField()
-    # idPerson = models. ????
+    idPerson = models.CharField()
     actions = models.CharField()
     metodology = models.CharField()
     courses = models.CharField()
