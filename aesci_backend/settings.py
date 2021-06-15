@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -75,12 +77,26 @@ WSGI_APPLICATION = 'aesci_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+
+POSTGRESDB_USER = os.environ.get('AESCI_DB_USER')
+POSTGRESDB_HOST = os.environ.get('AESCI_DB_HOST')
+POSTGRESDB_NAME = os.environ.get('AESCI_DB_NAME')
+POSTGRESDB_PASS = os.environ.get('AESCI_DB_PASS')
+POSTGRESDB_PORT = "5432"
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': POSTGRESDB_NAME,
+        'USER': POSTGRESDB_USER,
+        'PASSWORD' : POSTGRESDB_PASS,
+        'HOST' : "localhost",
+        'PORT' : POSTGRESDB_PORT
     }
 }
+
+
+
 
 
 # Password validation

@@ -6,39 +6,52 @@ from django.db.models.fields import BigIntegerField, CharField
 
 # Create your models here.
 class Person(models.Model):
-    idPerson = models.CharField()
-    role = models.CharField()
-    email = models.CharField()
-    name = models.CharField()
+    idPerson = models.CharField(max_length = 60)
+    role = models.CharField(max_length = 60)
+    email = models.CharField(max_length = 60)
+    name = models.CharField(max_length = 60)
+    class Meta:
+        abstract: True
+
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.name
+
 class Admin(Person):
-    charge = models.CharField()
+    charge = models.CharField(max_length = 60)
+
 
 class Student(Person):
-    carrer = models.CharField()
+    carrer = models.CharField(max_length = 60)
 
 class Teacher(Person):
-    departmentDoc = models.CharField()
+    departmentDoc = models.CharField(max_length = 60)
 
 class PairEvaluator(Person):
-    institution = models.CharField()
+    institution = models.CharField(max_length = 60)
+    
 class Assignment(models.Model):
     idAssignment = models.BigIntegerField()
     idDocument = models.BigIntegerField()
-    nameAssignament = models.CharField()
+    nameAssignament = models.CharField(max_length = 60)
     numGroup = models.BigIntegerField()
     course = models.BigIntegerField()
     codeResult = models.IntegerField()
     dateAssignment = models.DateTimeField()
     dateLimitAssignment = models.DateTimeField()
-    description = models.CharField()
-    format = models.CharField()
-    delivery = models.CharField()
+    description = models.CharField(max_length = 60)
+    format = models.CharField(max_length = 60)
+    delivery = models.CharField(max_length = 60)
+    
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.nameAssignament
 
 class AutoEvaluationCourse(models.Model):
     codeCourse = models.BigIntegerField()
     codeRubric = models.BigIntegerField()
-    autoPeriod = models.CharField()
-    idDocument = models.CharField()()
+    autoPeriod = models.CharField(max_length = 60)
+    idDocument = models.CharField(max_length = 60)
     numberStudents = models.IntegerField()
 
 class CoEvaluation(models.Model):
@@ -46,44 +59,45 @@ class CoEvaluation(models.Model):
     studentCOEV = models.BigIntegerField()
     numberGroup = models.BigIntegerField()
     course = models.BigIntegerField()
-    documentAttached = models.CharField()
+    documentAttached = models.CharField(max_length = 60)
 
 class Course(models.Model):
-    codeCourse = models.BigIntegerField()
-    periodPlan = models.CharField()
-    referencePlan = models.IntegerField()
-    nameCourse = models.CharField()(max_length = 60)
-    departmentCourse = models.CharField()
+    codeCourse = models.BigIntegerField(default=1)
+    periodPlan = models.CharField(max_length = 60, default="Test")
+    referencePlan = models.IntegerField(default=1)
+    nameCourse = models.CharField(max_length = 60,default="Test")
+    departmentCourse = models.CharField(max_length = 60, default=1)
 
     def __str__(self):
+        """String for representing the Model object."""
         return self.nameCourse
 
 class EducationResult(models.Model):
     codeResult = models.IntegerField()
-    description = models.CharField()
+    description = models.CharField(max_length = 60)
 
-class Group(models.Model):
+class GroupCo(models.Model):
     numGroup = models.BigIntegerField()
     course = models.BigIntegerField()
 
 class GroupStudent(models.Model):
-    idDocument = models.CharField()()
+    idDocument = models.CharField(max_length = 60)
     numGroup = models.BigIntegerField()
     course = models.BigIntegerField()
 
 class HomeworkStudent(models.Model):
-    idDocument = models.CharField()()
+    idDocument = models.CharField(max_length = 60)
     idHomework = models.BigIntegerField()
 
 class ImprovementPlan(models.Model):
-    planPeriod = models.CharField()
+    planPeriod = models.CharField(max_length = 60)
     codeResult = models.IntegerField()
     idDocument = models.BigIntegerField()
-    diagnosis = models.CharField()
-    analysis = models.CharField()
+    diagnosis = models.CharField(max_length = 60)
+    analysis = models.CharField(max_length = 60)
 
 class MeasurementEduResult(models.Model):
-    measureERPeriod = models.CharField()
+    measureERPeriod = models.CharField(max_length = 60)
     codeRubric = models.BigIntegerField()
     codeResult = models.IntegerField()
     experts = models.IntegerField()
@@ -92,13 +106,13 @@ class MeasurementEduResult(models.Model):
     beginners = models.IntegerField()
 
 class MonitoringPlan(models.Model):
-    period = CharField()
+    period = models.CharField(max_length=60)
     reference = models.IntegerField()
-    idPerson = models.CharField()
-    actions = models.CharField()
-    metodology = models.CharField()
-    courses = models.CharField()
-    progress = models.CharField()
+    idPerson = models.CharField(max_length = 60)
+    actions = models.CharField(max_length = 60)
+    metodology = models.CharField(max_length = 60)
+    courses = models.CharField(max_length = 60)
+    progress = models.CharField(max_length = 60)
 
 class Rubric(models.Model):
     codeRubric = models.BigIntegerField()
