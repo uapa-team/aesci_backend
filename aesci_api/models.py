@@ -61,7 +61,7 @@ class CoEvaluation(models.Model):
     course = models.BigIntegerField()
     documentAttached = models.CharField(max_length = 60)
 
-class Course(models.Model):
+class course(models.Model):
     codeCourse = models.BigIntegerField(default=1)
     periodPlan = models.CharField(max_length = 60, default="Test")
     referencePlan = models.IntegerField(default=1)
