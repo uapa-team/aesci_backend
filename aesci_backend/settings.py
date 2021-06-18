@@ -77,14 +77,11 @@ WSGI_APPLICATION = 'aesci_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-POSTGRESDB_USER = "uapapp-admin"          
-POSTGRESDB_HOST = "168.176.26.202"
-POSTGRESDB_NAME = "aesci"
-POSTGRESDB_PASS = "oNHkm0H87P$8cNLvgc"
-# POSTGRESDB_USER = os.environ.get('AESCI_DB_USER')
-# POSTGRESDB_HOST = os.environ.get('AESCI_DB_HOST')
-# POSTGRESDB_NAME = os.environ.get('AESCI_DB_NAME')
-# POSTGRESDB_PASS = os.environ.get('AESCI_DB_PASS')
+
+POSTGRESDB_USER = os.environ.get('AESCI_DB_USER')
+POSTGRESDB_HOST = os.environ.get('AESCI_DB_HOST')
+POSTGRESDB_NAME = os.environ.get('AESCI_DB_NAME')
+POSTGRESDB_PASS = os.environ.get('AESCI_DB_PASS')
 POSTGRESDB_PORT = "5432"
 
 DATABASES = {
@@ -97,8 +94,6 @@ DATABASES = {
         'PORT' : POSTGRESDB_PORT
     }
 }
-
-
 
 
 
