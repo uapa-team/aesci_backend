@@ -7,9 +7,8 @@ from .views import *
 
 router = routers.DefaultRouter()
 
-router.register(r'Courses', CourseViewSet)
+router.register(r'courses', CourseViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('api-auth', include('rest_framework.urls'))
 ]
