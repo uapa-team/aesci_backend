@@ -1,22 +1,14 @@
 import requests, os
 
 from django.contrib.auth.models import User
-from rest_framework import viewsets, permissions, status
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django_auth_ldap.backend import LDAPBackend
 
-from .models import Course
-from .serializers import CourseSerializer
 
 # Create your views here.
-
-def get_token(request):
-    """get a user with JWT auth"""
-    jwt_obj = JWTAuthentication()
-    header = jwt_obj.get_header(request)
-    return jwt_obj.get_raw_token(header)
 
 class LoginView(APIView):
     """Input user/password, return JWT"""
@@ -48,10 +40,3 @@ class LoginView(APIView):
         return Response( payload, status=status.HTTP_200_OK)
 
 
-class CourseViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = Course.objects.all()
-    serializer_class = CourseSerializer
-    permission_classes = [permissions.IsAdminUser]
