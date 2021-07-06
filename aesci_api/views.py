@@ -5,7 +5,6 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.views import TokenObtainPairView
 from django_auth_ldap.backend import LDAPBackend
 
 from .models import Course
@@ -19,10 +18,6 @@ def get_token(request):
     header = jwt_obj.get_header(request)
     return jwt_obj.get_raw_token(header)
 
-def refresh_token(request):
-    req = requests.post(f'{os.environ.get("URL_API")}refresh/', {request.body} )
-    
-    return Response(req.json(), status=req.status_code)
 class LoginView(APIView):
     """Input user/password, return JWT"""
     def post(self, request):
@@ -51,6 +46,7 @@ class LoginView(APIView):
         payload['role'] = user.groups.first().name
 
         return Response( payload, status=status.HTTP_200_OK)
+
 
 class CourseViewSet(viewsets.ModelViewSet):
     """

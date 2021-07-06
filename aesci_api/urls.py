@@ -1,7 +1,8 @@
-from django import urls
-from django.db.models import base
 from django.urls import include, path
-
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView
+)
 from rest_framework import routers
 
 from .views import *
@@ -12,5 +13,7 @@ router.register(r'courses', CourseViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('login/', LoginView.as_view())
+    path('login/', LoginView.as_view()),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
