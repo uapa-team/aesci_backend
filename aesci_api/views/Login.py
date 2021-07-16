@@ -1,7 +1,5 @@
 import requests, os
 
-from rest_framework_jwt.utils import jwt_decode_handler
-
 from ..serializers import MyTokenObtainPairSerializer
 
 from django.contrib.auth.models import User

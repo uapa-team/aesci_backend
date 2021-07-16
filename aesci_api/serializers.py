@@ -25,8 +25,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        print(token)
-        print(token.access_token)
     
         customToken = { 
             'access': str(token.access_token),
@@ -34,8 +32,5 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             'username': user.username,
             'role': user.groups.first().name
         }
-        print(customToken)
-        token['username'] = user.username
-        token['role'] = user.groups.first().name
     
         return customToken
