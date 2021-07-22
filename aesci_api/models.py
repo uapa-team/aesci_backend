@@ -1,65 +1,62 @@
 from django.db import models
 from django.db.models.base import Model
 from django.db.models.fields import BigIntegerField, CharField
+from django.contrib.auth.models import User, Group
 
 # URLField ?
 
 # Create your models here.
-class Person(models.Model):
+class Admin(models.Model):
+    username = models.CharField(max_length = 60, primary_key=True)
     idPerson = models.CharField(max_length = 60)
-    role = models.CharField(max_length = 60)
     email = models.CharField(max_length = 60)
     name = models.CharField(max_length = 60)
-    class Meta:
-        abstract: True
-
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.name
-
-class Admin(Person):
     charge = models.CharField(max_length = 60)
 
-
-class Student(Person):
+    def save(self, *args, **kwargs):
+        user = User.objects.create(username = self.username )
+        my_group = Group.objects.get(name='Admin') 
+        my_group.user_set.add(user)
+        super(Admin, self).save(*args, **kwargs)
+    
+class Student(models.Model):
+    username = models.CharField(max_length = 60, primary_key=True)
+    idPerson = models.CharField(max_length = 60)
+    email = models.CharField(max_length = 60)
+    name = models.CharField(max_length = 60)
     carrer = models.CharField(max_length = 60)
 
-class Teacher(Person):
+    def save(self, *args, **kwargs):
+        user = User.objects.create(username = self.username )
+        my_group = Group.objects.get(name='Student') 
+        my_group.user_set.add(user)
+        super(Student, self).save(*args, **kwargs)
+
+class Teacher(models.Model):
+    username = models.CharField(max_length = 60, primary_key=True)
+    idPerson = models.CharField(max_length = 60)
+    email = models.CharField(max_length = 60)
+    name = models.CharField(max_length = 60)
     departmentDoc = models.CharField(max_length = 60)
 
-class PairEvaluator(Person):
+    def save(self, *args, **kwargs):
+        user = User.objects.create(username = self.username )
+        my_group = Group.objects.get(name='Teacher') 
+        my_group.user_set.add(user)
+        super(Teacher, self).save(*args, **kwargs)
+
+class PairEvaluator(models.Model):
+    username = models.CharField(max_length = 60, primary_key=True)
+    idPerson = models.CharField(max_length = 60)
+    email = models.CharField(max_length = 60)
+    name = models.CharField(max_length = 60)
     institution = models.CharField(max_length = 60)
-    
-class Assignment(models.Model):
-    idAssignment = models.BigIntegerField()
-    idDocument = models.BigIntegerField()
-    nameAssignament = models.CharField(max_length = 60)
-    numGroup = models.BigIntegerField()
-    course = models.BigIntegerField()
-    codeResult = models.IntegerField()
-    dateAssignment = models.DateTimeField()
-    dateLimitAssignment = models.DateTimeField()
-    description = models.CharField(max_length = 60)
-    format = models.CharField(max_length = 60)
-    delivery = models.CharField(max_length = 60)
-    
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.nameAssignament
 
-class AutoEvaluationCourse(models.Model):
-    codeCourse = models.BigIntegerField()
-    codeRubric = models.BigIntegerField()
-    autoPeriod = models.CharField(max_length = 60)
-    idDocument = models.CharField(max_length = 60)
-    numberStudents = models.IntegerField()
-
-class CoEvaluation(models.Model):
-    codeRubric = models.BigIntegerField()
-    studentCOEV = models.BigIntegerField()
-    numberGroup = models.BigIntegerField()
-    course = models.BigIntegerField()
-    documentAttached = models.CharField(max_length = 60)
+    def save(self, *args, **kwargs):
+        user = User.objects.create(username = self.username )
+        my_group = Group.objects.get(name='PairEvaluator') 
+        my_group.user_set.add(user)
+        super(PairEvaluator, self).save(*args, **kwargs)
 
 class Course(models.Model):
     codeCourse = models.BigIntegerField(default=1, primary_key=True)
@@ -72,33 +69,81 @@ class Course(models.Model):
         return self.nameCourse
 
 class EducationResult(models.Model):
-    codeResult = models.IntegerField()
+    codeResult = models.IntegerField(primary_key=True)
     description = models.CharField(max_length = 60)
 
 class GroupCo(models.Model):
-    numGroup = models.BigIntegerField()
-    course = models.BigIntegerField()
+    numGroup = models.BigIntegerField(primary_key=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    periodPlan = models.CharField(max_length = 60, default="Test")
 
 class GroupStudent(models.Model):
-    idDocument = models.CharField(max_length = 60)
-    numGroup = models.BigIntegerField()
-    course = models.BigIntegerField()
+    username = models.ForeignKey(Student, on_delete=models.CASCADE)
+    numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+class GroupTeacher(models.Model):
+    username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+class Rubric(models.Model):
+    codeRubric = models.BigIntegerField(primary_key=True)
+    rubric = models.JSONField()
+    
+class Assignment(models.Model):
+    idAssignment = models.BigIntegerField(primary_key=True)
+    username = models.ForeignKey(Student, on_delete=models.CASCADE)
+    nameAssignament = models.CharField(max_length = 60)
+    numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    codeResult = models.ForeignKey(EducationResult, on_delete=models.CASCADE)
+    dateAssignment = models.DateTimeField()
+    dateLimitAssignment = models.DateTimeField()
+    description = models.CharField(max_length = 60)
+    format = models.CharField(max_length = 60)
+    delivery = models.CharField(max_length = 60)
+    
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.nameAssignament
+
+class AutoEvaluationCourse(models.Model):
+    codeCourse = models.ForeignKey(Course, on_delete=models.CASCADE)
+    codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
+    autoPeriod = models.CharField(max_length = 60)
+    username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    numberStudents = models.IntegerField()
+
+class CoEvaluation(models.Model):
+    codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
+    studentCOEV2 = models.ForeignKey(Student, on_delete=models.CASCADE)
+    numberGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    documentAttached = models.CharField(max_length = 60)
+
+class StudentCoEvaluation(models.Model):
+    studentCOEV1 = models.ForeignKey(Student, on_delete=models.CASCADE)
+    studentCOEV2 = models.ForeignKey(CoEvaluation, on_delete=models.CASCADE)
+    numberGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
 
 class HomeworkStudent(models.Model):
-    idDocument = models.CharField(max_length = 60)
-    idHomework = models.BigIntegerField()
+    username = models.ForeignKey(Student, on_delete=models.CASCADE)
+    idHomework = models.ForeignKey(Assignment, on_delete=models.CASCADE)
 
 class ImprovementPlan(models.Model):
     planPeriod = models.CharField(max_length = 60)
-    codeResult = models.IntegerField()
-    idDocument = models.BigIntegerField()
+    codeResult = models.ForeignKey(EducationResult, on_delete=models.CASCADE)
+    username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     diagnosis = models.CharField(max_length = 60)
     analysis = models.CharField(max_length = 60)
 
 class MeasurementEduResult(models.Model):
     measureERPeriod = models.CharField(max_length = 60)
-    codeRubric = models.BigIntegerField()
-    codeResult = models.IntegerField()
+    codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
+    codeResult = models.ForeignKey(EducationResult, on_delete=models.CASCADE)
     experts = models.IntegerField()
     competents = models.IntegerField()
     apprentices = models.IntegerField()
@@ -106,20 +151,9 @@ class MeasurementEduResult(models.Model):
 
 class MonitoringPlan(models.Model):
     period = models.CharField(max_length=60)
-    reference = models.IntegerField()
-    idPerson = models.CharField(max_length = 60)
+    reference = models.ForeignKey(EducationResult, on_delete=models.CASCADE)
+    username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     actions = models.CharField(max_length = 60)
     metodology = models.CharField(max_length = 60)
     courses = models.CharField(max_length = 60)
     progress = models.CharField(max_length = 60)
-
-class Rubric(models.Model):
-    codeRubric = models.BigIntegerField()
-    rubric = models.JSONField()
-
-class StudentCoEvaluation(models.Model):
-    studentCOEV1 = models.BigIntegerField()
-    studentCOEV2 = models.BigIntegerField()
-    numberGroup = models.BigIntegerField()
-    course = models.BigIntegerField()
-    codeRubric = models.BigIntegerField()
