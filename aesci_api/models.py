@@ -14,7 +14,7 @@ class Admin(models.Model):
     charge = models.CharField(max_length = 60)
 
     def save(self, *args, **kwargs):
-        user = User.objects.create(username = self.username )
+        user = User.objects.create(username = self.username, is_staff = True, is_superuser = True)
         my_group = Group.objects.get(name='Admin') 
         my_group.user_set.add(user)
         super(Admin, self).save(*args, **kwargs)
