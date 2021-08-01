@@ -6,7 +6,7 @@ from ..serializers import CourseSerializer
 
 class CourseViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
+    API endpoint that allows admin to create courses.
     """
     queryset = Course.objects.all()
     serializer_class = CourseSerializer

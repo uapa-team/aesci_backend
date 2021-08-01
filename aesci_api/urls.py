@@ -9,6 +9,7 @@ from .views import *
 
 router = routers.DefaultRouter()
 
+router.register(r'assignments', AssignmentViewSet, basename="assignment")
 router.register(r'courses', CourseViewSet)
 
 urlpatterns = [

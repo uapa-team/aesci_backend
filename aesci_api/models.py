@@ -18,6 +18,10 @@ class Admin(models.Model):
         my_group = Group.objects.get(name='Admin') 
         my_group.user_set.add(user)
         super(Admin, self).save(*args, **kwargs)
+
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.username
     
 class Student(models.Model):
     username = models.CharField(max_length = 60, primary_key=True)
@@ -32,6 +36,10 @@ class Student(models.Model):
         my_group.user_set.add(user)
         super(Student, self).save(*args, **kwargs)
 
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.username
+
 class Teacher(models.Model):
     username = models.CharField(max_length = 60, primary_key=True)
     idPerson = models.CharField(max_length = 60)
@@ -45,6 +53,10 @@ class Teacher(models.Model):
         my_group.user_set.add(user)
         super(Teacher, self).save(*args, **kwargs)
 
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.username
+
 class PairEvaluator(models.Model):
     username = models.CharField(max_length = 60, primary_key=True)
     idPerson = models.CharField(max_length = 60)
@@ -57,6 +69,10 @@ class PairEvaluator(models.Model):
         my_group = Group.objects.get(name='PairEvaluator') 
         my_group.user_set.add(user)
         super(PairEvaluator, self).save(*args, **kwargs)
+
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.username
 
 class Course(models.Model):
     codeCourse = models.BigIntegerField(default=1, primary_key=True)
@@ -101,7 +117,7 @@ class Assignment(models.Model):
     dateAssignment = models.DateTimeField()
     dateLimitAssignment = models.DateTimeField()
     description = models.CharField(max_length = 60)
-    format = models.CharField(max_length = 60)
+    formatAssignment = models.CharField(max_length = 60)
     delivery = models.CharField(max_length = 60)
     
     def __str__(self):
