@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.models import User, Group
-from .models import Course, Assignment
+from .models import Course, Assignment, GroupCo, GroupStudent, GroupTeacher
 
 
 class CourseSerializer(serializers.HyperlinkedModelSerializer):
@@ -15,6 +15,27 @@ class AssignmentSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = Assignment
+        fields = '__all__'
+
+class GroupCoSerializer(serializers.HyperlinkedModelSerializer):
+    # https://www.django-rest-framework.org/api-guide/relations/
+    username = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = GroupCo
+        fields = '__all__'
+
+class GroupStudentSerializer(serializers.HyperlinkedModelSerializer):
+    # https://www.django-rest-framework.org/api-guide/relations/
+    username = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = GroupStudent
+        fields = '__all__'
+
+class GroupTeacherSerializer(serializers.HyperlinkedModelSerializer):
+    # https://www.django-rest-framework.org/api-guide/relations/
+    username = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = GroupTeacher
         fields = '__all__'
 
 

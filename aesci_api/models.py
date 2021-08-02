@@ -93,6 +93,10 @@ class GroupCo(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     periodPlan = models.CharField(max_length = 60, default="Test")
 
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.numGroup
+
 class GroupStudent(models.Model):
     username = models.ForeignKey(Student, on_delete=models.CASCADE)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
