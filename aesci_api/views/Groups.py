@@ -13,5 +13,5 @@ class GroupCoViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
             queryset = GroupCo.objects.all()
-            query_set = queryset.filter(course=self.request.data['course']).order_by('-numGroup')
+            query_set = queryset.filter(course=self.request.data['course'])
             return query_set
