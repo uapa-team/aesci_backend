@@ -1,0 +1,9 @@
+django
+djangorestframework
+djangorestframework-simplejwt
+django-cors-headers
+django_auth_ldap
+psycopg2
+drf_spectacular
+djangorestframework-simplejwt
+requests
