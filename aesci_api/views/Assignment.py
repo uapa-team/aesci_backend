@@ -2,11 +2,7 @@ from rest_framework import viewsets, permissions
 from rest_framework import status
 from rest_framework.response import Response
 
-<<<<<<< HEAD
 from ..models import Assignment, Teacher, GroupStudent, Student
-=======
-from ..models import Assignment
->>>>>>> ab4c73c7ffdc7bd570930ccc23abe366df374ebc
 from ..serializers import AssignmentSerializer
 
 
