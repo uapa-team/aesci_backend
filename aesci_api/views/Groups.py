@@ -3,7 +3,7 @@ from rest_framework import viewsets, permissions
 from ..models import Course, GroupCo
 from ..serializers import GroupCoSerializer
 
-
+#create groups
 class GroupCoViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows admin to create groups.
