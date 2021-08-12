@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions
 from rest_framework import status
 from rest_framework.response import Response
 
-from ..models import Assignment, Teacher, GroupStudent, Student
+from ..models import Assignment, Teacher, GroupStudent, Student, HomeworkGroupStudent
 from ..serializers import AssignmentSerializer
 
 
@@ -14,18 +14,20 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        # if self.request.data['role'] == "Student":
-        # if Student.objects.filter(username=self.request.data['username']).exists():
-        # #     # Return assignments related to Student
-        #     queryset1 = GroupStudent.objects.filter(username=self.request.data['username'])
-        # for element in queryset1:
-        # 
-        #     queryset2 = Assignment.objects.filter(username=self.request.data['username'])
-        # #     query_set = queryset.filter(idGroupStudent=?).order_by('-dateAssignment')
-        #     return query_set
+        if Student.objects.filter(username=self.request.data['username']).exists():
+        # Return assignments related to Student
+            querysetGS = GroupStudent.objects.filter(username=self.request.data['username'])
+            groupsList = []
 
-        # elif self.request.data['role'] == "Proffesor":
-        if Teacher.objects.filter(username=self.request.data['username']).exists():
+            for element in querysetGS:
+                querysetHGS = HomeworkGroupStudent.objects.filter(idGroupStudent=element.id)
+                for elementHGS in querysetHGS:
+                    groupsList.append(elementHGS.idHomework)
+
+            groupsList.sort(key=lambda x: x.dateAssignment, reverse=True)
+            return groupsList
+
+        elif Teacher.objects.filter(username=self.request.data['username']).exists():
             # Return assignments related to Teacher
             return Assignment.objects.all().filter(username=self.request.data['username'])
         return None

@@ -117,7 +117,6 @@ class Assignment(models.Model):
 class GroupStudent(models.Model):
     username = models.ForeignKey(Student, on_delete=models.CASCADE)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
-    homework = models.ForeignKey(Assignment, on_delete=models.CASCADE)
 
 class GroupTeacher(models.Model):
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
@@ -152,8 +151,8 @@ class StudentCoEvaluation(models.Model):
 class HomeworkGroupStudent(models.Model):
     idHomework = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     idGroupStudent = models.ForeignKey(GroupStudent, on_delete=models.CASCADE, default=None)
-    deliveryURL = models.CharField(max_length = 60) 
-    grade = models.FloatField()
+    deliveryURL = models.CharField(max_length = 60, default=None, null=True) 
+    grade = models.FloatField(default=None, null=True)
 
 class ImprovementPlan(models.Model):
     planPeriod = models.CharField(max_length = 60)
