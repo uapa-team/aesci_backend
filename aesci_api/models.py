@@ -100,12 +100,19 @@ class GroupCo(models.Model):
 class GroupStudent(models.Model):
     username = models.ForeignKey(Student, on_delete=models.CASCADE)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.username  
 
 class GroupTeacher(models.Model):
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.username
 
 class Rubric(models.Model):
     codeRubric = models.BigIntegerField(primary_key=True)
