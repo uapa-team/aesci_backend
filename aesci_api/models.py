@@ -95,7 +95,7 @@ class GroupCo(models.Model):
 
     def __str__(self):
         """String for representing the Model object."""
-        return self.numGroup
+        return self.course.nameCourse
 
 class GroupStudent(models.Model):
     username = models.ForeignKey(Student, on_delete=models.CASCADE)
