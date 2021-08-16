@@ -11,7 +11,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     API endpoint that allows teachers to handle assignments.
     """
     serializer_class = AssignmentSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         if Student.objects.filter(username=self.request.data['username']).exists():
