@@ -3,6 +3,7 @@ from django.db.models.base import Model
 from django.db.models.fields import BigIntegerField, CharField
 from django.contrib.auth.models import User, Group
 from django.utils.timezone import now
+from .helpers import CARRER_CHOICES
 
 # URLField ?
 
@@ -29,7 +30,7 @@ class Student(models.Model):
     idPerson = models.CharField(max_length = 60)
     email = models.CharField(max_length = 60)
     name = models.CharField(max_length = 60)
-    carrer = models.CharField(max_length = 60)
+    carrer = models.CharField(max_length = 60, choices = CARRER_CHOICES)
 
     def save(self, *args, **kwargs):
         user = User.objects.create(username = self.username )
@@ -151,7 +152,7 @@ class StudentCoEvaluation(models.Model):
 class HomeworkGroupStudent(models.Model):
     idHomework = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     idGroupStudent = models.ForeignKey(GroupStudent, on_delete=models.CASCADE, default=None)
-    deliveryURL = models.CharField(max_length = 60, default=None, null=True) 
+    deliveryURL = models.URLField(max_length = 60, default=None, null=True) 
     grade = models.FloatField(default=None, null=True)
 
 class ImprovementPlan(models.Model):
