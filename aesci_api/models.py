@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.base import Model
 from django.db.models.fields import BigIntegerField, CharField
 from django.contrib.auth.models import User, Group
+from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
 from .helpers import CARRER_CHOICES
 
@@ -94,9 +95,13 @@ class GroupCo(models.Model):
         """String for representing the Model object."""
         return self.course.nameCourse
 
-class EducationResult(models.Model):
-    codeResult = models.IntegerField(primary_key=True)
-    description = models.CharField(max_length = 60)
+class Rubric(models.Model):
+    codeRubric = models.BigIntegerField(primary_key=True)
+    description = models.CharField(max_length = 60, null = True)
+
+class StudentOutcome(models.Model):
+    codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
+    description = models.CharField(max_length = 100)
     def __str__(self):
         """String for representing the Model object."""
         return self.description
@@ -106,7 +111,7 @@ class Assignment(models.Model):
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     nameAssignament = models.CharField(max_length = 60)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
-    codeResult = models.ForeignKey(EducationResult, on_delete=models.CASCADE)
+    codeResult = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
     dateAssignment = models.DateTimeField(default=now)
     dateLimitAssignment = models.DateTimeField(default=now)
     description = models.CharField(max_length = 60)
@@ -122,12 +127,7 @@ class GroupStudent(models.Model):
 class GroupTeacher(models.Model):
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
-
-class Rubric(models.Model):
-    codeRubric = models.BigIntegerField(primary_key=True)
-    rubric = models.JSONField()
     
-
 class AutoEvaluationCourse(models.Model):
     codeCourse = models.ForeignKey(Course, on_delete=models.CASCADE)
     codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
@@ -152,12 +152,19 @@ class StudentCoEvaluation(models.Model):
 class HomeworkGroupStudent(models.Model):
     idHomework = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     idGroupStudent = models.ForeignKey(GroupStudent, on_delete=models.CASCADE, default=None)
-    deliveryURL = models.URLField(max_length = 60, default=None, null=True) 
     grade = models.FloatField(default=None, null=True)
+    link = ArrayField(
+        ArrayField(
+            models.URLField(max_length=10),
+            size=8,
+        ),
+        size=8,
+        null=True
+    )
 
 class ImprovementPlan(models.Model):
     planPeriod = models.CharField(max_length = 60)
-    codeResult = models.ForeignKey(EducationResult, on_delete=models.CASCADE)
+    codeResult = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     diagnosis = models.CharField(max_length = 60)
     analysis = models.CharField(max_length = 60)
@@ -165,7 +172,7 @@ class ImprovementPlan(models.Model):
 class MeasurementEduResult(models.Model):
     measureERPeriod = models.CharField(max_length = 60)
     codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
-    codeResult = models.ForeignKey(EducationResult, on_delete=models.CASCADE)
+    codeResult = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
     experts = models.IntegerField()
     competents = models.IntegerField()
     apprentices = models.IntegerField()
@@ -173,9 +180,17 @@ class MeasurementEduResult(models.Model):
 
 class MonitoringPlan(models.Model):
     period = models.CharField(max_length=60)
-    reference = models.ForeignKey(EducationResult, on_delete=models.CASCADE)
+    reference = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     actions = models.CharField(max_length = 60)
     metodology = models.CharField(max_length = 60)
     courses = models.CharField(max_length = 60)
     progress = models.CharField(max_length = 60)
+
+class PerformanceIndicator(models.Model):
+    codeSO = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
+    description = models.CharField(max_length = 100)
+
+class IndicatorAssignment(models.Model):
+    codePzI = models.ForeignKey(PerformanceIndicator, on_delete=models.CASCADE)
+    idHomework = models.ForeignKey(HomeworkGroupStudent, on_delete=models.CASCADE)
