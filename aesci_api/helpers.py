@@ -145,3 +145,19 @@ CARRER_CHOICES = (
         (BAP_INGENIERIA,
          'Modalidad de Asignaturas de Posgrado Facultad de Ingeniería'),
     )
+
+# Indicators' measures 
+MEASURES = [
+        ("1", "Beginner"),
+        ("2", "Apprentice"),
+        ("3", "Competent"),
+        ("4", "Expert"),
+    ]
+
+
+# Evaluations' types
+EVTYPES = [
+        ("AUTO", "Autoevaluation"),
+        ("COTE", "Coevaluation teacher"),
+        ("COST", "Coevaluation student"),
+    ]
