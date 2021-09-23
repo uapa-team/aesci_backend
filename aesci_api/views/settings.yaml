@@ -1,4 +1,4 @@
-client_config_backend: settings
+client_config_backend: file
 client_config:
   client_id: ${CLIENT_ID}
   client_secret: ${CLIENT_SECRET}

@@ -15,6 +15,7 @@ router.register(r'courses', CourseViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('login/', LoginView.as_view()),
+    path('upload/', UploadView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('login/verify/', TokenVerifyView.as_view(), name='token_verify'),
 ]
