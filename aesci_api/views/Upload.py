@@ -13,7 +13,6 @@ class UploadView(APIView):
     def post(self, request):
         up_file = request.FILES['file']   
         path = default_storage.save("tmp", ContentFile(up_file.read()))
-        tmp_file = os.path.join(settings.MEDIA_ROOT, path)
 
         gauth = GoogleAuth()
         gauth.LoadCredentialsFile("./aesci_api/views/credentials.json")
@@ -29,9 +28,12 @@ class UploadView(APIView):
 
         # Set up folder ID 
         studentFiles = os.environ.get('STUDENT_FOLDER')
+        # Path to temp file
+        tmp_file = os.path.join(settings.MEDIA_ROOT, path)
 
         # Create File inside folder studentFiles
         file1 = drive.CreateFile({'parents': [{'id': studentFiles}]})
         file1.SetContentFile(path)
         file1.Upload()
+        os.remove(tmp_file)
         return Response(  status=status.HTTP_200_OK)
