@@ -38,7 +38,11 @@ En Windows, usar este comando:
 
 `ssh -L 5432:127.0.0.1:5432 uapapp-admin@168.176.26.202`
 
-## ⚠️ Problemas comunes ⚠️
+7. Correr el comando
+
+`python3 manage.py runserver`
+
+## ⚠️ Problemas comunes ⚠️¹
 
 <!-- Aquí van los problemas comunes que se encuentren -->
 
