@@ -34,9 +34,11 @@ En Windows, usar este comando:
 
 5. Conectarse a la VPN
 
-    5.1 En Windows: En caso de no tener instalada la VPN, buscar en el Drive compartido de la UAPA un archivo llamado `VPN_Cisco.msi` para instalar Cisco Any Connect.
-    5.2 Una vez instalado, permite el acceso a redes no seguras.
-    5.3 Logearse con las credenciales de la UN.
+    5.1. En Windows: En caso de no tener instalada la VPN, buscar en el Drive compartido de la UAPA un archivo llamado `VPN_Cisco.msi` para instalar Cisco Any Connect.
+
+    5.2. Una vez instalado, permite el acceso a redes no seguras.
+    
+    5.3. Logearse con las credenciales de la UN.
 
 6. Abrir otra terminal y correr
 
