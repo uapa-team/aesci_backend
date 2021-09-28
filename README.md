@@ -42,7 +42,7 @@ En Windows, usar este comando:
 
 `python3 manage.py runserver`⚠️¹
 
-## ⚠️ Problemas comunes ⚠️¹
+## ⚠️ Problemas comunes ⚠️
 
 <!-- Aquí van los problemas comunes que se encuentren -->
 
