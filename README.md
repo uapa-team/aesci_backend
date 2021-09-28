@@ -40,7 +40,7 @@ En Windows, usar este comando:
 
 7. Correr el comando
 
-`python3 manage.py runserver`
+`python3 manage.py runserver`⚠️¹
 
 ## ⚠️ Problemas comunes ⚠️¹
 
