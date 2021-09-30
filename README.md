@@ -44,9 +44,23 @@ En Windows, usar este comando:
 
 `ssh -L 5432:127.0.0.1:5432 uapapp-admin@168.176.26.202`
 
-7. Correr el comando
+7. Verificar que las siguientes variables de entorno estén asignadas. Éstas se encuentran en el Bitwarden.
 
-`python3 manage.py runserver`⚠️¹
+    ```
+    AESCI_DB_USER      
+    AESCI_DB_HOST
+    AESCI_DB_NAME
+    AESCI_DB_PASS
+    AESCI_LDAP
+    URL_API
+    SECRET_KEY
+    ```
+    
+En Linux, utilizar el comando `export NOMBRE_VARIABLE="valor"`, en Windows usar el comando `setx NOMBRE_VARIABLE="valor"` o directamente configurarlas en el panel de control.
+
+8. Correr el comando
+
+`python3 manage.py runserver`⚠️¹⁴
 
 ## ⚠️ Problemas comunes ⚠️
 
@@ -68,3 +82,31 @@ Probablemente, el comando `pip install django_auth_ldap` genere problemas.
 - Colocar el comando `python --version` para encontrar la versión de Python instalada en el computador.
 - Dirigirse a [esta página](https://www.lfd.uci.edu/~gohlke/pythonlibs/#python-ldap) y descargar el binario correspondiente a la versión de Python utilizada y a la arquitectura del computador (32 o 64 bits).
     - Por ejemplo, para un computador con arquitectura de 64 bits y Python 3.9 instalado, el archivo a descargar será `python_ldap‑3.3.1‑cp39‑cp39‑win_amd64.whl`
+
+### 4. Sale un error que dice que la base de datos no tiene usuario o contraseña
+
+Reiniciar el computador y volver a correr el back. Este error sólo debería aparecer la primera vez que se instala el backend.
+
+## Una vez instalado, cómo correr el back
+
+1. Activar el entorno virtual (posicionarse en la carpeta donde se creó ese entorno):
+
+    - Linux: `source ./bin/activate`
+    - Windows: `source ./bin/activate`
+
+2. Revisar que el entorno virtual cuente con los paquetes necesarios, para eso se puede usar el comando `pip list`.
+
+3. Conectarse a la VPN.
+
+4. Abrir otra terminal y correr
+
+`ssh -L 5432:127.0.0.1:5432 uapapp-admin@168.176.26.202`
+
+5. Revisar que las variables de entorno estén asignadas.
+
+- En Linux: `printenv`
+- En Windows: `SET`
+
+6. Correr el comando
+
+`python3 manage.py runserver`⚠️¹
