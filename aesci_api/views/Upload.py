@@ -35,5 +35,12 @@ class UploadView(APIView):
         file1 = drive.CreateFile({'parents': [{'id': studentFiles}]})
         file1.SetContentFile(path)
         file1.Upload()
+        
+        print(file1['id'])
+
+        # Remove file from storage
         os.remove(tmp_file)
-        return Response(  status=status.HTTP_200_OK)
+        return Response( status=status.HTTP_200_OK)
+
+
+#RETORNAR URL
