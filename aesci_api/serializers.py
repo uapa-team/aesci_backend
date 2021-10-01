@@ -4,13 +4,15 @@ from django.contrib.auth.models import User, Group
 from .models import Course, Assignment, GroupCo, GroupStudent, GroupTeacher
 
 
-class CourseSerializer(serializers.ModelSerializer):
+class CourseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Course
         fields = '__all__'
 
 
-class AssignmentSerializer(serializers.ModelSerializer):
+class AssignmentSerializer(serializers.HyperlinkedModelSerializer):
+    # https://www.django-rest-framework.org/api-guide/relations/
+    username = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = Assignment
         fields = '__all__'
