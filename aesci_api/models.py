@@ -78,22 +78,24 @@ class PairEvaluator(models.Model):
         return self.username
 
 class Course(models.Model):
-    codeCourse = models.BigIntegerField(default=1, primary_key=True)
-    referencePlan = models.IntegerField(default=1)
-    nameCourse = models.CharField(max_length = 60,default="Test")
-    departmentCourse = models.CharField(max_length = 60, default=1)
+    codeCourse = models.BigIntegerField(primary_key=True)
+    referencePlan = models.IntegerField()
+    nameCourse = models.CharField(max_length = 60)
+    departmentCourse = models.CharField(max_length = 60)
 
     def __str__(self):
         """String for representing the Model object."""
         return self.nameCourse
 
 class GroupCo(models.Model):
-    numGroup = models.BigIntegerField(primary_key=True)
+    numGroup = models.IntegerField(default=1)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    periodPlan = models.CharField(max_length = 60, default="Test")
+    periodPlan = models.CharField(max_length = 60)
+
     def __str__(self):
         """String for representing the Model object."""
         return self.course.nameCourse
+
 
 class Rubric(models.Model):
     codeRubric = models.BigIntegerField(primary_key=True)
