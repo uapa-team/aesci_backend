@@ -11,6 +11,8 @@ router = routers.DefaultRouter()
 
 router.register(r'assignments', AssignmentViewSet, basename="assignment")
 router.register(r'courses', CourseViewSet)
+router.register(r'groups', GroupCoViewSet, basename="group")
+
 
 urlpatterns = [
     path('', include(router.urls)),
