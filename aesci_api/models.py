@@ -4,14 +4,13 @@ from django.db.models.fields import BigIntegerField, CharField
 from django.contrib.auth.models import User, Group
 from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
-from .helpers import CARRER_CHOICES, MEASURES, EVTYPES
+from .helpers import CARRER_CHOICES, MEASURES, EVTYPES, PERIODS, ROLES
 
 # URLField ?
 
 # Create your models here.
 class Admin(models.Model):
     username = models.CharField(max_length = 60, primary_key=True)
-    Person = models.CharField(max_length = 60)
     email = models.CharField(max_length = 60)
     name = models.CharField(max_length = 60)
     charge = models.CharField(max_length = 60)
@@ -28,7 +27,6 @@ class Admin(models.Model):
     
 class Student(models.Model):
     username = models.CharField(max_length = 60, primary_key=True)
-    Person = models.CharField(max_length = 60)
     email = models.CharField(max_length = 60)
     name = models.CharField(max_length = 60)
     carrer = models.CharField(max_length = 60, choices = CARRER_CHOICES)
@@ -45,14 +43,13 @@ class Student(models.Model):
 
 class Teacher(models.Model):
     username = models.CharField(max_length = 60, primary_key=True)
-    Person = models.CharField(max_length = 60)
     email = models.CharField(max_length = 60)
     name = models.CharField(max_length = 60)
     departmentDoc = models.CharField(max_length = 60)
 
     def save(self, *args, **kwargs):
         user = User.objects.create(username = self.username )
-        my_group = Group.objects.get(name='Professor') 
+        my_group = Group.objects.get(name='Teacher') 
         my_group.user_set.add(user)
         super(Teacher, self).save(*args, **kwargs)
 
@@ -62,7 +59,6 @@ class Teacher(models.Model):
 
 class PairEvaluator(models.Model):
     username = models.CharField(max_length = 60, primary_key=True)
-    Person = models.CharField(max_length = 60)
     email = models.CharField(max_length = 60)
     name = models.CharField(max_length = 60)
     institution = models.CharField(max_length = 60)
@@ -79,18 +75,17 @@ class PairEvaluator(models.Model):
 
 class Course(models.Model):
     codeCourse = models.BigIntegerField(primary_key=True)
-    referencePlan = models.IntegerField()
     nameCourse = models.CharField(max_length = 60)
-    departmentCourse = models.CharField(max_length = 60)
+    departmentCourse = models.CharField(max_length = 60, choices = CARRER_CHOICES)
 
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.nameCourse
+    # def __str__(self):
+    #     """String for representing the Model object."""
+    #     return self.nameCourse
 
 class GroupCo(models.Model):
     numGroup = models.IntegerField(default=1)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    periodPlan = models.CharField(max_length = 60)
+    periodPlan = models.CharField(max_length = 60, choices = PERIODS)
 
     def __str__(self):
         """String for representing the Model object."""
@@ -101,6 +96,9 @@ class GroupCo(models.Model):
 class Rubric(models.Model):
     codeRubric = models.BigIntegerField(primary_key=True)
     description = models.CharField(max_length = 60, null = True)
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.nameCourse
 
 class StudentOutcome(models.Model):
     codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
