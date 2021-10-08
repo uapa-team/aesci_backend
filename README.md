@@ -82,6 +82,9 @@ Probablemente, el comando `pip install django_auth_ldap` genere problemas.
 - Colocar el comando `python --version` para encontrar la versión de Python instalada en el computador.
 - Dirigirse a [esta página](https://www.lfd.uci.edu/~gohlke/pythonlibs/#python-ldap) y descargar el binario correspondiente a la versión de Python utilizada y a la arquitectura del computador (32 o 64 bits).
     - Por ejemplo, para un computador con arquitectura de 64 bits y Python 3.9 instalado, el archivo a descargar será `python_ldap‑3.3.1‑cp39‑cp39‑win_amd64.whl`
+- Desde la misma terminar que se está trabajano, instalar el archivo medidante el comando `pip install <DIRECCIÓN>/python_ldap‑3.3.1‑cp39‑cp39‑win_amd64.whl` o dirigirse a la carpeta donde se encuentra el archivo y probar `pip install python_ldap‑3.3.1‑cp39‑cp39‑win_amd64.whl` (no colocarle comillas al nombre del archivo)
+- En caso de que aparezca un error acerca de que no se soporta el wheel, verificar que las especificaciones del computador (x32 o x64 bits) y la versión de Python correspondan con el nombre del archivo descargado.
+- Una vez instalado, volver a correr el comando `pip install django_auth_ldap`, ahora no debería dar problemas y se puede seguir la instalación.
 
 ### 4. Sale un error que dice que la base de datos no tiene usuario o contraseña
 
@@ -92,7 +95,7 @@ Reiniciar el computador y volver a correr el back. Este error sólo debería apa
 1. Activar el entorno virtual (posicionarse en la carpeta donde se creó ese entorno):
 
     - Linux: `source ./bin/activate`
-    - Windows: `source ./bin/activate`
+    - Windows: `tutorial-env\Scripts\activate.bat`
 
 2. Revisar que el entorno virtual cuente con los paquetes necesarios, para eso se puede usar el comando `pip list`.
 
