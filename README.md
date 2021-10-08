@@ -113,3 +113,7 @@ Reiniciar el computador y volver a correr el back. Este error sólo debería apa
 6. Correr el comando
 
 `python3 manage.py runserver`⚠️¹
+
+## TO DO 📢
+
+- Credenciales del Drive
