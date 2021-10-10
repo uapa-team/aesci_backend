@@ -8,10 +8,6 @@ class GroupCoViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows admin to create groups.
     """
+    queryset = GroupCo.objects.all()
     serializer_class = GroupCoSerializer
     permission_classes = [permissions.IsAdminUser]
-
-    def get_queryset(self):
-            queryset = GroupCo.objects.all()
-            query_set = queryset.filter(course=self.request.data['course'])
-            return query_set

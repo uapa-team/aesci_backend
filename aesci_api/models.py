@@ -4,14 +4,13 @@ from django.db.models.fields import BigIntegerField, CharField
 from django.contrib.auth.models import User, Group
 from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
-from .helpers import CARRER_CHOICES, MEASURES, EVTYPES
+from .helpers import CARRER_CHOICES, MEASURES, EVTYPES, PERIODS, ROLES
 
 # URLField ?
 
 # Create your models here.
 class Admin(models.Model):
     username = models.CharField(max_length = 60, primary_key=True)
-    Person = models.CharField(max_length = 60)
     email = models.CharField(max_length = 60)
     name = models.CharField(max_length = 60)
     charge = models.CharField(max_length = 60)
@@ -28,7 +27,6 @@ class Admin(models.Model):
     
 class Student(models.Model):
     username = models.CharField(max_length = 60, primary_key=True)
-    Person = models.CharField(max_length = 60)
     email = models.CharField(max_length = 60)
     name = models.CharField(max_length = 60)
     carrer = models.CharField(max_length = 60)
@@ -45,7 +43,6 @@ class Student(models.Model):
 
 class Teacher(models.Model):
     username = models.CharField(max_length = 60, primary_key=True)
-    Person = models.CharField(max_length = 60)
     email = models.CharField(max_length = 60)
     name = models.CharField(max_length = 60)
     departmentDoc = models.CharField(max_length = 60)
@@ -62,7 +59,6 @@ class Teacher(models.Model):
 
 class PairEvaluator(models.Model):
     username = models.CharField(max_length = 60, primary_key=True)
-    Person = models.CharField(max_length = 60)
     email = models.CharField(max_length = 60)
     name = models.CharField(max_length = 60)
     institution = models.CharField(max_length = 60)
@@ -78,27 +74,35 @@ class PairEvaluator(models.Model):
         return self.username
 
 class Course(models.Model):
-    codeCourse = models.BigIntegerField(default=1, primary_key=True)
-    referencePlan = models.IntegerField(default=1)
-    nameCourse = models.CharField(max_length = 60,default="Test")
-    departmentCourse = models.CharField(max_length = 60, default=1)
+    codeCourse = models.BigIntegerField(primary_key=True)
+    nameCourse = models.CharField(max_length = 60)
+    departmentCourse = models.CharField(max_length = 60, choices = CARRER_CHOICES)
 
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.nameCourse
+    # def __str__(self):
+    #     """String for representing the Model object."""
+    #     return self.nameCourse
 
 class EducationResult(models.Model):
     codeResult = models.IntegerField(primary_key=True)
     description = models.CharField(max_length = 60)
 
 class GroupCo(models.Model):
-    numGroup = models.BigIntegerField(primary_key=True)
+    numGroup = models.IntegerField(default=1)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    periodPlan = models.CharField(max_length = 60, default="Test")
+    periodPlan = models.CharField(max_length = 60, choices = PERIODS)
+
+    def __str__(self):
+        """String for representing the Model object."""
+        nameGroup = f"{self.course.nameCourse} - {self.numGroup}"  
+        return  nameGroup
+
 
 class Rubric(models.Model):
     codeRubric = models.BigIntegerField(primary_key=True)
     description = models.CharField(max_length = 60, null = True)
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.nameCourse
 
 class StudentOutcome(models.Model):
     codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
@@ -110,7 +114,7 @@ class StudentOutcome(models.Model):
 class Assignment(models.Model):
     idAssignment = models.AutoField(primary_key=True)
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-    nameAssignament = models.CharField(max_length = 60)
+    nameAssignment = models.CharField(max_length = 60)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
     dateAssignment = models.DateTimeField(default=now)
     dateLimitAssignment = models.DateTimeField(default=now)
@@ -133,18 +137,15 @@ class GroupTeacher(models.Model):
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
 
-class HomeworkGroupStudent(models.Model):
-    Homework = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+class AssignmentStudent(models.Model):
+    Assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     GroupStudent = models.ForeignKey(GroupStudent, on_delete=models.CASCADE, default=None)
     grade = models.FloatField(default=None, null=True)
     link = ArrayField(
-        ArrayField(
             models.URLField(max_length=200),
             size=8,
-        ),
-        size=8,
-        null=True
-    )
+            null=True
+        )
 
 class ImprovementPlan(models.Model):
     planPeriod = models.CharField(max_length = 60)
@@ -172,7 +173,7 @@ class IndicatorGroup(models.Model):
 
 class IndicatorAssignment(models.Model):
     indicatorGroup = models.ForeignKey(IndicatorGroup, on_delete=models.CASCADE)
-    homework = models.ForeignKey(HomeworkGroupStudent, on_delete=models.CASCADE)
+    homework = models.ForeignKey(AssignmentStudent, on_delete=models.CASCADE)
 
 class IndicatorMeasure(models.Model):
     performanceIndicator = models.ForeignKey(PerformanceIndicator, on_delete=models.CASCADE)

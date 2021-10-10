@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions
 from rest_framework import status
 from rest_framework.response import Response
 
-from ..models import Assignment
+from ..models import Assignment, Teacher, GroupStudent, Student, AssignmentStudent
 from ..serializers import AssignmentSerializer
 
 
@@ -20,6 +20,14 @@ class AssignmentViewSet(viewsets.ModelViewSet):
             query_set = queryset.filter(username=self.request.data['username']).order_by('-dateAssignment')
             return query_set
 
-        elif self.request.data['role'] == "Proffesor":
+            for element in querysetGS:
+                querysetHGS = AssignmentStudent.objects.filter(idGroupStudent=element.id)
+                for elementHGS in querysetHGS:
+                    groupsList.append(elementHGS.idHomework)
+
+            groupsList.sort(key=lambda x: x.dateAssignment, reverse=True)
+            return groupsList
+
+        elif Teacher.objects.filter(username=self.request.data['username']).exists():
             # Return assignments related to Teacher
             return Assignment.objects.all()

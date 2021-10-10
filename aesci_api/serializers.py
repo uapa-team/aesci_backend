@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.models import User, Group
-from .models import Course, Assignment, GroupCo, GroupStudent, GroupTeacher
+from .models import Course, Assignment, AssignmentStudent, GroupCo, GroupStudent, GroupTeacher
 
 
 class CourseSerializer(serializers.HyperlinkedModelSerializer):
@@ -9,31 +9,27 @@ class CourseSerializer(serializers.HyperlinkedModelSerializer):
         model = Course
         fields = '__all__'
 
-
-class AssignmentSerializer(serializers.HyperlinkedModelSerializer):
-    # https://www.django-rest-framework.org/api-guide/relations/
-    username = serializers.PrimaryKeyRelatedField(read_only=True)
+class AssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assignment
         fields = '__all__'
 
-class GroupCoSerializer(serializers.HyperlinkedModelSerializer):
-    # https://www.django-rest-framework.org/api-guide/relations/
-    username = serializers.PrimaryKeyRelatedField(read_only=True)
+class AssignmentStudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AssignmentStudent
+        fields = '__all__'
+
+class GroupCoSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupCo
         fields = '__all__'
 
-class GroupStudentSerializer(serializers.HyperlinkedModelSerializer):
-    # https://www.django-rest-framework.org/api-guide/relations/
-    username = serializers.PrimaryKeyRelatedField(read_only=True)
+class GroupStudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupStudent
         fields = '__all__'
 
-class GroupTeacherSerializer(serializers.HyperlinkedModelSerializer):
-    # https://www.django-rest-framework.org/api-guide/relations/
-    username = serializers.PrimaryKeyRelatedField(read_only=True)
+class GroupTeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupTeacher
         fields = '__all__'

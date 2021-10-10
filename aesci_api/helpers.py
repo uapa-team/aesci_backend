@@ -161,3 +161,17 @@ EVTYPES = [
         ("COTE", "Coevaluation teacher"),
         ("COST", "Coevaluation student"),
     ]
+
+
+# Period's groups
+PERIODS = [
+    ("2021-1","2021-1S"),
+    ("2021-2","2021-2S"),
+]
+
+ROLES = [
+    ("Admin","Admin"),
+    ("PairEvaluator","Pair Evaluator"),
+    ("Teacher","Teacher"),
+    ("Student","Student"),
+]
