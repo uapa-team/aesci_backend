@@ -10,8 +10,11 @@ from .views import *
 router = routers.DefaultRouter()
 
 router.register(r'assignments', AssignmentViewSet, basename="assignment")
+router.register(r'assignmentstudents', AssignmentStudentViewSet, basename="assignment")
 router.register(r'courses', CourseViewSet)
 router.register(r'groups', GroupCoViewSet, basename="group")
+router.register(r'groupstudents', GroupStudentViewSet, basename="groupstudents")
+router.register(r'groupteachers', GroupTeacherViewSet, basename="groupteacher")
 
 
 urlpatterns = [

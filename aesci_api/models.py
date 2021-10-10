@@ -110,7 +110,7 @@ class StudentOutcome(models.Model):
 class Assignment(models.Model):
     idAssignment = models.AutoField(primary_key=True)
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-    nameAssignament = models.CharField(max_length = 60)
+    nameAssignment = models.CharField(max_length = 60)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
     dateAssignment = models.DateTimeField(default=now)
     dateLimitAssignment = models.DateTimeField(default=now)
@@ -128,18 +128,15 @@ class GroupTeacher(models.Model):
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
 
-class HomeworkGroupStudent(models.Model):
-    Homework = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+class AssignmentStudent(models.Model):
+    Assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     GroupStudent = models.ForeignKey(GroupStudent, on_delete=models.CASCADE, default=None)
     grade = models.FloatField(default=None, null=True)
     link = ArrayField(
-        ArrayField(
             models.URLField(max_length=200),
             size=8,
-        ),
-        size=8,
-        null=True
-    )
+            null=True
+        )
 
 class ImprovementPlan(models.Model):
     planPeriod = models.CharField(max_length = 60)
@@ -167,7 +164,7 @@ class IndicatorGroup(models.Model):
 
 class IndicatorAssignment(models.Model):
     indicatorGroup = models.ForeignKey(IndicatorGroup, on_delete=models.CASCADE)
-    homework = models.ForeignKey(HomeworkGroupStudent, on_delete=models.CASCADE)
+    homework = models.ForeignKey(AssignmentStudent, on_delete=models.CASCADE)
 
 class IndicatorMeasure(models.Model):
     performanceIndicator = models.ForeignKey(PerformanceIndicator, on_delete=models.CASCADE)
