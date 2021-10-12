@@ -133,7 +133,7 @@ class AssignmentStudent(models.Model):
     GroupStudent = models.ForeignKey(GroupStudent, on_delete=models.CASCADE, default=None)
     grade = models.FloatField(default=None, null=True)
     link = ArrayField(
-            models.URLField(max_length=200),
+            models.CharField(max_length=200),
             size=8,
             null=True
         )
