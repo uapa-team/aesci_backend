@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
 
-from ..models import Course, GroupCo
+from ..models import GroupCo
 from ..serializers import GroupCoSerializer
 
 #create groups

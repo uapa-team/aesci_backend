@@ -4,4 +4,8 @@ from .Courses import *
 from .Groups import *
 from .GroupStudent import *
 from .GroupTeacher import *
+from .IndicatorMeasure import *
 from .Login import *
+from .PerformanceIndicator import *
+from .Rubric import *
+from .StudentOutcome import *

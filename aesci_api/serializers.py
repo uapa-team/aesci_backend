@@ -1,13 +1,8 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.models import User, Group
-from .models import Course, Assignment, AssignmentStudent, GroupCo, GroupStudent, GroupTeacher
+from .models import * 
 
-
-class CourseSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Course
-        fields = '__all__'
 
 class AssignmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,6 +12,11 @@ class AssignmentSerializer(serializers.ModelSerializer):
 class AssignmentStudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = AssignmentStudent
+        fields = '__all__'
+
+class CourseSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Course
         fields = '__all__'
 
 class GroupCoSerializer(serializers.ModelSerializer):
@@ -34,6 +34,25 @@ class GroupTeacherSerializer(serializers.ModelSerializer):
         model = GroupTeacher
         fields = '__all__'
 
+class IndicatorMeasureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IndicatorMeasure
+        fields = '__all__'
+
+class PerformanceIndicatorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PerformanceIndicator
+        fields = '__all__'
+
+class RubricSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rubric
+        fields = '__all__'
+
+class StudentOutcomeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentOutcome
+        fields = '__all__'
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod

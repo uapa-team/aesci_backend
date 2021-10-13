@@ -16,7 +16,7 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
     """
     queryset = AssignmentStudent.objects.all()
     serializer_class = AssignmentStudentSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def update(self, request, *args, **kwargs):
         files = request.FILES.getlist('file')

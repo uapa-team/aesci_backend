@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions
 from rest_framework import status
 from rest_framework.response import Response
 
-from ..models import Course, GroupCo, GroupStudent, GroupTeacher
+from ..models import GroupTeacher
 from ..serializers import GroupTeacherSerializer
 
 

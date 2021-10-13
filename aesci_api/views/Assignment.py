@@ -14,20 +14,21 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        if self.request.data['role'] == "Student":
-            # Return assignments related to Student
-            queryset = Assignment.objects.all()
-            query_set = queryset.filter(username=self.request.data['username']).order_by('-dateAssignment')
-            return query_set
+        if Student.objects.filter(username=self.request.data['username']).exists():
+        # Return assignments related to Student
+            querysetGS = GroupStudent.objects.filter(username=self.request.data['username'])
+            groupsList = []
 
             for element in querysetGS:
-                querysetHGS = AssignmentStudent.objects.filter(idGroupStudent=element.id)
+                querysetHGS = AssignmentStudent.objects.filter(GroupStudent_id=element.id)
                 for elementHGS in querysetHGS:
-                    groupsList.append(elementHGS.idHomework)
+                    groupsList.append(elementHGS.Assignment)
 
+        # Sort assignment by date
             groupsList.sort(key=lambda x: x.dateAssignment, reverse=True)
             return groupsList
 
         elif Teacher.objects.filter(username=self.request.data['username']).exists():
             # Return assignments related to Teacher
-            return Assignment.objects.all()
+            return Assignment.objects.all().filter(username=self.request.data['username'])
+        return None
