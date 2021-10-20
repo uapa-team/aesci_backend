@@ -5,6 +5,8 @@ from .Groups import *
 from .GroupStudent import *
 from .GroupTeacher import *
 from .IndicatorMeasure import *
+from .IndicatorAssignment import *
+from .IndicatorGroup import *
 from .Login import *
 from .PerformanceIndicator import *
 from .Rubric import *

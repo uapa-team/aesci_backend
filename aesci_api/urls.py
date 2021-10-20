@@ -16,9 +16,11 @@ router.register(r'groups', GroupCoViewSet, basename="group")
 router.register(r'groupstudents', GroupStudentViewSet, basename="groupstudents")
 router.register(r'groupteachers', GroupTeacherViewSet, basename="groupteacher")
 router.register(r'rubric', RubricViewSet, basename="rubric")
-router.register(r'outcomes', StudentOutcomeViewSet, basename="studentoutcome")
-router.register(r'indicators', PerformanceIndicatorViewSet, basename="performanceindicator")
-router.register(r'measures', IndicatorMeasureViewSet, basename="indicatormeasure")
+router.register(r'studentoutcomes', StudentOutcomeViewSet, basename="studentoutcome")
+router.register(r'performanceindicators', PerformanceIndicatorViewSet, basename="performanceindicator")
+router.register(r'indicatormeasures', IndicatorMeasureViewSet, basename="indicatormeasure")
+router.register(r'indicatorgroups', IndicatorGroupViewSet, basename="indicatorgroup")
+router.register(r'indicatorassignments', IndicatorAssignmentViewSet, basename="indicatorassignment")
 
 
 urlpatterns = [

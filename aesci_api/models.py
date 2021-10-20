@@ -146,6 +146,10 @@ class AssignmentStudent(models.Model):
             null=True
         )
 
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.Assignment.nameAssignment  
+
 class ImprovementPlan(models.Model):
     planPeriod = models.CharField(max_length = 60)
     codeResult = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
@@ -173,6 +177,10 @@ class PerformanceIndicator(models.Model):
 class IndicatorGroup(models.Model):
     performanceIndicator = models.ForeignKey(PerformanceIndicator, on_delete=models.CASCADE)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
+
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.performanceIndicator.description  
     
 
 class IndicatorAssignment(models.Model):

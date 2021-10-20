@@ -39,6 +39,16 @@ class IndicatorMeasureSerializer(serializers.ModelSerializer):
         model = IndicatorMeasure
         fields = '__all__'
 
+class IndicatorGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IndicatorGroup
+        fields = '__all__'
+        
+class IndicatorAssignmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IndicatorAssignment
+        fields = '__all__'
+
 class PerformanceIndicatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = PerformanceIndicator
