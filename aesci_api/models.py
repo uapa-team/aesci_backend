@@ -102,7 +102,7 @@ class Rubric(models.Model):
     description = models.CharField(max_length = 60, null = True)
     def __str__(self):
         """String for representing the Model object."""
-        return self.nameCourse
+        return self.description
 
 class StudentOutcome(models.Model):
     codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
@@ -127,7 +127,6 @@ class Assignment(models.Model):
 class GroupStudent(models.Model):
     username = models.ForeignKey(Student, on_delete=models.CASCADE)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
-
 
     def __str__(self):
         """String for representing the Model object."""
@@ -167,9 +166,14 @@ class PerformanceIndicator(models.Model):
     codeSO = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
     description = models.CharField(max_length = 100)
 
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.description  
+
 class IndicatorGroup(models.Model):
     performanceIndicator = models.ForeignKey(PerformanceIndicator, on_delete=models.CASCADE)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
+    
 
 class IndicatorAssignment(models.Model):
     indicatorGroup = models.ForeignKey(IndicatorGroup, on_delete=models.CASCADE)
@@ -182,6 +186,10 @@ class IndicatorMeasure(models.Model):
         choices=MEASURES,
     )
     description = models.CharField(max_length = 60)
+
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.description
     
 
 class AutoEvaluationCourse(models.Model):
