@@ -122,7 +122,7 @@ class Assignment(models.Model):
     
     def __str__(self):
         """String for representing the Model object."""
-        return self.nameAssignament
+        return self.nameAssignment
 
 class GroupStudent(models.Model):
     username = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -130,7 +130,7 @@ class GroupStudent(models.Model):
 
     def __str__(self):
         """String for representing the Model object."""
-        return self.username  
+        return self.username.username  
 
 class GroupTeacher(models.Model):
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
