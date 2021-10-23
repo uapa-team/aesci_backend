@@ -78,13 +78,9 @@ class Course(models.Model):
     nameCourse = models.CharField(max_length = 60)
     departmentCourse = models.CharField(max_length = 60, choices = CARRER_CHOICES)
 
-    # def __str__(self):
-    #     """String for representing the Model object."""
-    #     return self.nameCourse
-
-class EducationResult(models.Model):
-    codeResult = models.IntegerField(primary_key=True)
-    description = models.CharField(max_length = 60)
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.nameCourse
 
 class GroupCo(models.Model):
     numGroup = models.IntegerField(default=1)
@@ -139,7 +135,6 @@ class GroupTeacher(models.Model):
 class AssignmentStudent(models.Model):
     Assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     GroupStudent = models.ForeignKey(GroupStudent, on_delete=models.CASCADE, default=None)
-    grade = models.FloatField(default=None, null=True)
     link = ArrayField(
             models.CharField(max_length=200),
             size=8,
@@ -219,4 +214,6 @@ class EvaluationAssignment(models.Model):
         max_length=1,
         choices=MEASURES,
     )
+    grade = models.FloatField(default=None, null=True)
+    
     
