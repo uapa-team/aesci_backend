@@ -1,4 +1,4 @@
-from ..models import AssignmentStudent
+from ..models import AssignmentStudent, GroupStudent, Student
 from ..serializers import AssignmentStudentSerializer
 
 import os
@@ -14,9 +14,28 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows student to update urls on assignments.
     """
-    queryset = AssignmentStudent.objects.all()
     serializer_class = AssignmentStudentSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        if Student.objects.filter(username=self.request.query_params["username"]).exists():
+        # Return assignments related to Student
+            querysetGS = GroupStudent.objects.filter(username=self.request.query_params["username"])
+            groupsList = []
+
+            print(querysetGS)
+            for element in querysetGS:
+                querysetHGS = AssignmentStudent.objects.filter(GroupStudent_id=element.id)
+                for elementHGS in querysetHGS:
+                    groupsList.append(elementHGS)
+            
+             # Sort assignment by date
+            groupsList.sort(key=lambda x: x.Assignment.dateAssignment, reverse=True)
+
+            return groupsList
+
+        # Return None if student does not have assignments
+        return None
 
     def update(self, request, *args, **kwargs):
         files = request.FILES.getlist('file')
