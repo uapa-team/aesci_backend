@@ -21,6 +21,7 @@ router.register(r'performanceindicators', PerformanceIndicatorViewSet, basename=
 router.register(r'indicatormeasures', IndicatorMeasureViewSet, basename="indicatormeasure")
 router.register(r'indicatorgroups', IndicatorGroupViewSet, basename="indicatorgroup")
 router.register(r'indicatorassignments', IndicatorAssignmentViewSet, basename="indicatorassignment")
+router.register(r'evaluationassignment', EvaluationAssignmentViewSet, basename="evaluationassignment")
 
 
 urlpatterns = [

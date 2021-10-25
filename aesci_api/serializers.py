@@ -19,6 +19,11 @@ class CourseSerializer(serializers.HyperlinkedModelSerializer):
         model = Course
         fields = '__all__'
 
+class EvaluationAssignmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EvaluationAssignment
+        fields = '__all__'
+
 class GroupCoSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupCo

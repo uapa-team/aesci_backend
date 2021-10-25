@@ -92,7 +92,7 @@ class GroupCo(models.Model):
         nameGroup = f"{self.course.nameCourse} - {self.numGroup}"  
         return  nameGroup
 
-
+2
 class Rubric(models.Model):
     codeRubric = models.BigIntegerField(primary_key=True)
     description = models.CharField(max_length = 60, null = True)
@@ -181,6 +181,9 @@ class IndicatorGroup(models.Model):
 class IndicatorAssignment(models.Model):
     indicatorGroup = models.ForeignKey(IndicatorGroup, on_delete=models.CASCADE)
     homework = models.ForeignKey(AssignmentStudent, on_delete=models.CASCADE)
+    def __str__(self):
+        """String for representing the Model object."""
+        return f"{self.indicatorGroup.performanceIndicator.description} - {self.homework.GroupStudent.username}"   
 
 class IndicatorMeasure(models.Model):
     performanceIndicator = models.ForeignKey(PerformanceIndicator, on_delete=models.CASCADE)
@@ -205,7 +208,7 @@ class AutoEvaluationCourse(models.Model):
 class EvaluationAssignment(models.Model):
     indicatorAssignment = models.ForeignKey(IndicatorAssignment, on_delete=models.CASCADE)
     qualifier = models.CharField(max_length = 60)
-    documentAttached = models.URLField(max_length=200)
+    documentAttached = models.CharField(max_length=200, null=True)
     evaluationType = models.CharField(
         max_length=4,
         choices=EVTYPES,
