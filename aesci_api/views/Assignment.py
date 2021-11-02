@@ -13,8 +13,8 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     serializer_class = AssignmentSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
+    def get_queryset(self, pk=None):
         if Teacher.objects.filter(username=self.request.query_params["username"]).exists():
             # Return assignments related to Teacher
             return Assignment.objects.all().filter(username=self.request.query_params["username"])
-        return None
+        return Assignment.objects.all() 
