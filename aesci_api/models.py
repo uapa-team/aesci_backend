@@ -95,14 +95,14 @@ class GroupCo(models.Model):
 2
 class Rubric(models.Model):
     codeRubric = models.BigIntegerField(primary_key=True)
-    description = models.CharField(max_length = 60, null = True)
+    description = models.TextField()
     def __str__(self):
         """String for representing the Model object."""
         return self.description
 
 class StudentOutcome(models.Model):
     codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
-    description = models.CharField(max_length = 100)
+    description = models.TextField()
     def __str__(self):
         """String for representing the Model object."""
         return self.description
@@ -114,8 +114,8 @@ class Assignment(models.Model):
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
     dateAssignment = models.DateTimeField(default=now)
     dateLimitAssignment = models.DateTimeField(default=now)
-    description = models.CharField(max_length = 60)
-    
+    description = models.TextField()    
+
     def __str__(self):
         """String for representing the Model object."""
         return self.nameAssignment
@@ -163,7 +163,7 @@ class MonitoringPlan(models.Model):
 
 class PerformanceIndicator(models.Model):
     codeSO = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
-    description = models.CharField(max_length = 100)
+    description = models.TextField()    
 
     def __str__(self):
         """String for representing the Model object."""
