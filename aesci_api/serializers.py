@@ -14,7 +14,7 @@ class AssignmentStudentSerializer(serializers.ModelSerializer):
         model = AssignmentStudent
         fields = '__all__'
 
-class CourseSerializer(serializers.HyperlinkedModelSerializer):
+class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = '__all__'

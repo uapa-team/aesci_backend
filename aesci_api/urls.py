@@ -10,18 +10,18 @@ from .views import *
 router = routers.DefaultRouter()
 
 router.register(r'assignments', AssignmentViewSet, basename="assignment")
-router.register(r'assignmentstudents', AssignmentStudentViewSet, basename="assignment")
+router.register(r'assignmentstudents', AssignmentStudentViewSet, basename="assignmentstudent")
 router.register(r'courses', CourseViewSet)
 router.register(r'groups', GroupCoViewSet, basename="group")
-router.register(r'groupstudents', GroupStudentViewSet, basename="groupstudents")
+router.register(r'groupstudents', GroupStudentViewSet, basename="groupstudent")
 router.register(r'groupteachers', GroupTeacherViewSet, basename="groupteacher")
-router.register(r'rubric', RubricViewSet, basename="rubric")
+router.register(r'rubrics', RubricViewSet, basename="rubric")
 router.register(r'studentoutcomes', StudentOutcomeViewSet, basename="studentoutcome")
 router.register(r'performanceindicators', PerformanceIndicatorViewSet, basename="performanceindicator")
 router.register(r'indicatormeasures', IndicatorMeasureViewSet, basename="indicatormeasure")
 router.register(r'indicatorgroups', IndicatorGroupViewSet, basename="indicatorgroup")
 router.register(r'indicatorassignments', IndicatorAssignmentViewSet, basename="indicatorassignment")
-router.register(r'evaluationassignment', EvaluationAssignmentViewSet, basename="evaluationassignment")
+router.register(r'evaluationassignments', EvaluationAssignmentViewSet, basename="evaluationassignment")
 
 
 urlpatterns = [

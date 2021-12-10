@@ -29,7 +29,7 @@ class Student(models.Model):
     username = models.CharField(max_length = 60, primary_key=True)
     email = models.CharField(max_length = 60)
     name = models.CharField(max_length = 60)
-    carrer = models.CharField(max_length = 60)
+    departmentCourse = models.CharField(max_length = 60, choices = CARRER_CHOICES, default='2542')
 
     def save(self, *args, **kwargs):
         user = User.objects.create(username = self.username )
@@ -74,9 +74,13 @@ class PairEvaluator(models.Model):
         return self.username
 
 class Course(models.Model):
-    codeCourse = models.BigIntegerField(primary_key=True)
+    codeCourse = models.BigIntegerField(primary_key=True, default=1)
     nameCourse = models.CharField(max_length = 60)
-    departmentCourse = models.CharField(max_length = 60, choices = CARRER_CHOICES)
+    departmentCourse = ArrayField(
+            models.CharField(max_length = 60, choices = CARRER_CHOICES, default='2542'),
+            size=4,
+            null=True
+        )
 
     def __str__(self):
         """String for representing the Model object."""
@@ -92,10 +96,15 @@ class GroupCo(models.Model):
         nameGroup = f"{self.course.nameCourse} - {self.numGroup}"  
         return  nameGroup
 
-2
 class Rubric(models.Model):
-    codeRubric = models.BigIntegerField(primary_key=True)
+    codeRubric = models.CharField(max_length=60)
     description = models.TextField()
+    departmentRubric = ArrayField(
+            models.CharField(max_length = 60, choices = CARRER_CHOICES, default='2542'),
+            size=4,
+            null=True
+        )
+
     def __str__(self):
         """String for representing the Model object."""
         return self.description
@@ -103,6 +112,7 @@ class Rubric(models.Model):
 class StudentOutcome(models.Model):
     codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
     description = models.TextField()
+    
     def __str__(self):
         """String for representing the Model object."""
         return self.description
@@ -163,11 +173,12 @@ class MonitoringPlan(models.Model):
 
 class PerformanceIndicator(models.Model):
     codeSO = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
+    codePI = models.CharField(max_length=10)
     description = models.TextField()    
 
     def __str__(self):
         """String for representing the Model object."""
-        return self.description  
+        return f'{self.codePI} - {self.description}' 
 
 class IndicatorGroup(models.Model):
     performanceIndicator = models.ForeignKey(PerformanceIndicator, on_delete=models.CASCADE)
@@ -191,7 +202,7 @@ class IndicatorMeasure(models.Model):
         max_length=1,
         choices=MEASURES,
     )
-    description = models.CharField(max_length = 60)
+    description = models.TextField()
 
     def __str__(self):
         """String for representing the Model object."""
@@ -218,5 +229,4 @@ class EvaluationAssignment(models.Model):
         choices=MEASURES,
     )
     grade = models.FloatField(default=None, null=True)
-    
-    
+
