@@ -1,8 +1,0 @@
-django
-djangorestframework
-djangorestframework-simplejwt
-django-cors-headers
-django_auth_ldap
-drf_spectacular
-psycopg2
-pydrive

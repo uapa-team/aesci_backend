@@ -12,3 +12,4 @@ from .Login import *
 from .PerformanceIndicator import *
 from .Rubric import *
 from .StudentOutcome import *
+from .UploadStudents import *
