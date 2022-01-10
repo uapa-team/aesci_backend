@@ -23,7 +23,7 @@ class UploadStudentsView(APIView):
         path = default_storage.save("tmp", ContentFile(file.read()))
         
         # Take columns to use them
-        data_frame_courses = pandas.read_excel(path, sheet_name='Sheet2', usecols=['COD_ASIGNATURA','ASIGNATURA','GRUPO_ASIGNATURA','CORREO'], skiprows=[0])
+        data_frame_courses = pandas.read_excel(path, engine='openpyxl',sheet_name='Sheet2', usecols=['COD_ASIGNATURA','ASIGNATURA','GRUPO_ASIGNATURA','CORREO'], skiprows=[0])
         
         # Filter by course
         df_course_filtered = data_frame_courses[data_frame_courses['COD_ASIGNATURA']==str(cod_asignatura)]
