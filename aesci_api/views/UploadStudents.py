@@ -20,7 +20,7 @@ class UploadStudentsView(APIView):
         cod_asignatura = request.data['codAsignatura']
         groups = [[]]
 
-        path = default_storage.save("tmp", ContentFile(file.read()))
+        path = default_storage.save("tmp.xlsx", ContentFile(file.read()))
         
         # Take columns to use them
         data_frame_courses = pandas.read_excel(path, engine='openpyxl',sheet_name='Sheet2', usecols=['COD_ASIGNATURA','ASIGNATURA','GRUPO_ASIGNATURA','CORREO'], skiprows=[0])
