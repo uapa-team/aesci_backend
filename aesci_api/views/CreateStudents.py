@@ -24,14 +24,9 @@ class CreateStudentsView(APIView):
         
         # Take columns to use them
         data_frame_students = pandas.read_excel(path, sheet_name='Sheet2', usecols=['COD_PLAN','NOMBRES','APELLIDO1','APELLIDO2','CORREO'], skiprows=[0])
-        # print(data_frame_students)
-        print(data_frame_students.dtypes)
 
         # Filter by carreer
-        print(type(codCareer))
-        print(codCareer == 2549)
         data_frame_students = data_frame_students[data_frame_students['COD_PLAN']==int64(codCareer)]
-        # print(data_frame_students)
         
         # Remove student duplicates
         data_frame_students = data_frame_students.drop_duplicates(subset='CORREO')
@@ -43,7 +38,6 @@ class CreateStudentsView(APIView):
 
         # Take amount of groups in course
         length_student = len(pandas.unique(data_frame_students['username']))
-        print(length_student)
         
         names = data_frame_students['name'].tolist()
         usernames = data_frame_students['username'].tolist()
@@ -51,7 +45,7 @@ class CreateStudentsView(APIView):
 
 
         for i in range(length_student):
-            Student.objects.create(username=usernames[i], email=emails[i], name=names[i], departmentCourse=codCareer)
+            obj, _ = Student.objects.get_or_create(username=usernames[i], email=emails[i], name=names[i], departmentCourse=codCareer)
 
         # Path to temp file
         tmp_file = os.path.join(settings.MEDIA_ROOT, path)

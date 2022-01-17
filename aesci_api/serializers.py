@@ -25,6 +25,7 @@ class EvaluationAssignmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class GroupCoSerializer(serializers.ModelSerializer):
+    course = CourseSerializer()
     class Meta:
         model = GroupCo
         fields = '__all__'
@@ -50,6 +51,7 @@ class IndicatorGroupSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 class IndicatorAssignmentSerializer(serializers.ModelSerializer):
+    evaluation = EvaluationAssignmentSerializer()
     class Meta:
         model = IndicatorAssignment
         fields = '__all__'

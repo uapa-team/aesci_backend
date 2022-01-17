@@ -27,11 +27,9 @@ class UploadStudentsView(APIView):
         
         # Filter by course
         df_course_filtered = data_frame_courses[data_frame_courses['COD_ASIGNATURA']==str(cod_asignatura)]
-        print(df_course_filtered)
 
         # Split email to username
         df_course_filtered['CORREO'] = df_course_filtered['CORREO'].apply(lambda x: x.split('@')[0])
-        print(df_course_filtered)
 
         # Take amount of groups in course
         length_group = len(pandas.unique(df_course_filtered['GRUPO_ASIGNATURA']))

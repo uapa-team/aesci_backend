@@ -66,7 +66,6 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
             file1.SetContentFile(path)
             file1.Upload()
             
-            print(file1['id'])
             links.append(file1['id'])
             # Remove file from storage
             os.remove(tmp_file)
@@ -75,14 +74,16 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
         partial = kwargs.pop('partial', False)
         
         # Get object with pk
-        instance = self.get_object()
+        instance = AssignmentStudent.objects.get(pk=kwargs['pk'])
 
         # Merge old links with new ones
         # data = instance.link + request.data['link']
-        data = instance.link + links
+        if instance.link is None:
+            data = links
+        else:
+            data = instance.link + links
         data = { "link":data }
         
-        print(data)
         # Set up serializer
         serializer = self.get_serializer(instance, data, partial=partial)
         serializer.is_valid(raise_exception=True)
