@@ -10,6 +10,7 @@ class AssignmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AssignmentStudentSerializer(serializers.ModelSerializer):
+    Assignment = AssignmentSerializer()
     class Meta:
         model = AssignmentStudent
         fields = '__all__'
