@@ -9,9 +9,15 @@ class IndicatorGroupViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows admin to create indicator group.
     """
-    queryset = IndicatorGroup.objects.all()
     serializer_class = IndicatorGroupSerializer
     permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self, pk=None):
+        if IndicatorGroup.objects.filter(numGroup=self.request.query_params["numgroup"]).exists():
+            # Return assignments related to Teacher
+            return IndicatorGroup.objects.all().filter(numGroup=self.request.query_params["numgroup"])
+        else:
+            return None
 
     def create(self, request):
         indicators = request.data["performanceIndicator"]

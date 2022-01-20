@@ -118,7 +118,7 @@ class StudentOutcome(models.Model):
         return self.description
 
 class Assignment(models.Model):
-    idAssignment = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     nameAssignment = models.CharField(max_length = 60)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
@@ -191,10 +191,10 @@ class IndicatorGroup(models.Model):
 
 class IndicatorAssignment(models.Model):
     indicatorGroup = models.ForeignKey(IndicatorGroup, on_delete=models.CASCADE)
-    homework = models.ForeignKey(AssignmentStudent, on_delete=models.CASCADE)
-    def __str__(self):
-        """String for representing the Model object."""
-        return f"{self.indicatorGroup.performanceIndicator.description} - {self.homework.GroupStudent.username}"   
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    # def __str__(self):
+    #     """String for representing the Model object."""
+    #     return f"{self.indicatorGroup.performanceIndicator.description} - {self.assignment.GroupStudent.username}"   
 
 class IndicatorMeasure(models.Model):
     performanceIndicator = models.ForeignKey(PerformanceIndicator, on_delete=models.CASCADE)

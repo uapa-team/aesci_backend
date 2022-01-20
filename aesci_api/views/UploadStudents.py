@@ -44,7 +44,6 @@ class UploadStudentsView(APIView):
             for group in id_course:
                 num_group = group.id    
                 num_group_filtered = GroupCo.objects.get(id =num_group)
-                print(num_group_filtered)
             for student in groups[i]:
                 student_filtered = Student.objects.get(username=student)
                 GroupStudent.objects.create(numGroup=num_group_filtered, username=student_filtered)

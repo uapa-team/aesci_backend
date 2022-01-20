@@ -46,21 +46,44 @@ class IndicatorMeasureSerializer(serializers.ModelSerializer):
         model = IndicatorMeasure
         fields = '__all__'
 
+class PerformanceIndicatorSerializer(serializers.ModelSerializer):
+    # measures = IndicatorMeasureSerializer(many=True)    
+    class Meta:
+        model = PerformanceIndicator
+        fields = ['id','codePI','description','codeSO']
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        levels = IndicatorMeasure.objects.filter(performanceIndicator=instance.id)
+        arr_levels = levels.values_list()
+        final_levels = []
+
+        # Get dict from indicators' measure 
+        for element in arr_levels:
+            level_element = {'id':element[0],
+                'codeMeasure':element[1],
+                'description':element[2],
+                'performanceIndicator':element[3]
+            }
+            final_levels.append(level_element)
+        
+        # Add array of measures to response
+        representation['levels'] = final_levels 
+        return representation
+
 class IndicatorGroupSerializer(serializers.ModelSerializer):
+    performanceIndicator = PerformanceIndicatorSerializer()
     class Meta:
         model = IndicatorGroup
         fields = '__all__'
         
 class IndicatorAssignmentSerializer(serializers.ModelSerializer):
-    evaluation = EvaluationAssignmentSerializer()
+    # assignment = AssignmentSerializer()
+    indicatorGroup = IndicatorGroupSerializer()
     class Meta:
         model = IndicatorAssignment
         fields = '__all__'
 
-class PerformanceIndicatorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PerformanceIndicator
-        fields = '__all__'
 
 class RubricSerializer(serializers.ModelSerializer):
     class Meta:

@@ -8,7 +8,6 @@ class GroupCoViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows admin to create groups.
     """
-    # queryset = GroupCo.objects.all()
     serializer_class = GroupCoSerializer
     permission_classes = [permissions.IsAuthenticated]
 

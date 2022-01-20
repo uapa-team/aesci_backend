@@ -9,14 +9,18 @@ class IndicatorAssignmentViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows admin to create indicator assignment.
     """
-    queryset = IndicatorAssignment.objects.all()
     serializer_class = IndicatorAssignmentSerializer
     permission_classes = [permissions.AllowAny]
 
+    def get_queryset(self, pk=None):
+        if IndicatorAssignment.objects.filter(assignment=self.request.query_params["assignment"]).exists():
+            return IndicatorAssignment.objects.filter(assignment=self.request.query_params["assignment"])
+        else:
+            return None 
 
     def create(self, request):
         indicators = request.data["indicators"]
-        homework = request.data["homework"]
+        assignment = request.data["assignment"]
 
         # data validated 
         data = []
@@ -30,8 +34,8 @@ class IndicatorAssignmentViewSet(viewsets.ModelViewSet):
 
             data.append(validatedIndicator.id)
 
-        # Save indicators for each homework
+        # Save indicators for each assignment
         for indicator in data:  
-            IndicatorAssignment.objects.create(homework_id = homework, indicatorGroup_id = indicator)
+            IndicatorAssignment.objects.create(assignment_id = assignment, indicatorGroup_id = indicator)
 
         return Response( status=status.HTTP_200_OK)
