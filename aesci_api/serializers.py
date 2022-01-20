@@ -4,7 +4,26 @@ from django.contrib.auth.models import User, Group
 from .models import * 
 
 
+
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = '__all__'
+        
+class GroupCoSerializer(serializers.ModelSerializer):
+    course = CourseSerializer()
+    class Meta:
+        model = GroupCo
+        fields = '__all__'
+
+class TeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teacher
+        fields = '__all__'
+
 class AssignmentSerializer(serializers.ModelSerializer):
+    username = TeacherSerializer()
+    numGroup = GroupCoSerializer()
     class Meta:
         model = Assignment
         fields = '__all__'
@@ -15,21 +34,13 @@ class AssignmentStudentSerializer(serializers.ModelSerializer):
         model = AssignmentStudent
         fields = '__all__'
 
-class CourseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Course
-        fields = '__all__'
 
 class EvaluationAssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = EvaluationAssignment
         fields = '__all__'
 
-class GroupCoSerializer(serializers.ModelSerializer):
-    course = CourseSerializer()
-    class Meta:
-        model = GroupCo
-        fields = '__all__'
+
 
 class GroupStudentSerializer(serializers.ModelSerializer):
     class Meta:

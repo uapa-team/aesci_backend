@@ -118,7 +118,7 @@ class StudentOutcome(models.Model):
         return self.description
 
 class Assignment(models.Model):
-    id = models.AutoField(primary_key=True)
+    idAssignment = models.AutoField(primary_key=True)
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     nameAssignment = models.CharField(max_length = 60)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
