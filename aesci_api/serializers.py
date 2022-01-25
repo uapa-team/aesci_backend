@@ -11,7 +11,7 @@ class CourseSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 class GroupCoSerializer(serializers.ModelSerializer):
-    course = CourseSerializer()
+    course = CourseSerializer(read_only=True)
     class Meta:
         model = GroupCo
         fields = '__all__'
@@ -22,14 +22,14 @@ class TeacherSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AssignmentSerializer(serializers.ModelSerializer):
-    username = TeacherSerializer()
-    numGroup = GroupCoSerializer()
+    username = TeacherSerializer(read_only=True)
+    numGroup = GroupCoSerializer(read_only=True)
     class Meta:
         model = Assignment
         fields = '__all__'
 
 class AssignmentStudentSerializer(serializers.ModelSerializer):
-    Assignment = AssignmentSerializer()
+    Assignment = AssignmentSerializer(read_only=True)
     class Meta:
         model = AssignmentStudent
         fields = '__all__'

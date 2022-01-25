@@ -218,6 +218,7 @@ class AutoEvaluationCourse(models.Model):
 
 class EvaluationAssignment(models.Model):
     indicatorAssignment = models.ForeignKey(IndicatorAssignment, on_delete=models.CASCADE)
+    assignmentStudent = models.ForeignKey(AssignmentStudent, on_delete=models.CASCADE, default=1)
     qualifier = models.CharField(max_length = 60)
     documentAttached = models.CharField(max_length=200, null=True)
     evaluationType = models.CharField(
