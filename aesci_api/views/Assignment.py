@@ -16,7 +16,5 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     def get_queryset(self, pk=None):
         if Teacher.objects.filter(username=self.request.query_params["username"]).exists():
             # Return assignments related to Teacher
-            return Assignment.objects.all().filter(username=self.request.query_params["username"])
-        elif Student.objects.filter(username=self.request.query_params["username"]).exists():
-            print( )
+            return Assignment.objects.filter(username=self.request.query_params["username"])
         return Assignment.objects.all() 

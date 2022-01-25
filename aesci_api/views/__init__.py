@@ -1,5 +1,6 @@
 from .Assignment import *
 from .AssignmentStudent import *
+from .AssignmentGroup import *
 from .Courses import *
 from .EvaluationAssignment import *
 from .Groups import *

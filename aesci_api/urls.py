@@ -27,6 +27,7 @@ router.register(r'evaluationassignments', EvaluationAssignmentViewSet, basename=
 urlpatterns = [
     path('', include(router.urls)),
     path('login/', LoginView.as_view()),
+    path('assignmentgroups/', AssignmentGroupView.as_view()),
     path('uploadstudents/', UploadStudentsView.as_view()),
     path('createstudents/', CreateStudentsView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
