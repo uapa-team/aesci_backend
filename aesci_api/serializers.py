@@ -11,10 +11,14 @@ class CourseSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 class GroupCoSerializer(serializers.ModelSerializer):
-    course = CourseSerializer(read_only=True)
     class Meta:
         model = GroupCo
         fields = '__all__'
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response["course"] = CourseSerializer(instance.course).data
+        return response
 
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,25 +26,31 @@ class TeacherSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AssignmentSerializer(serializers.ModelSerializer):
-    username = TeacherSerializer(read_only=True)
-    numGroup = GroupCoSerializer(read_only=True)
     class Meta:
         model = Assignment
         fields = '__all__'
 
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response["username"] = TeacherSerializer(instance.username).data
+        response["numGroup"] = GroupCoSerializer(instance.numGroup).data
+        return response
+
 class AssignmentStudentSerializer(serializers.ModelSerializer):
-    Assignment = AssignmentSerializer(read_only=True)
     class Meta:
         model = AssignmentStudent
         fields = '__all__'
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response["Assignment"] = AssignmentSerializer(instance.assignment).data
+        return response
 
 
 class EvaluationAssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = EvaluationAssignment
         fields = '__all__'
-
-
 
 class GroupStudentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -58,7 +68,6 @@ class IndicatorMeasureSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PerformanceIndicatorSerializer(serializers.ModelSerializer):
-    # measures = IndicatorMeasureSerializer(many=True)    
     class Meta:
         model = PerformanceIndicator
         fields = ['id','codePI','description','codeSO']
@@ -83,17 +92,26 @@ class PerformanceIndicatorSerializer(serializers.ModelSerializer):
         return representation
 
 class IndicatorGroupSerializer(serializers.ModelSerializer):
-    performanceIndicator = PerformanceIndicatorSerializer()
     class Meta:
         model = IndicatorGroup
         fields = '__all__'
-        
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response["performanceIndicator"] = PerformanceIndicatorSerializer(instance.performanceIndicator).data
+        return response
+
+
 class IndicatorAssignmentSerializer(serializers.ModelSerializer):
     # assignment = AssignmentSerializer()
-    indicatorGroup = IndicatorGroupSerializer()
     class Meta:
         model = IndicatorAssignment
         fields = '__all__'
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response["indicatorGroup"] = IndicatorGroupSerializer(instance.indicatorGroup).data
+        return response
 
 
 class RubricSerializer(serializers.ModelSerializer):
