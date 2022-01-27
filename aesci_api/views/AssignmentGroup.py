@@ -23,8 +23,11 @@ class AssignmentGroupView(APIView):
 
             # Build dict with assignments group by course
             for element in query_result:
-                if res.get(element[0]) is None:
-                    res[element[0]] = []
+                cursor.execute(f'SELECT "nameCourse" FROM aesci_api_course WHERE "codeCourse" = \'{element[0]}\' ')
+                result = cursor.fetchone()
+                print(result[0])
+                if res.get(result[0]) is None:
+                    res[result[0]] = []
                     aux = {}
                     aux['numGroup'] = element[1]
                     aux['username'] = element[2]
@@ -32,7 +35,7 @@ class AssignmentGroupView(APIView):
                     aux['name'] = element[4]
                     aux['description'] = element[5]
                     aux['idAssignment'] = element[6]
-                    res[element[0]].append(aux)
+                    res[result[0]].append(aux)
                 else:
                     aux = {}
                     aux['numGroup'] = element[1]
@@ -41,7 +44,7 @@ class AssignmentGroupView(APIView):
                     aux['name'] = element[4]
                     aux['description'] = element[5]
                     aux['idAssignment'] = element[6]
-                    res[element[0]].append(aux)
+                    res[result[0]].append(aux)
                     
         return Response( res, status=status.HTTP_200_OK)
 

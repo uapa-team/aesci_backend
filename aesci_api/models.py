@@ -124,7 +124,8 @@ class Assignment(models.Model):
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
     dateAssignment = models.DateTimeField(default=now)
     dateLimitAssignment = models.DateTimeField(default=now)
-    description = models.TextField()    
+    description = models.TextField()
+    link = models.CharField(max_length=200, default='')
 
     def __str__(self):
         """String for representing the Model object."""

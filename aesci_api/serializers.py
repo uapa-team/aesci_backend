@@ -43,7 +43,7 @@ class AssignmentStudentSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response["Assignment"] = AssignmentSerializer(instance.assignment).data
+        response["Assignment"] = AssignmentSerializer(instance.Assignment).data
         return response
 
 
@@ -111,6 +111,7 @@ class IndicatorAssignmentSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response["indicatorGroup"] = IndicatorGroupSerializer(instance.indicatorGroup).data
+        response["assignment"] = AssignmentSerializer(instance.assignment).data
         return response
 
 
