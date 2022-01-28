@@ -45,7 +45,9 @@ class AssignmentGroupView(APIView):
                     aux['description'] = element[5]
                     aux['idAssignment'] = element[6]
                     res[result[0]].append(aux)
-                    
+            
+            res = list(res.items())
+
         return Response( res, status=status.HTTP_200_OK)
 
 
