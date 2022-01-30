@@ -125,7 +125,11 @@ class Assignment(models.Model):
     dateAssignment = models.DateTimeField(default=now)
     dateLimitAssignment = models.DateTimeField(default=now)
     description = models.TextField()
-    link = models.CharField(max_length=200, default='', null=True)
+    link = ArrayField(
+            models.CharField(max_length=200),
+            size=2,
+            null=True
+        )
 
     def __str__(self):
         """String for representing the Model object."""
