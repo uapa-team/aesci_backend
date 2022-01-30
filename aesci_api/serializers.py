@@ -32,7 +32,7 @@ class AssignmentSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response["username"] = TeacherSerializer(instance.username).data
+        response["usernameTeacher"] = TeacherSerializer(instance.usernameTeacher).data
         response["numGroup"] = GroupCoSerializer(instance.numGroup).data
         return response
 

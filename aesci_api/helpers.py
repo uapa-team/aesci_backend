@@ -148,10 +148,10 @@ CARRER_CHOICES = (
 
 # Indicators' measures 
 MEASURES = [
-        ("1", "Beginner"),
-        ("2", "Apprentice"),
-        ("3", "Competent"),
-        ("4", "Expert"),
+        (1, "Beginner"),
+        (2, "Apprentice"),
+        (3, "Competent"),
+        (4, "Expert"),
     ]
 
 

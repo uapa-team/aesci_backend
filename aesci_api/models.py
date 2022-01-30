@@ -119,13 +119,13 @@ class StudentOutcome(models.Model):
 
 class Assignment(models.Model):
     idAssignment = models.AutoField(primary_key=True)
-    username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    usernameTeacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     nameAssignment = models.CharField(max_length = 60)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
     dateAssignment = models.DateTimeField(default=now)
     dateLimitAssignment = models.DateTimeField(default=now)
     description = models.TextField()
-    link = models.CharField(max_length=200, default='')
+    link = models.CharField(max_length=200, default='', null=True)
 
     def __str__(self):
         """String for representing the Model object."""
@@ -193,14 +193,13 @@ class IndicatorGroup(models.Model):
 class IndicatorAssignment(models.Model):
     indicatorGroup = models.ForeignKey(IndicatorGroup, on_delete=models.CASCADE)
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
-    # def __str__(self):
-    #     """String for representing the Model object."""
-    #     return f"{self.indicatorGroup.performanceIndicator.description} - {self.assignment.GroupStudent.username}"   
+    def __str__(self):
+        """String for representing the Model object."""
+        return f"{self.indicatorGroup.performanceIndicator.description}"   
 
 class IndicatorMeasure(models.Model):
     performanceIndicator = models.ForeignKey(PerformanceIndicator, on_delete=models.CASCADE)
-    codeMeasure = models.CharField(
-        max_length=1,
+    codeMeasure = models.IntegerField(
         choices=MEASURES,
     )
     description = models.TextField()
