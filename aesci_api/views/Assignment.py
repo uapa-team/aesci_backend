@@ -28,7 +28,21 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         return Assignment.objects.all() 
 
     def update(self, request, *args, **kwargs):
+
+        # Get object with pk
+        instance = self.get_object()
+
+        #print(request.data["nameAssignment"])
+
+        name = request.data["nameAssignment"]
+        date = request.data["dateAssignment"]
+        dateLimit = request.data["dateLimitAssignment"]
+        description = request.data["description"]
+        numGroup = request.data["numGroup_id"]
+        teacher = request.data["usernameTeacher_id"]
         files = request.FILES.getlist('file')
+
+        
         links = []
 
         for fil in files:
@@ -61,19 +75,26 @@ class AssignmentViewSet(viewsets.ModelViewSet):
             # Remove file from storage
             os.remove(tmp_file)
 
+
+        
         # Get partial value
         partial = kwargs.pop('partial', False)
         
-        # Get object with pk
-        instance = self.get_object()
 
         # Merge old links with new ones
         # data = instance.link + request.data['link']
+
         if instance.link is None:
-            data = links
+            fileData = links
         else:
-            data = instance.link + links
-        data = { "link":data }
+            fileData = instance.link + links
+
+        if links == []:
+            data = {"usernameTeacher":teacher,"nameAssignment":name,"numGroup":numGroup,"dateAssignment":date,
+            "dateLimitAssignment":dateLimit,"description":description }
+        else:
+            data = {"usernameTeacher":teacher,"nameAssignment":name,"numGroup":numGroup,"dateAssignment":date,
+            "dateLimitAssignment":dateLimit,"description":description ,"link":fileData }
         
         #print(data)
         # Set up serializer
