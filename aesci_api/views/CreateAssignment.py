@@ -13,11 +13,13 @@ from rest_framework.views import APIView
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
-from ..models import Assignment, Teacher, GroupCo, IndicatorAssignment
+from ..models import Assignment, Teacher, GroupCo, IndicatorAssignment, IndicatorGroup
 
 class CreateAssignmentView(APIView):
 
     def post(self, request, *args, **kwargs):
+
+        #Get all the data from the request
 
         name = request.data["nameAssignment"]
         date = request.data["dateAssignment"]
@@ -26,11 +28,14 @@ class CreateAssignmentView(APIView):
         numGroup = request.data["numGroup_id"]
         teacher = request.data["usernameTeacher_id"]
 
-    #    indicators = request.data["idIndicators"]
+        indicators = request.data["idIndicators"]
+        indicatorsList = list(indicators.split(","))
         
         files = request.FILES.getlist('file')
         
         links = []
+
+        #Upload files to Google Drive
 
         for fil in files:
             path = default_storage.save("tmp", ContentFile(fil.read()))
@@ -61,24 +66,31 @@ class CreateAssignmentView(APIView):
             links.append(file1['id'])
             # Remove file from storage
             os.remove(tmp_file)
+
+        #Get teacher and group objects to create assignment instance later
         
         teacherObject = Teacher.objects.get(username=teacher)
         groupObject = GroupCo.objects.get(id=numGroup)
 
-    #    indicatorGroup_list = []
+        #Conusult the database
+
+        indicatorGroup_list = []
 
         with connection.cursor() as cursor:
+            #Get the greatest idAssignment to assign the next number to new assignment
             query='SELECT "idAssignment" FROM aesci_api_assignment WHERE "idAssignment" = (SELECT max("idAssignment") from aesci_api_assignment)'
             cursor.execute(query)
             result=cursor.fetchone()
             print(result)
-    #        lenght_indicators = len(indicators)
-    #        for i in range(lenght_indicators)
-    #            query2=f'SELECT id FROM aesci_api_indicatorgroup WHERE "performanceIndicator_id" = \'{indicators[i]}\' and "numGroup_id" = \'{numGroup}\''
-    #            cursor.execute(query2)
-    #            result2 = cursor.fetchone()
-    #            indicatorGroup_list.append(result2)
+            #Get the indicatorGroup id with the group and indicators ids
+            for i in indicatorsList:
+                query2=f'SELECT id FROM aesci_api_indicatorgroup WHERE "performanceIndicator_id" = \'{i}\' and "numGroup_id" = \'{numGroup}\''
+                cursor.execute(query2)
+                result2 = cursor.fetchone()
+                indicatorGroup_list.append(result2)
             
+        #Create the assignment object in database
+        
         if links == []:
             obj, _ = Assignment.objects.get_or_create(idAssignment=result[0] + 1,usernameTeacher=teacherObject, nameAssignment=name,
          numGroup=groupObject, dateAssignment=date, dateLimitAssignment=dateLimit, description=description)
@@ -86,8 +98,13 @@ class CreateAssignmentView(APIView):
             obj, _ = Assignment.objects.get_or_create(idAssignment=result[0] + 1 ,usernameTeacher=teacherObject, nameAssignment=name,
          numGroup=groupObject, dateAssignment=date, dateLimitAssignment=dateLimit, description=description, link=links)
         
-    #    for element in indicatorGroup_list:
-    #        obj, _ = IndicatorAssignment.objects.get_or_create(indicatorGroup=element,assignment=result[0] + 1)
+        #Create the indicatorAssignment objects in database
+
+        assignmentObject = Assignment.objects.get(idAssignment=result[0] + 1)
+
+        for element in indicatorGroup_list:
+            indicatorGroupObject = IndicatorGroup.objects.get(id=element[0])
+            obj, _ = IndicatorAssignment.objects.get_or_create(indicatorGroup=indicatorGroupObject,assignment=assignmentObject)
 
         return Response("Tarea creada exitosamente", status=status.HTTP_200_OK)
         
