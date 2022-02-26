@@ -124,7 +124,7 @@ class Assignment(models.Model):
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
     dateAssignment = models.DateTimeField(default=now)
     dateLimitAssignment = models.DateTimeField(default=now)
-    description = models.TextField()
+    description = models.TextField()	
     link = ArrayField(
             models.CharField(max_length=200),
             size=2,

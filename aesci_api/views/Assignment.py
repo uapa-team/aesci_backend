@@ -43,7 +43,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
                 gauth.Refresh()
             else: 
                 gauth.Authorize()
-
+            
             drive = GoogleDrive(gauth)
 
             # Set up folder ID 
