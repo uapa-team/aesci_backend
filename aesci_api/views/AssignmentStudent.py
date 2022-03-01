@@ -41,54 +41,59 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
         files = request.FILES.getlist('file')
         links = []
 
-        for fil in files:
-            path = default_storage.save("tmp", ContentFile(fil.read()))
-
-            gauth = GoogleAuth()
-            gauth.LoadCredentialsFile("./aesci_api/views/credentials.json")
-            if gauth.credentials is None:
-                # Authenticate if they're not there
-                gauth.LocalWebserverAuth()
-            elif gauth.access_token_expired:
-                gauth.Refresh()
-            else: 
-                gauth.Authorize()
-
-            drive = GoogleDrive(gauth)
-
-            # Set up folder ID 
-            studentFiles = os.environ.get('STUDENT_FOLDER')
-            # Path to temp file
-            tmp_file = os.path.join(settings.MEDIA_ROOT, path)
-
-            # Create File inside folder studentFiles
-            file1 = drive.CreateFile({'parents': [{'id': studentFiles}]})
-            file1.SetContentFile(path)
-            file1.Upload()
-            
-            links.append(file1['id'])
-            # Remove file from storage
-            os.remove(tmp_file)
-
-        # Get partial value
-        partial = kwargs.pop('partial', False)
-        
         # Get object with pk
         instance = AssignmentStudent.objects.get(pk=kwargs['pk'])
 
-        # Merge old links with new ones
-        # data = instance.link + request.data['link']
-        if instance.link is None:
-            data = links
-        else:
-            data = instance.link + links
-        data = { "link":data }
-        
-        # Set up serializer
-        serializer = self.get_serializer(instance, data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        
-        # Execute serializer
-        self.perform_update(serializer)
+        if len(instance.link)<=8:
 
-        return Response(serializer.data)
+            for fil in files:
+                path = default_storage.save("tmp", ContentFile(fil.read()))
+
+                gauth = GoogleAuth()
+                gauth.LoadCredentialsFile("./aesci_api/views/credentials.json")
+                if gauth.credentials is None:
+                    # Authenticate if they're not there
+                    gauth.LocalWebserverAuth()
+                elif gauth.access_token_expired:
+                    gauth.Refresh()
+                else: 
+                    gauth.Authorize()
+
+                drive = GoogleDrive(gauth)
+
+                # Set up folder ID 
+                studentFiles = os.environ.get('STUDENT_FOLDER')
+                # Path to temp file
+                tmp_file = os.path.join(settings.MEDIA_ROOT, path)
+
+                # Create File inside folder studentFiles
+                file1 = drive.CreateFile({'parents': [{'id': studentFiles}]})
+                file1.SetContentFile(path)
+                file1.Upload()
+
+                links.append(file1['id'])
+                # Remove file from storage
+                os.remove(tmp_file)
+
+            # Get partial value
+            partial = kwargs.pop('partial', False)
+
+
+            # Merge old links with new ones
+            # data = instance.link + request.data['link']
+            if instance.link is None:
+                data = links
+            else:
+                data = instance.link + links
+            data = { "link":data }
+        
+            # Set up serializer
+            serializer = self.get_serializer(instance, data, partial=partial)
+            serializer.is_valid(raise_exception=True)
+
+            # Execute serializer
+            self.perform_update(serializer)
+
+            return Response(serializer.data)
+        else:
+            return Response({"Error": "Limite excedido"}, status=status.HTTP_401_UNAUTHORIZED)
