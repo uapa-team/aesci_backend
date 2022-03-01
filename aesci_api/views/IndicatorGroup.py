@@ -29,11 +29,11 @@ class IndicatorGroupViewSet(viewsets.ModelViewSet):
         # Search and store valid indicators
         for indicator in indicators:
             try:
-                validatedIndicator = PerformanceIndicator.objects.get( id = indicator)
+                validatedIndicator = PerformanceIndicator.objects.get( idPerformanceIndicator = indicator)
             except:
                 continue
 
-            data.append(validatedIndicator.id)
+            data.append(validatedIndicator.idPerformanceIndicator)
 
         for group in numGroup:
             # Save indicators for each group

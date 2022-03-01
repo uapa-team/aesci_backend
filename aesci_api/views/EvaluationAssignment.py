@@ -26,7 +26,7 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
         documentsAttached = self.request.FILES.get('documentAttached')
 		#documentsAttached = self.request.data["documentAttached"]
         grade = self.request.data["grade"]
-        indicatorAssignment = IndicatorAssignment.objects.get(id = self.request.data["indicatorAssignment_id"])
+        indicatorAssignment = IndicatorAssignment.objects.get(idIndicatorAssignment = self.request.data["indicatorAssignment_id"])
         evaluationType = self.request.data["evaluationType"]
         qualifier = self.request.data["qualifier"]
 

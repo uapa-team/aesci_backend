@@ -25,7 +25,7 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
 
             print(querysetGS)
             for element in querysetGS:
-                querysetHGS = AssignmentStudent.objects.filter(GroupStudent_id=element.id)
+                querysetHGS = AssignmentStudent.objects.filter(GroupStudent_id=element.idGroupStudent)
                 for elementHGS in querysetHGS:
                     groupsList.append(elementHGS)
             

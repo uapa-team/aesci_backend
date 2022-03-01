@@ -70,17 +70,17 @@ class IndicatorMeasureSerializer(serializers.ModelSerializer):
 class PerformanceIndicatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = PerformanceIndicator
-        fields = ['id','codePI','description','codeSO']
+        fields = ['idPerformanceIndicator','codePI','description','codeSO']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        levels = IndicatorMeasure.objects.filter(performanceIndicator=instance.id)
+        levels = IndicatorMeasure.objects.filter(performanceIndicator=instance.idPerformanceIndicator)
         arr_levels = levels.values_list()
         final_levels = []
 
         # Get dict from indicators' measure 
         for element in arr_levels:
-            level_element = {'id':element[0],
+            level_element = {'idIndicatorMeasure':element[0],
                 'codeMeasure':element[1],
                 'description':element[2],
                 'performanceIndicator':element[3]

@@ -28,11 +28,11 @@ class IndicatorAssignmentViewSet(viewsets.ModelViewSet):
         # Search and store valid indicators
         for indicator in indicators:
             try:
-                validatedIndicator = IndicatorGroup.objects.get( id = indicator)
+                validatedIndicator = IndicatorGroup.objects.get( idIndicatorGroup = indicator)
             except:
                 continue
 
-            data.append(validatedIndicator.id)
+            data.append(validatedIndicator.idIndicatorGroup)
 
         # Save indicators for each assignment
         for indicator in data:  
