@@ -29,7 +29,9 @@ class CreateAssignmentView(APIView):
         teacher = request.data["usernameTeacher"]
 
         indicators = request.data["idIndicators"]
-        indicatorsList = list(indicators.split(","))
+        indicatorsString1 = indicators.replace('[','')
+        indicatorsString2 = indicatorsString1.replace(']','')
+        indicatorsList = list(indicatorsString2.split(","))
         
         files = request.FILES.getlist('file')
         
