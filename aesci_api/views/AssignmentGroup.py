@@ -13,8 +13,8 @@ class AssignmentGroupView(APIView):
         with connection.cursor() as cursor:
             query = '''SELECT DISTINCT myselect.course_id, "numGroup_id",  myselect.username_id, myselect."periodPlan", aesci_api_assignment."nameAssignment", aesci_api_assignment.description, aesci_api_assignment."idAssignment"
                 FROM aesci_api_assignment INNER JOIN
-                    (SELECT aesci_api_groupco.idGroupCo, aesci_api_groupco.course_id, aesci_api_groupco."periodPlan", aesci_api_groupco."numGroup", aesci_api_groupstudent.username_id FROM aesci_api_groupco
-                    INNER JOIN aesci_api_groupstudent on aesci_api_groupco.idGroupCo = aesci_api_groupstudent."numGroup_id" WHERE username_id = '''+ "'" + self.request.query_params["username"]+ "'" +''') AS myselect
+                    (SELECT aesci_api_groupco."idGroupCo", aesci_api_groupco."course_id", aesci_api_groupco."periodPlan", aesci_api_groupco."numGroup", aesci_api_groupstudent.username_id FROM aesci_api_groupco
+                    INNER JOIN aesci_api_groupstudent on aesci_api_groupco."idGroupCo" = aesci_api_groupstudent."numGroup_id" WHERE username_id = '''+ "'" + self.request.query_params["username"]+ "'" +''') AS myselect
                 on aesci_api_assignment."numGroup_id" = myselect."idGroupCo"'''
             cursor.execute(query)
             # Get all rows of query
