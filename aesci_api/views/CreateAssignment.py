@@ -70,7 +70,7 @@ class CreateAssignmentView(APIView):
         #Get teacher and group objects to create assignment instance later
         
         teacherObject = Teacher.objects.get(username=teacher)
-        groupObject = GroupCo.objects.get(id=numGroup)
+        groupObject = GroupCo.objects.get(idGroupCo=numGroup)
 
         #Conusult the database
 
@@ -84,7 +84,7 @@ class CreateAssignmentView(APIView):
             print(result)
             #Get the indicatorGroup id with the group and indicators ids
             for i in indicatorsList:
-                query2=f'SELECT id FROM aesci_api_indicatorgroup WHERE "performanceIndicator_id" = \'{i}\' and "numGroup_id" = \'{numGroup}\''
+                query2=f'SELECT idIndicatorGroup FROM aesci_api_indicatorgroup WHERE "performanceIndicator_id" = \'{i}\' and "numGroup_id" = \'{numGroup}\''
                 cursor.execute(query2)
                 result2 = cursor.fetchone()
                 indicatorGroup_list.append(result2)
@@ -103,7 +103,7 @@ class CreateAssignmentView(APIView):
         assignmentObject = Assignment.objects.get(idAssignment=result[0] + 1)
 
         for element in indicatorGroup_list:
-            indicatorGroupObject = IndicatorGroup.objects.get(id=element[0])
+            indicatorGroupObject = IndicatorGroup.objects.get(idIndicatorGroup=element[0])
             obj, _ = IndicatorAssignment.objects.get_or_create(indicatorGroup=indicatorGroupObject,assignment=assignmentObject)
 
         return Response("Tarea creada exitosamente", status=status.HTTP_200_OK)
