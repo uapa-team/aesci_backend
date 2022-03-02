@@ -25,8 +25,8 @@ class CreateAssignmentView(APIView):
         date = request.data["dateAssignment"]
         dateLimit = request.data["dateLimitAssignment"]
         description = request.data["description"]
-        numGroup = request.data["numGroup_id"]
-        teacher = request.data["usernameTeacher_id"]
+        numGroup = request.data["numGroup"]
+        teacher = request.data["usernameTeacher"]
 
         indicators = request.data["idIndicators"]
         indicatorsList = list(indicators.split(","))
@@ -69,6 +69,8 @@ class CreateAssignmentView(APIView):
 
         #Get teacher and group objects to create assignment instance later
         
+        print("A")
+
         teacherObject = Teacher.objects.get(username=teacher)
         groupObject = GroupCo.objects.get(idGroupCo=numGroup)
 
@@ -76,21 +78,24 @@ class CreateAssignmentView(APIView):
 
         indicatorGroup_list = []
 
+        print("B")
+
         with connection.cursor() as cursor:
             #Get the greatest idAssignment to assign the next number to new assignment
             query='SELECT "idAssignment" FROM aesci_api_assignment WHERE "idAssignment" = (SELECT max("idAssignment") from aesci_api_assignment)'
             cursor.execute(query)
             result=cursor.fetchone()
+            print("C")
             print(result)
             #Get the indicatorGroup id with the group and indicators ids
             for i in indicatorsList:
-                query2=f'SELECT idIndicatorGroup FROM aesci_api_indicatorgroup WHERE "performanceIndicator_id" = \'{i}\' and "numGroup_id" = \'{numGroup}\''
+                query2=f'SELECT "idIndicatorGroup" FROM aesci_api_indicatorgroup WHERE "performanceIndicator_id" = \'{i}\' and "numGroup_id" = \'{numGroup}\''
                 cursor.execute(query2)
                 result2 = cursor.fetchone()
                 indicatorGroup_list.append(result2)
             
         #Create the assignment object in database
-        
+        print("D")
         if links == []:
             obj, _ = Assignment.objects.get_or_create(idAssignment=result[0] + 1,usernameTeacher=teacherObject, nameAssignment=name,
          numGroup=groupObject, dateAssignment=date, dateLimitAssignment=dateLimit, description=description)
@@ -101,7 +106,7 @@ class CreateAssignmentView(APIView):
         #Create the indicatorAssignment objects in database
 
         assignmentObject = Assignment.objects.get(idAssignment=result[0] + 1)
-
+        print("E")
         for element in indicatorGroup_list:
             indicatorGroupObject = IndicatorGroup.objects.get(idIndicatorGroup=element[0])
             obj, _ = IndicatorAssignment.objects.get_or_create(indicatorGroup=indicatorGroupObject,assignment=assignmentObject)
