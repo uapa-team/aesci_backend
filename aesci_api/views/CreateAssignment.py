@@ -28,7 +28,7 @@ class CreateAssignmentView(APIView):
         numGroup = request.data["numGroup"]
         teacher = request.data["usernameTeacher"]
 
-        indicators = request.data["idIndicators"]
+        indicators =''.join(request.data["idIndicators"])
         indicatorsString1 = indicators.replace('[','')
         indicatorsString2 = indicatorsString1.replace(']','')
         indicatorsString3 = indicatorsString2.replace('"','')
