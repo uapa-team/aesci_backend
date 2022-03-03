@@ -30,7 +30,8 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
         evaluationType = self.request.data["evaluationType"]
         qualifier = self.request.data["qualifier"]
 
-        if documentsAttached is None:
+        if isNumber = "True":
+
             if float(grade) < 2.1:
                 codeMeasure = "1"
             elif float(grade) < 3.0:
@@ -40,7 +41,10 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
             else:
                 codeMeasure = "4"
 
+        if documentAttached is None:
+
             EvaluationAssignment.objects.create(qualifier= qualifier, codeMeasure=codeMeasure, grade=grade, indicatorAssignment=indicatorAssignment, evaluationType=evaluationType)
+        
         else:
             
             path = default_storage.save("tmp", ContentFile(documentsAttached.read()))
