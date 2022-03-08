@@ -22,15 +22,14 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request):
-        #print(self.request.query_params["isNumber"])
-        documentsAttached = self.request.FILES.get('documentAttached')
-		#documentsAttached = self.request.data["documentAttached"]
+        isNumber = self.request.data["isNumber"]
+        documentsAttached = self.request.FILES.get('documentAttached')		
         grade = self.request.data["grade"]
         indicatorAssignment = IndicatorAssignment.objects.get(idIndicatorAssignment = self.request.data["indicatorAssignment_id"])
         evaluationType = self.request.data["evaluationType"]
         qualifier = self.request.data["qualifier"]
 
-        if isNumber = "True":
+        if isNumber == "True":
 
             if float(grade) < 2.1:
                 codeMeasure = "1"
