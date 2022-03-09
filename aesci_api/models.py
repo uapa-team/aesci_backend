@@ -127,7 +127,7 @@ class Assignment(models.Model):
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
     dateAssignment = models.DateTimeField(default=now)
     dateLimitAssignment = models.DateTimeField(default=now)
-    description = models.TextField()
+    description = models.TextField()	
     link = ArrayField(
             models.CharField(max_length=200),
             size=2,
@@ -167,7 +167,7 @@ class AssignmentStudent(models.Model):
         return self.Assignment.nameAssignment  
 
 class ImprovementPlan(models.Model):
-    idImprovementPlan = models.AutoField(primary_key=True)    
+    idImprovementPlan = models.AutoField(primary_key=True)
     planPeriod = models.CharField(max_length = 60)
     codeResult = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
@@ -186,7 +186,7 @@ class MonitoringPlan(models.Model):
 
 class PerformanceIndicator(models.Model):
     idPerformanceIndicator = models.AutoField(primary_key=True)
-	codeSO = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
+    codeSO = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
     codePI = models.CharField(max_length=10)
     description = models.TextField()    
 
@@ -248,4 +248,3 @@ class EvaluationAssignment(models.Model):
         choices=MEASURES,
     )
     grade = models.FloatField(default=None, null=True)
-
