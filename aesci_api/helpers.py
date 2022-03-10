@@ -160,6 +160,7 @@ EVTYPES = [
         ("AUTO", "Autoevaluation"),
         ("COTE", "Coevaluation teacher"),
         ("COST", "Coevaluation student"),
+        ("EVAL", "Evaluation teacher"),
     ]
 
 
