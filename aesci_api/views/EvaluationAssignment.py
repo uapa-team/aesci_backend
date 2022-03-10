@@ -23,7 +23,7 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         isNumber = self.request.data["isNumber"]
-        documentsAttached = self.request.FILES.get('documentAttached')		
+        documentsAttached = self.request.FILES.get('documentAttached')        
         grade = self.request.data["grade"]
         indicatorAssignment = IndicatorAssignment.objects.get(idIndicatorAssignment = self.request.data["indicatorAssignment_id"])
         evaluationType = self.request.data["evaluationType"]
@@ -40,8 +40,8 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
             else:
                 codeMeasure = "4"
 
-        if documentAttached is None:
-
+        if documentsAttached is None:
+            
             EvaluationAssignment.objects.create(qualifier= qualifier, codeMeasure=codeMeasure, grade=grade, indicatorAssignment=indicatorAssignment, evaluationType=evaluationType)
         
         else:
