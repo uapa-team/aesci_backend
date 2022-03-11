@@ -19,10 +19,9 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     API endpoint that allows teachers to create assignments.
     """
     serializer_class = AssignmentSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    http_method_names = ['get', 'put', 'patch', 'head', 'options', 'trace', 'delete',]
+    permission_classes = [permissions.IsAuthenticated]    
 
-    def get_queryset(self, pk=None):
+    def get_queryset(self, pk=None):    
         if Teacher.objects.filter(username=self.request.query_params["username"]).exists():
             # Return assignments related to Teacher
             return Assignment.objects.filter(usernameTeacher=self.request.query_params["username"])
@@ -107,13 +106,8 @@ class AssignmentViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
     
-    def destroy(self, request, pk=None, *args, **kwargs):
-        print("Hola")
-        
-#        try:
-#            instance = self.get_object()
-#            instance.delete()
-#            self.perform_destroy(instance)
-#        except Http404:
-#            pass
-#        return Response(status=status.HTTP_204_NO_CONTENT)
+    def desatroy(self, request, pk=None):                   		
+        instance = self.get_object()
+        instance.delete()        
+            #self.perform_destroy(instance)        
+        return Response("Asignatura eliminada exitosamente", status=status.HTTP_200_OK)
