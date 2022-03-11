@@ -106,7 +106,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
     
-    def desatroy(self, request, pk=None):                   		
+    def destroy(self, request, pk=None):                   		
         instance = self.get_object()
         instance.delete()        
             #self.perform_destroy(instance)        
