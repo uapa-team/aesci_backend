@@ -130,7 +130,7 @@ class Assignment(models.Model):
     description = models.TextField()	
     link = ArrayField(
             models.CharField(max_length=200),
-            size=2,
+#            size=2,
             null=True
         )
 

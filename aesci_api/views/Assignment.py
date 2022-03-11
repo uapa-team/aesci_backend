@@ -20,6 +20,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     """
     serializer_class = AssignmentSerializer
     permission_classes = [permissions.IsAuthenticated]
+    http_method_names = ['get', 'put', 'patch', 'head', 'options', 'trace', 'delete',]
 
     def get_queryset(self, pk=None):
         if Teacher.objects.filter(username=self.request.query_params["username"]).exists():
@@ -70,7 +71,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
             file1.SetContentFile(path)
             file1.Upload()
             
-            print(file1['id'])
+            #print(file1['id'])
             links.append(file1['id'])
             # Remove file from storage
             os.remove(tmp_file)
@@ -105,3 +106,14 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         self.perform_update(serializer)
 
         return Response(serializer.data)
+    
+    def destroy(self, request, pk=None, *args, **kwargs):
+        print("Hola")
+        
+#        try:
+#            instance = self.get_object()
+#            instance.delete()
+#            self.perform_destroy(instance)
+#        except Http404:
+#            pass
+#        return Response(status=status.HTTP_204_NO_CONTENT)
