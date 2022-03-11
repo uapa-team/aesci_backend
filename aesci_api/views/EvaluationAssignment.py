@@ -28,7 +28,7 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
     def create(self, request):
 
         #Get data from request
-        
+
         qualifier = self.request.data["qualifier"]
         evaluationType = self.request.data["evaluationType"]
         isNumber = self.request.data["isNumber"]
@@ -75,7 +75,6 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
 
         for fil in files:
             path = default_storage.save("tmp", ContentFile(fil.read()))
-
             gauth = GoogleAuth()
             gauth.LoadCredentialsFile("./aesci_api/views/credentials.json")
             if gauth.credentials is None:
