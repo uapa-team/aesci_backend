@@ -35,6 +35,8 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
         assignment = self.request.data["assignment"]
         group = self.request.data["group"]
 
+        #Create lists for indicators, measures and grades (if they exist)
+
         indicators =''.join(request.data["indicator"])
         indicatorsString1 = indicators.replace('[','')
         indicatorsString2 = indicatorsString1.replace(']','')
@@ -47,7 +49,7 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
         measuresString2 = measuresString1.replace(']','')
         measuresString3 = measuresString2.replace('"','')
         measuresString4 = measuresString3.replace(' ','')
-        if measuresString4=='':
+        if measuresString4!='':
             measuresList = list(measuresString4.split(","))
         else:
             measuresList = []
@@ -57,8 +59,8 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
         gradesString2 = gradesString1.replace(']','')
         gradesString3 = gradesString2.replace('"','')
         gradesString4 = gradesString3.replace(' ','')
-        if gradesString4=='':
-            gradesList = list(measuresString4.split(","))
+        if gradesString4!='':
+            gradesList = list(gradesString4.split(","))
         else:
             gradesList = []
 
@@ -98,7 +100,7 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
             # Remove file from storage
             os.remove(tmp_file)
         
-        for i in range(len(indicatorsList)):
+        for i in range(0,len(indicatorsList)):
 
             #Change grade into measure if the grade is a normal number
 
@@ -121,14 +123,14 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
                 result1=cursor.fetchone()
                 print(result1)
                 query2=f'SELECT "idAssignmentStudent" FROM aesci_api_assignmentStudent WHERE "Assignment_id" = \'{assignment}\' and "GroupStudent_id" = (SELECT "idGroupStudent" FROM aesci_api_groupstudent WHERE "numGroup_id"=\'{group}\' AND "username_id"=\'{username}\')'
-                cursor.execute(query)
+                cursor.execute(query2)
                 result2=cursor.fetchone()
                 print(result2)
 
             IndicatorAssignmentObject = IndicatorAssignment.objects.get(idIndicatorAssignment=result1[0])
             AssignmentStudentObject = AssignmentStudent.objects.get(idAssignmentStudent=result2[0])
 
-            #Create EvaluationStudent objects
+            #Create EvaluationStudent objects depending if documents and grades exist
 
             if links == [] and gradesList == []:
 
@@ -146,6 +148,15 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
                     evaluationType=evaluationType,
                     codeMeasure=measuresList[i],
                     grade=gradesList[i])
+
+            elif gradesList == []:
+
+                EvaluationAssignment.objects.create(indicatorAssignment=IndicatorAssignmentObject,
+                    assignmentStudent=AssignmentStudentObject,
+                    qualifier=qualifier,
+                    evaluationType=evaluationType,
+                    codeMeasure=measuresList[i],
+                    documentAttached= links[0])
 
             else:
 
