@@ -19,9 +19,9 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     API endpoint that allows teachers to create assignments.
     """
     serializer_class = AssignmentSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]    
 
-    def get_queryset(self, pk=None):
+    def get_queryset(self, pk=None):    
         if Teacher.objects.filter(username=self.request.query_params["username"]).exists():
             # Return assignments related to Teacher
             return Assignment.objects.filter(usernameTeacher=self.request.query_params["username"])
@@ -70,7 +70,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
             file1.SetContentFile(path)
             file1.Upload()
             
-            print(file1['id'])
+            #print(file1['id'])
             links.append(file1['id'])
             # Remove file from storage
             os.remove(tmp_file)
@@ -105,3 +105,9 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         self.perform_update(serializer)
 
         return Response(serializer.data)
+    
+    def destroy(self, request, pk=None):                   		
+        instance = self.get_object()
+        instance.delete()        
+            #self.perform_destroy(instance)        
+        return Response("Asignatura eliminada exitosamente", status=status.HTTP_200_OK)
