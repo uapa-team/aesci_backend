@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions
 from rest_framework import status
 from rest_framework.response import Response
 
-from ..models import Assignment, Teacher, GroupStudent, Student, AssignmentStudent
+from ..models import Assignment, Teacher, GroupStudent, Student, AssignmentStudent, IndicatorGroup, IndicatorAssignment
 from ..serializers import AssignmentSerializer
 
 from pydrive.auth import GoogleAuth
@@ -11,6 +11,8 @@ from pydrive.drive import GoogleDrive
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
+
+from django.db import connection
 
 import os
 
@@ -30,7 +32,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
 
         # Get object with pk
-        instance = self.get_object()
+        instance = self.get_object()                
 
         #print(request.data["nameAssignment"])
 
@@ -42,6 +44,12 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         teacher = request.data["usernameTeacher_id"]
         files = request.FILES.getlist('file')
 
+        indicators =''.join(request.data["idIndicators"])
+        indicatorsString1 = indicators.replace('[','')
+        indicatorsString2 = indicatorsString1.replace(']','')
+        indicatorsString3 = indicatorsString2.replace('"','')
+        indicatorsString4 = indicatorsString3.replace(' ','')
+        indicatorsList = list(indicatorsString4.split(","))
         
         links = []
 
@@ -103,6 +111,69 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         
         # Execute serializer
         self.perform_update(serializer)
+
+        #print(instance.idAssignment)
+        idAssignmentRequest = instance.idAssignment
+
+        indicatorGroup_listCheck = []
+        checkPairs = []
+        indicatorGroup_list = []
+
+        #Check if the indicators have changed for the update
+
+        with connection.cursor() as cursor:     
+
+            #Get the indicatorAssignment id  of all tuples in IndicatorAssignment associated with the request assignment                            
+            query=f'SELECT "idIndicatorAssignment" FROM aesci_api_indicatorassignment WHERE "assignment_id" = \'{idAssignmentRequest}\''
+            cursor.execute(query)
+            currentIndicatorAssignments = cursor.fetchall()                        
+                               
+            #Get the indicatorGroup id with the group and indicators ids
+            for i in indicatorsList:
+                query2=f'SELECT "idIndicatorGroup" FROM aesci_api_indicatorgroup WHERE "performanceIndicator_id" = \'{i}\' and "numGroup_id" = \'{numGroup}\''
+                cursor.execute(query2)
+                result2 = cursor.fetchone()
+                indicatorGroup_listCheck.append(result2)                                
+
+            #Get the indicatorAssignment id  of tuples in IndicatorAssignment associated with the indicatorGroup in  indicatorGroup_listCheck
+            updateIndicatorAssignments = []
+            indicatorAssignmentsToCreate = []
+            for i in indicatorGroup_listCheck:                
+                query3=f'SELECT "idIndicatorAssignment" FROM aesci_api_indicatorassignment WHERE "assignment_id" = \'{idAssignmentRequest}\' and "indicatorGroup_id" = \'{i[0]}\''
+                cursor.execute(query3)
+                updateIndicatorAssignments.append(cursor.fetchall())                
+                #If we didn't find any match is because there is a tuple that need to be created
+                #we'll create it after delete the tuples that are not being used
+                if updateIndicatorAssignments[-1] == []:
+                    indicatorAssignmentsToCreate.append(i[0])
+
+            #Check if elements in currentIndicatorAssignments are in updateIndicatorAssignments
+            #print("Beginiiiiiiiiiiiiiing")
+            for x in currentIndicatorAssignments:
+                isCurrentValueThere = False
+                for y in updateIndicatorAssignments:
+                    #print(y)
+                    if y == []:
+                        print('this was empty')
+                    else:
+                        #print(y[0][0])
+                        if x[0] == y[0][0]:
+                            print("%i Passed!", x[0])
+                            isCurrentValueThere = True
+                            break
+                #If the value wasn't there, then will be deleted
+                if isCurrentValueThere==False:                
+                    #instance = SomeModel.objects.get(id=id)
+                    #instance.delete()
+                    print("%i is gonna be deleted", x[0])                
+                                    
+            #Create the missing tuples assignment, indicatorGroup in IndicatorAssignment
+            #Get the assignmetn with the id
+            assignmentObject = Assignment.objects.get(idAssignment=idAssignmentRequest)      
+            #Create the missing indicatorAssignment          
+            for idIndicatorGroup in indicatorAssignmentsToCreate:
+                indicatorGroupObject = IndicatorGroup.objects.get(idIndicatorGroup=idIndicatorGroup)
+                obj, _ = IndicatorAssignment.objects.get_or_create(indicatorGroup=indicatorGroupObject,assignment=assignmentObject)                
 
         return Response(serializer.data)
     
