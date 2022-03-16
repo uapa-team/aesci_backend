@@ -71,7 +71,7 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
                 file1.SetContentFile(path)
                 file1.Upload()
 
-                links.append(file1['id'])
+                links.append(file1['alternateLink'])
                 # Remove file from storage
                 os.remove(tmp_file)
 

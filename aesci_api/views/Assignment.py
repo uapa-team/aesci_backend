@@ -79,7 +79,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
             file1.Upload()
             
             #print(file1['id'])
-            links.append(file1['id'])
+            links.append(file1['alternateLink|'])
             # Remove file from storage
             os.remove(tmp_file)
 
@@ -117,7 +117,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
 
         indicatorGroup_listCheck = []
         checkPairs = []
-        indicatorGroup_list = []
+        indicatorGroup_list = []		
 
         #Check if the indicators have changed for the update
 
@@ -147,25 +147,23 @@ class AssignmentViewSet(viewsets.ModelViewSet):
                 if updateIndicatorAssignments[-1] == []:
                     indicatorAssignmentsToCreate.append(i[0])
 
-            #Check if elements in currentIndicatorAssignments are in updateIndicatorAssignments
-            #print("Beginiiiiiiiiiiiiiing")
+            #Check if elements in currentIndicatorAssignments are in updateIndicatorAssignments            
             for x in currentIndicatorAssignments:
                 isCurrentValueThere = False
                 for y in updateIndicatorAssignments:
                     #print(y)
                     if y == []:
                         print('this was empty')
-                    else:
-                        #print(y[0][0])
-                        if x[0] == y[0][0]:
-                            print("%i Passed!", x[0])
+                    else:                        
+                        if x[0] == y[0][0]:                            
                             isCurrentValueThere = True
                             break
                 #If the value wasn't there, then will be deleted
                 if isCurrentValueThere==False:                
-                    #instance = SomeModel.objects.get(id=id)
-                    #instance.delete()
-                    print("%i is gonna be deleted", x[0])                
+                    instance = IndicatorAssignment.objects.get(idIndicatorAssignment=x[0])
+                    instance.delete()                    
+					#EvluationAssignment elements with a fk correspondent to the just deleted instance
+					#will be deleted too due to CASCADE
                                     
             #Create the missing tuples assignment, indicatorGroup in IndicatorAssignment
             #Get the assignmetn with the id

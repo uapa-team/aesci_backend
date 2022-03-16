@@ -68,7 +68,8 @@ class CreateAssignmentView(APIView):
             file1.Upload()
             
             #print(file1['id'])
-            links.append(file1['id'])
+            links.append(file1['alternateLink'])
+            print(file1)
             # Remove file from storage
             os.remove(tmp_file)
 

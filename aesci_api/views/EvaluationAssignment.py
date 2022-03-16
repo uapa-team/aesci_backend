@@ -96,7 +96,7 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
             file1.Upload()
             
             print(file1['id'])
-            links.append(file1['id'])
+            links.append(file1['alternateLink'])
             # Remove file from storage
             os.remove(tmp_file)
         
