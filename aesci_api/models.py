@@ -87,7 +87,7 @@ class Course(models.Model):
         return self.nameCourse
 
 class GroupCo(models.Model):
-    idGroupCo = models.AutoField(primary_key=True)
+    #idGroupCo = models.AutoField(primary_key=True)
     numGroup = models.IntegerField(default=1)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     periodPlan = models.CharField(max_length = 60, choices = PERIODS)
@@ -101,6 +101,7 @@ class Rubric(models.Model):
     idRubric = models.AutoField(primary_key=True)
     codeRubric = models.CharField(max_length=60)
     description = models.TextField()
+    isActive = models.CharField(max_length=60,default='')
     departmentRubric = ArrayField(
             models.CharField(max_length = 60, choices = CARRER_CHOICES, default='2542'),
             size=4,
@@ -112,7 +113,7 @@ class Rubric(models.Model):
         return self.description
 
 class StudentOutcome(models.Model):
-    idStudentOutcome = models.AutoField(primary_key=True)
+    #idStudentOutcome = models.AutoField(primary_key=True)
     codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
     description = models.TextField()
     
@@ -139,7 +140,7 @@ class Assignment(models.Model):
         return self.nameAssignment
 
 class GroupStudent(models.Model):
-    idGroupStudent = models.AutoField(primary_key=True)
+    #idGroupStudent = models.AutoField(primary_key=True)
     username = models.ForeignKey(Student, on_delete=models.CASCADE)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
 
@@ -148,12 +149,12 @@ class GroupStudent(models.Model):
         return f"{self.numGroup}"  
 
 class GroupTeacher(models.Model):
-    idGroupTeacher = models.AutoField(primary_key=True)
+    #idGroupTeacher = models.AutoField(primary_key=True)
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
 
 class AssignmentStudent(models.Model):
-    idAssignmentStudent = models.AutoField(primary_key=True)
+    #idAssignmentStudent = models.AutoField(primary_key=True)
     Assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     GroupStudent = models.ForeignKey(GroupStudent, on_delete=models.CASCADE, default=None)
     link = ArrayField(
@@ -167,7 +168,7 @@ class AssignmentStudent(models.Model):
         return self.Assignment.nameAssignment  
 
 class ImprovementPlan(models.Model):
-    idImprovementPlan = models.AutoField
+    #idImprovementPlan = models.AutoField
     planPeriod = models.CharField(max_length = 60)
     codeResult = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
@@ -175,7 +176,7 @@ class ImprovementPlan(models.Model):
     analysis = models.CharField(max_length = 60)
 
 class MonitoringPlan(models.Model):
-    idMonitoringPlan = models.AutoField(primary_key=True)
+    #idMonitoringPlan = models.AutoField(primary_key=True)
     period = models.CharField(max_length=60)
     reference = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
@@ -185,7 +186,7 @@ class MonitoringPlan(models.Model):
     progress = models.CharField(max_length = 60)
 
 class PerformanceIndicator(models.Model):
-    idPerformanceIndicator = models.AutoField(primary_key=True)
+    #idPerformanceIndicator = models.AutoField(primary_key=True)
     codeSO = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
     codePI = models.CharField(max_length=10)
     description = models.TextField()    
@@ -195,7 +196,7 @@ class PerformanceIndicator(models.Model):
         return f'{self.codePI} - {self.description}' 
 
 class IndicatorGroup(models.Model):
-    idIndicatorGroup = models.AutoField(primary_key=True)
+    #idIndicatorGroup = models.AutoField(primary_key=True)
     performanceIndicator = models.ForeignKey(PerformanceIndicator, on_delete=models.CASCADE)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
 
@@ -205,7 +206,7 @@ class IndicatorGroup(models.Model):
     
 
 class IndicatorAssignment(models.Model):
-    idIndicatorAssignment = models.AutoField(primary_key=True)
+    #idIndicatorAssignment = models.AutoField(primary_key=True)
     indicatorGroup = models.ForeignKey(IndicatorGroup, on_delete=models.CASCADE)
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     def __str__(self):
@@ -213,7 +214,7 @@ class IndicatorAssignment(models.Model):
         return f"{self.indicatorGroup.performanceIndicator.description}"   
 
 class IndicatorMeasure(models.Model):
-    idIndicatorMeasure = models.AutoField(primary_key=True)
+    #idIndicatorMeasure = models.AutoField(primary_key=True)
     performanceIndicator = models.ForeignKey(PerformanceIndicator, on_delete=models.CASCADE)
     codeMeasure = models.IntegerField(
         choices=MEASURES,
@@ -226,7 +227,7 @@ class IndicatorMeasure(models.Model):
     
 
 class AutoEvaluationCourse(models.Model):
-    idAutoevaluationCourse = models.AutoField(primary_key=True)
+    #idAutoevaluationCourse = models.AutoField(primary_key=True)
     codeCourse = models.ForeignKey(Course, on_delete=models.CASCADE)
     codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
     autoPeriod = models.CharField(max_length = 60)
@@ -234,7 +235,7 @@ class AutoEvaluationCourse(models.Model):
     numberStudents = models.IntegerField()
 
 class EvaluationAssignment(models.Model):
-    idEvaluationAssignment = models.AutoField(primary_key=True)
+    #idEvaluationAssignment = models.AutoField(primary_key=True)
     indicatorAssignment = models.ForeignKey(IndicatorAssignment, on_delete=models.CASCADE)
     assignmentStudent = models.ForeignKey(AssignmentStudent, on_delete=models.CASCADE, default=1)
     qualifier = models.CharField(max_length = 60)
