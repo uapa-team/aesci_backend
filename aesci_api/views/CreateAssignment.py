@@ -64,6 +64,7 @@ class CreateAssignmentView(APIView):
 
             # Create File inside folder assignmentFiles
             file1 = drive.CreateFile({'parents': [{'id': assignmentFiles}]})
+            file1['title'] = fil.name # Change title of the file.
             file1.SetContentFile(path)
             file1.Upload()
             

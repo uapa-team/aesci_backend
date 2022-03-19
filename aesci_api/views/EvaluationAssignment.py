@@ -92,6 +92,7 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
 
             # Create File inside folder studentFiles
             file1 = drive.CreateFile({'parents': [{'id': studentFiles}]})
+            file1['title'] = fil.name # Change title of the file.			
             file1.SetContentFile(path)
             file1.Upload()
             

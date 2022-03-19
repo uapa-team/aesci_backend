@@ -87,7 +87,7 @@ class Course(models.Model):
         return self.nameCourse
 
 class GroupCo(models.Model):
-    #idGroupCo = models.AutoField(primary_key=True)
+    idGroupCo = models.AutoField(primary_key=True)
     numGroup = models.IntegerField(default=1)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     periodPlan = models.CharField(max_length = 60, choices = PERIODS)
@@ -196,7 +196,7 @@ class PerformanceIndicator(models.Model):
         return f'{self.codePI} - {self.description}' 
 
 class IndicatorGroup(models.Model):
-    #idIndicatorGroup = models.AutoField(primary_key=True)
+    idIndicatorGroup = models.AutoField(primary_key=True)
     performanceIndicator = models.ForeignKey(PerformanceIndicator, on_delete=models.CASCADE)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
 
@@ -206,7 +206,7 @@ class IndicatorGroup(models.Model):
     
 
 class IndicatorAssignment(models.Model):
-    #idIndicatorAssignment = models.AutoField(primary_key=True)
+    idIndicatorAssignment = models.AutoField(primary_key=True)
     indicatorGroup = models.ForeignKey(IndicatorGroup, on_delete=models.CASCADE)
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     def __str__(self):

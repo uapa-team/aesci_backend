@@ -42,7 +42,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         description = request.data["description"]
         numGroup = request.data["numGroup_id"]
         teacher = request.data["usernameTeacher_id"]
-        files = request.FILES.getlist('file')
+        files = request.FILES.getlist('file')		
 
         indicators =''.join(request.data["idIndicators"])
         indicatorsString1 = indicators.replace('[','')
@@ -50,9 +50,16 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         indicatorsString3 = indicatorsString2.replace('"','')
         indicatorsString4 = indicatorsString3.replace(' ','')
         indicatorsList = list(indicatorsString4.split(","))
+
+        currentLinks =''.join(request.data["links"])
+        linksString1 = currentLinks.replace('[','')
+        linksString2 = linksString1.replace(']','')
+        linksString3 = linksString2.replace('"','')
+        linksString4 = linksString3.replace(' ','')
+        currentLinksList = list(linksString4.split(","))
         
         links = []
-
+        
         for fil in files:
             path = default_storage.save("tmp", ContentFile(fil.read()))
 
@@ -75,11 +82,11 @@ class AssignmentViewSet(viewsets.ModelViewSet):
 
             # Create File inside folder studentFiles
             file1 = drive.CreateFile({'parents': [{'id': studentFiles}]})
+            file1['title'] = fil.name # Change title of the file.
             file1.SetContentFile(path)
             file1.Upload()
-            
-            #print(file1['id'])
-            links.append(file1['alternateLink|'])
+                        
+            links.append(file1['alternateLink'])
             # Remove file from storage
             os.remove(tmp_file)
 
@@ -87,22 +94,40 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         
         # Get partial value
         partial = kwargs.pop('partial', False)
-        
 
         # Merge old links with new ones
         # data = instance.link + request.data['link']
 
+	#Don't delete this comments, they'll be used later to delete the file from drive to
+#        if instance.link is None:
+#            pass
+#        else:
+#            #Evaluate if a file from assignment has been removed
+#            for y in currentLinksList:
+#                isTheFileStillThere = False
+#                for x in instance.link:
+#                    if x == y:
+#                        isTheFileStillThere = True                
+#                if isTheFileStillThere == False:
+#                    print("%s is gonna be deleted", y) 
+#                    currentLinksList.remove(y)
+
+        fileData = []
         if instance.link is None:
             fileData = links
         else:
-            fileData = instance.link + links
+            fileData = currentLinksList + links     
 
         if links == []:
             data = {"usernameTeacher":teacher,"nameAssignment":name,"numGroup":numGroup,"dateAssignment":date,
             "dateLimitAssignment":dateLimit,"description":description }
+            print("xd")
+            print(fileData)
         else:
             data = {"usernameTeacher":teacher,"nameAssignment":name,"numGroup":numGroup,"dateAssignment":date,
             "dateLimitAssignment":dateLimit,"description":description ,"link":fileData }
+            print("xd")
+            print(fileData)
         
         #print(data)
         # Set up serializer
@@ -111,8 +136,8 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         
         # Execute serializer
         self.perform_update(serializer)
-
-        #print(instance.idAssignment)
+        
+		#Now that assginment has been updated, let's update its indicators in indicatorAssignment
         idAssignmentRequest = instance.idAssignment
 
         indicatorGroup_listCheck = []
