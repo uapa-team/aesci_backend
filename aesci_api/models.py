@@ -113,7 +113,7 @@ class Rubric(models.Model):
         return self.description
 
 class StudentOutcome(models.Model):
-    #idStudentOutcome = models.AutoField(primary_key=True)
+    idStudentOutcome = models.AutoField(primary_key=True)
     codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
     description = models.TextField()
     
