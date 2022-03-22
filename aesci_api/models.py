@@ -115,6 +115,7 @@ class Rubric(models.Model):
 class StudentOutcome(models.Model):
     idStudentOutcome = models.AutoField(primary_key=True)
     codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
+    isActive = models.CharField(max_length=60,default='')
     description = models.TextField()
     
     def __str__(self):
