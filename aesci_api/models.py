@@ -141,7 +141,7 @@ class Assignment(models.Model):
         return self.nameAssignment
 
 class GroupStudent(models.Model):
-    #idGroupStudent = models.AutoField(primary_key=True)
+    idGroupStudent = models.AutoField(primary_key=True)
     username = models.ForeignKey(Student, on_delete=models.CASCADE)
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
 
@@ -155,7 +155,7 @@ class GroupTeacher(models.Model):
     numGroup = models.ForeignKey(GroupCo, on_delete=models.CASCADE)
 
 class AssignmentStudent(models.Model):
-    #idAssignmentStudent = models.AutoField(primary_key=True)
+    idAssignmentStudent = models.AutoField(primary_key=True)
     Assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     GroupStudent = models.ForeignKey(GroupStudent, on_delete=models.CASCADE, default=None)
     link = ArrayField(
@@ -187,7 +187,7 @@ class MonitoringPlan(models.Model):
     progress = models.CharField(max_length = 60)
 
 class PerformanceIndicator(models.Model):
-    #idPerformanceIndicator = models.AutoField(primary_key=True)
+    idPerformanceIndicator = models.AutoField(primary_key=True)
     codeSO = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
     codePI = models.CharField(max_length=10)
     description = models.TextField()    
@@ -215,7 +215,7 @@ class IndicatorAssignment(models.Model):
         return f"{self.indicatorGroup.performanceIndicator.description}"   
 
 class IndicatorMeasure(models.Model):
-    #idIndicatorMeasure = models.AutoField(primary_key=True)
+    idIndicatorMeasure = models.AutoField(primary_key=True)
     performanceIndicator = models.ForeignKey(PerformanceIndicator, on_delete=models.CASCADE)
     codeMeasure = models.IntegerField(
         choices=MEASURES,
@@ -236,7 +236,7 @@ class AutoEvaluationCourse(models.Model):
     numberStudents = models.IntegerField()
 
 class EvaluationAssignment(models.Model):
-    #idEvaluationAssignment = models.AutoField(primary_key=True)
+    idEvaluationAssignment = models.AutoField(primary_key=True)
     indicatorAssignment = models.ForeignKey(IndicatorAssignment, on_delete=models.CASCADE)
     assignmentStudent = models.ForeignKey(AssignmentStudent, on_delete=models.CASCADE, default=1)
     qualifier = models.CharField(max_length = 60)

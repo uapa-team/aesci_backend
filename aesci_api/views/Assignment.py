@@ -120,13 +120,11 @@ class AssignmentViewSet(viewsets.ModelViewSet):
 
         if links == []:
             data = {"usernameTeacher":teacher,"nameAssignment":name,"numGroup":numGroup,"dateAssignment":date,
-            "dateLimitAssignment":dateLimit,"description":description }
-            print("xd")
+            "dateLimitAssignment":dateLimit,"description":description }            
             print(fileData)
         else:
             data = {"usernameTeacher":teacher,"nameAssignment":name,"numGroup":numGroup,"dateAssignment":date,
-            "dateLimitAssignment":dateLimit,"description":description ,"link":fileData }
-            print("xd")
+            "dateLimitAssignment":dateLimit,"description":description ,"link":fileData }            
             print(fileData)
         
         #print(data)
@@ -163,7 +161,9 @@ class AssignmentViewSet(viewsets.ModelViewSet):
             #Get the indicatorAssignment id  of tuples in IndicatorAssignment associated with the indicatorGroup in  indicatorGroup_listCheck
             updateIndicatorAssignments = []
             indicatorAssignmentsToCreate = []
-            for i in indicatorGroup_listCheck:                
+            for i in indicatorGroup_listCheck:          
+                print(idAssignmentRequest)
+                print(i)
                 query3=f'SELECT "idIndicatorAssignment" FROM aesci_api_indicatorassignment WHERE "assignment_id" = \'{idAssignmentRequest}\' and "indicatorGroup_id" = \'{i[0]}\''
                 cursor.execute(query3)
                 updateIndicatorAssignments.append(cursor.fetchall())                
@@ -183,11 +183,13 @@ class AssignmentViewSet(viewsets.ModelViewSet):
                         if x[0] == y[0][0]:                            
                             isCurrentValueThere = True
                             break
-                #If the value wasn't there, then will be deleted
+                #If the value wasn't there, then it will be deleted 
+				#because that means that indicator is NO LONGER related with that assignment
+				#According to the parameters sent by the request
                 if isCurrentValueThere==False:                
                     instance = IndicatorAssignment.objects.get(idIndicatorAssignment=x[0])
                     instance.delete()                    
-					#EvluationAssignment elements with a fk correspondent to the just deleted instance
+					#EvaluationAssignment elements with a fk correspondent to the just deleted instance
 					#will be deleted too due to CASCADE
                                     
             #Create the missing tuples assignment, indicatorGroup in IndicatorAssignment
@@ -204,4 +206,4 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         instance.delete()        
             #self.perform_destroy(instance)        
-        return Response("Asignatura eliminada exitosamente", status=status.HTTP_200_OK)
+        return Response("Tarea eliminada exitosamente", status=status.HTTP_200_OK)

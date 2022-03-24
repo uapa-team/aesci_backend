@@ -13,8 +13,9 @@ class IndicatorGroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self, pk=None):
+        print(self.request.query_params["numgroup"])
         if IndicatorGroup.objects.filter(numGroup=self.request.query_params["numgroup"]).exists():
-            # Return assignments related to Teacher
+            # Return assignments related to Teacher            
             return IndicatorGroup.objects.all().filter(numGroup=self.request.query_params["numgroup"])
         else:
             return None

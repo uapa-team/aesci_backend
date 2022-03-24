@@ -23,7 +23,9 @@ class LoginView(APIView):
             return Response({"Error":"Usuario o contraseña vacios"}, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
+            print(username)
             user = User.objects.get(username = username)
+
         except User.DoesNotExist:
             return Response({"Error":"El usuario no existe"}, status=status.HTTP_401_UNAUTHORIZED)
         
