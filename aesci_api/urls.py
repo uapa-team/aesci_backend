@@ -7,6 +7,7 @@ from rest_framework import routers
 
 from .views import *
 from .views import CreateAssignment
+from .views import AssignmentGroupTeacher
 
 router = routers.DefaultRouter()
 
@@ -29,6 +30,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('login/', LoginView.as_view()),
     path('assignmentgroups/', AssignmentGroupView.as_view()),
+    path('assignmentgroupsteacher/', AssignmentGroupTeacher.AssignmentGroupTeacherView.as_view()),
     path('uploadstudents/', UploadStudentsView.as_view()),
     path('createstudents/', CreateStudentsView.as_view()),
     path('createassignment/', CreateAssignment.CreateAssignmentView.as_view()),
