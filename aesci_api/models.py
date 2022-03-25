@@ -160,7 +160,7 @@ class AssignmentStudent(models.Model):
     GroupStudent = models.ForeignKey(GroupStudent, on_delete=models.CASCADE, default=None)
     link = ArrayField(
             models.CharField(max_length=200),
-            size=8,
+#            size=8,
             null=True
         )
 

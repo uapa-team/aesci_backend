@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
-from ..models import Assignment, Teacher, GroupCo, IndicatorAssignment, IndicatorGroup
+from ..models import Assignment, Teacher, GroupCo, IndicatorAssignment, IndicatorGroup, AssignmentStudent, GroupStudent
 
 class CreateAssignmentView(APIView):
 
@@ -101,6 +101,9 @@ class CreateAssignmentView(APIView):
                 result2 = cursor.fetchone()
                 indicatorGroup_list.append(result2)
             
+		#Save the idAssignment to later create the assignmentStudent tuple after creating the assignment
+        idNewAssignment = result[0] + 1
+
         #Create the assignment object in database
         #print("D")
         if links == []:
@@ -117,6 +120,41 @@ class CreateAssignmentView(APIView):
         for element in indicatorGroup_list:
             indicatorGroupObject = IndicatorGroup.objects.get(idIndicatorGroup=element[0])
             obj, _ = IndicatorAssignment.objects.get_or_create(indicatorGroup=indicatorGroupObject,assignment=assignmentObject)
+
+		#Create the assignmentStudent objects in database
+        
+        maxIdAssignmentStudent = []
+        idGroupStudent_list = []
+
+        with connection.cursor() as cursor:
+            #Get the greatest idAssignment to assign the next number to new assignment
+            query='SELECT "idAssignmentStudent" FROM aesci_api_assignmentstudent WHERE "idAssignmentStudent" = (SELECT max("idAssignmentStudent") from aesci_api_assignmentstudent)'
+            cursor.execute(query)
+            maxIdAssignmentStudent=cursor.fetchone()
+            maxIdAssignmentStudent=maxIdAssignmentStudent[0]
+            #print("F")
+            #print(maxIdAssignmentStudent)
+
+            #Get the idGroupStudent of tuples from aesci_api_groupstudent whose attribute numGroup_id has the value
+			#numGroup sent via the request 
+            
+            query2=f'SELECT "idGroupStudent" FROM aesci_api_groupstudent WHERE "numGroup_id" = \'{numGroup}\''
+            cursor.execute(query2)            
+            idGroupStudent_list = cursor.fetchall()		
+
+		#for each valua in idGroupStudent_list create a raw in the table aesci_api_assignmentstudent
+				
+        if links == []:
+            for groupStudent in idGroupStudent_list:
+                maxIdAssignmentStudent = maxIdAssignmentStudent+1				
+                groupStudent = GroupStudent.objects.get(idGroupStudent=groupStudent[0])                
+                obj, _ = AssignmentStudent.objects.get_or_create(idAssignmentStudent=maxIdAssignmentStudent+1, GroupStudent=groupStudent,Assignment=assignmentObject)
+        else:
+            for groupStudent in idGroupStudent_list:
+                maxIdAssignmentStudent = maxIdAssignmentStudent+1
+                groupStudent = GroupStudent.objects.get(idGroupStudent=groupStudent[0])                
+                obj, _ = AssignmentStudent.objects.get_or_create(idAssignmentStudent=maxIdAssignmentStudent+1, GroupStudent=groupStudent,Assignment=assignmentObject,link=links)
+        
 
         return Response("Tarea creada exitosamente", status=status.HTTP_200_OK)
         

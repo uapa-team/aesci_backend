@@ -98,7 +98,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         # Merge old links with new ones
         # data = instance.link + request.data['link']
 
-	#Don't delete this comments, they'll be used later to delete the file from drive to
+	#Don't delete this comments, they'll be used later to delete the file from drive too
 #        if instance.link is None:
 #            pass
 #        else:
@@ -118,14 +118,12 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         else:
             fileData = currentLinksList + links     
 
-        if links == []:
+        if fileData == []:
             data = {"usernameTeacher":teacher,"nameAssignment":name,"numGroup":numGroup,"dateAssignment":date,
-            "dateLimitAssignment":dateLimit,"description":description }            
-            print(fileData)
+            "dateLimitAssignment":dateLimit,"description":description }                        
         else:
             data = {"usernameTeacher":teacher,"nameAssignment":name,"numGroup":numGroup,"dateAssignment":date,
-            "dateLimitAssignment":dateLimit,"description":description ,"link":fileData }            
-            print(fileData)
+            "dateLimitAssignment":dateLimit,"description":description ,"link":fileData }                        
         
         #print(data)
         # Set up serializer
@@ -162,8 +160,8 @@ class AssignmentViewSet(viewsets.ModelViewSet):
             updateIndicatorAssignments = []
             indicatorAssignmentsToCreate = []
             for i in indicatorGroup_listCheck:          
-                print(idAssignmentRequest)
-                print(i)
+                #print(idAssignmentRequest)
+                #print(i)
                 query3=f'SELECT "idIndicatorAssignment" FROM aesci_api_indicatorassignment WHERE "assignment_id" = \'{idAssignmentRequest}\' and "indicatorGroup_id" = \'{i[0]}\''
                 cursor.execute(query3)
                 updateIndicatorAssignments.append(cursor.fetchall())                
@@ -200,10 +198,26 @@ class AssignmentViewSet(viewsets.ModelViewSet):
                 indicatorGroupObject = IndicatorGroup.objects.get(idIndicatorGroup=idIndicatorGroup)
                 obj, _ = IndicatorAssignment.objects.get_or_create(indicatorGroup=indicatorGroupObject,assignment=assignmentObject)                
 
+		#Update the assignmentStudent links of rows related with this assignment if the links have changed
+
+        indicatorsAssignments_list = []
+        with connection.cursor() as cursor:     
+
+            #Get the indicatorAssignment id  of all tuples in IndicatorAssignment associated with the request assignment                            
+            query=f'SELECT "idAssignmentStudent", "GroupStudent_id" FROM aesci_api_assignmentstudent WHERE "Assignment_id" = \'{idAssignmentRequest}\''
+            cursor.execute(query)
+            indicatorsAssignments_list = cursor.fetchall()
+
+		#Update assignmentStudent raws links
+              
+        for indicatorAssignment in indicatorsAssignments_list:
+            #data = {"Assignment":idAssignmentRequest, "GroupStudent":indicatorAssignment[1], "link":fileData }
+            AssignmentStudent.objects.filter(idAssignmentStudent=indicatorAssignment[0]).update(link=fileData)                
+
         return Response(serializer.data)
     
     def destroy(self, request, pk=None):                   		
         instance = self.get_object()
-        instance.delete()        
+        instance.delete()                	
             #self.perform_destroy(instance)        
         return Response("Tarea eliminada exitosamente", status=status.HTTP_200_OK)

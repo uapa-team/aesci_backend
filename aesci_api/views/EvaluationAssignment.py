@@ -228,6 +228,8 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
 
-
-
-
+    def destroy(self, request, pk=None):                   		
+        instance = self.get_object()
+        instance.delete()                 
+            #self.perform_destroy(instance)        
+        return Response("Calificación eliminada exitosamente", status=status.HTTP_200_OK)
