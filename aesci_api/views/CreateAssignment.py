@@ -143,18 +143,11 @@ class CreateAssignmentView(APIView):
             idGroupStudent_list = cursor.fetchall()		
 
 		#for each valua in idGroupStudent_list create a raw in the table aesci_api_assignmentstudent
-				
-        if links == []:
-            for groupStudent in idGroupStudent_list:
-                maxIdAssignmentStudent = maxIdAssignmentStudent+1				
-                groupStudent = GroupStudent.objects.get(idGroupStudent=groupStudent[0])                
-                obj, _ = AssignmentStudent.objects.get_or_create(idAssignmentStudent=maxIdAssignmentStudent+1, GroupStudent=groupStudent,Assignment=assignmentObject)
-        else:
-            for groupStudent in idGroupStudent_list:
-                maxIdAssignmentStudent = maxIdAssignmentStudent+1
-                groupStudent = GroupStudent.objects.get(idGroupStudent=groupStudent[0])                
-                obj, _ = AssignmentStudent.objects.get_or_create(idAssignmentStudent=maxIdAssignmentStudent+1, GroupStudent=groupStudent,Assignment=assignmentObject,link=links)
-        
+				        
+        for groupStudent in idGroupStudent_list:
+            maxIdAssignmentStudent = maxIdAssignmentStudent+1				
+            groupStudent = GroupStudent.objects.get(idGroupStudent=groupStudent[0])                
+            obj, _ = AssignmentStudent.objects.get_or_create(idAssignmentStudent=maxIdAssignmentStudent+1, GroupStudent=groupStudent,Assignment=assignmentObject)        
 
         return Response("Tarea creada exitosamente", status=status.HTTP_200_OK)
         

@@ -161,7 +161,8 @@ class AssignmentStudent(models.Model):
     link = ArrayField(
             models.CharField(max_length=200),
 #            size=8,
-            null=True
+            null=True,
+            blank=True
         )
 
     def __str__(self):
