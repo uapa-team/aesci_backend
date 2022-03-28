@@ -131,9 +131,10 @@ class Assignment(models.Model):
     dateLimitAssignment = models.DateTimeField(default=now)
     description = models.TextField()	
     link = ArrayField(
-            models.CharField(max_length=200),
+            models.CharField(max_length=200, blank=True),
 #            size=2,
-            null=True
+            null=True,
+			blank=True
         )
 
     def __str__(self):
@@ -161,8 +162,7 @@ class AssignmentStudent(models.Model):
     link = ArrayField(
             models.CharField(max_length=200),
 #            size=8,
-            null=True,
-            blank=True
+            null=True            
         )
 
     def __str__(self):

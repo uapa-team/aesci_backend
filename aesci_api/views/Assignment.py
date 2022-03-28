@@ -57,6 +57,8 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         linksString3 = linksString2.replace('"','')
         linksString4 = linksString3.replace(' ','')
         currentLinksList = list(linksString4.split(","))
+
+        print(currentLinksList)
         
         links = []
         
@@ -116,7 +118,12 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         if instance.link is None:
             fileData = links
         else:
-            fileData = currentLinksList + links     
+            if currentLinksList == ['']:
+                print("Yep")
+                fileData = links
+            else:
+                print("Nop")
+                fileData = currentLinksList + links     
 
         if fileData == []:
             data = {"usernameTeacher":teacher,"nameAssignment":name,"numGroup":numGroup,"dateAssignment":date,
