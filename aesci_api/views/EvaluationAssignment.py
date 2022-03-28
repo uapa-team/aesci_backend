@@ -97,7 +97,7 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
             file1.Upload()
             
             #print(file1['id'])
-            linkPlusFileName = file1['alternateLink'] + ',' + fil.name
+            linkPlusFileName = file1['alternateLink'] + ';' + fil.name
 			
             links.append(linkPlusFileName)
             # Remove file from storage
@@ -203,7 +203,7 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
             file1.SetContentFile(path)
             file1.Upload()
 
-            linkPlusFileName = file1['alternateLink'] + ',' + fil.name
+            linkPlusFileName = file1['alternateLink'] + ';' + fil.name
             
             documentsAttached.append(linkPlusFileName)
             # Remove file from storage

@@ -86,7 +86,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
             file1.SetContentFile(path)
             file1.Upload()
 
-            linkPlusFileName = file1['alternateLink'] + ',' + fil.name
+            linkPlusFileName = file1['alternateLink'] + ';' + fil.name
                         
             links.append(linkPlusFileName)
             # Remove file from storage

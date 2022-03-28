@@ -43,6 +43,12 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
 
         # Get object with pk
         instance = AssignmentStudent.objects.get(pk=kwargs['pk'])
+        currentLinks =''.join(request.data["links"])
+        linksString1 = currentLinks.replace('[','')
+        linksString2 = linksString1.replace(']','')
+        linksString3 = linksString2.replace('"','')
+        linksString4 = linksString3.replace(' ','')
+        currentLinksList = list(linksString4.split(","))
 
         if len(instance.link)<=8:
 
@@ -71,7 +77,7 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
                 file1.SetContentFile(path)
                 file1.Upload()
 
-                linkPlusFileName = file1['alternateLink'] + ',' + fil.name
+                linkPlusFileName = file1['alternateLink'] + ';' + fil.name
 
                 links.append(linkPlusFileName)
                 # Remove file from storage
@@ -86,7 +92,10 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
             if instance.link is None:
                 data = links
             else:
-                data = instance.link + links
+                if currentLinksList == ['']:                
+                    data = links
+                else:                
+                    data = currentLinksList + links 
             data = { "link":data }
         
             # Set up serializer
