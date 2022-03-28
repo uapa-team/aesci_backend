@@ -67,10 +67,12 @@ class CreateAssignmentView(APIView):
             file1['title'] = fil.name # Change title of the file.
             file1.SetContentFile(path)
             file1.Upload()
-            
+
+            linkPlusFileName = file1['alternateLink'] + ',' + fil.name
+
             #print(file1['id'])
-            links.append(file1['alternateLink'])
-            print(file1)
+            links.append(linkPlusFileName)
+#            print(file1)
             # Remove file from storage
             os.remove(tmp_file)
 

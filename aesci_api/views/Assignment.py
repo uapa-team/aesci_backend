@@ -56,9 +56,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         linksString2 = linksString1.replace(']','')
         linksString3 = linksString2.replace('"','')
         linksString4 = linksString3.replace(' ','')
-        currentLinksList = list(linksString4.split(","))
-
-        print(currentLinksList)
+        currentLinksList = list(linksString4.split(","))        
         
         links = []
         
@@ -87,8 +85,10 @@ class AssignmentViewSet(viewsets.ModelViewSet):
             file1['title'] = fil.name # Change title of the file.
             file1.SetContentFile(path)
             file1.Upload()
+
+            linkPlusFileName = file1['alternateLink'] + ',' + fil.name
                         
-            links.append(file1['alternateLink'])
+            links.append(linkPlusFileName)
             # Remove file from storage
             os.remove(tmp_file)
 
@@ -118,11 +118,9 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         if instance.link is None:
             fileData = links
         else:
-            if currentLinksList == ['']:
-                print("Yep")
+            if currentLinksList == ['']:                
                 fileData = links
-            else:
-                print("Nop")
+            else:                
                 fileData = currentLinksList + links     
 
         if fileData == []:

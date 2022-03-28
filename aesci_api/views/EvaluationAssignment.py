@@ -96,8 +96,10 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
             file1.SetContentFile(path)
             file1.Upload()
             
-            print(file1['id'])
-            links.append(file1['alternateLink'])
+            #print(file1['id'])
+            linkPlusFileName = file1['alternateLink'] + ',' + fil.name
+			
+            links.append(linkPlusFileName)
             # Remove file from storage
             os.remove(tmp_file)
         
@@ -200,8 +202,10 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
             file1 = drive.CreateFile({'parents': [{'id': studentFiles}]})
             file1.SetContentFile(path)
             file1.Upload()
+
+            linkPlusFileName = file1['alternateLink'] + ',' + fil.name
             
-            documentsAttached.append(file1['id'])
+            documentsAttached.append(linkPlusFileName)
             # Remove file from storage
             os.remove(tmp_file)
 
