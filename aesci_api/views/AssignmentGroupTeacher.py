@@ -11,7 +11,7 @@ class AssignmentGroupTeacherView(APIView):
     
     def get(self, request):
         with connection.cursor() as cursor:
-            query = '''SELECT DISTINCT myselect.course_id, "numGroup_id",  myselect.username_id, myselect."periodPlan", aesci_api_assignment."nameAssignment", aesci_api_assignment.description, aesci_api_assignment."idAssignment"
+            query = '''SELECT DISTINCT myselect.course_id, myselect."numGroup",  myselect.username_id, myselect."periodPlan", aesci_api_assignment."nameAssignment", aesci_api_assignment.description, aesci_api_assignment."idAssignment"
                 FROM aesci_api_assignment INNER JOIN
                     (SELECT aesci_api_groupco."idGroupCo", aesci_api_groupco."course_id", aesci_api_groupco."periodPlan", aesci_api_groupco."numGroup", aesci_api_groupteacher.username_id FROM aesci_api_groupco
                     INNER JOIN aesci_api_groupteacher on aesci_api_groupco."idGroupCo" = aesci_api_groupteacher."numGroup_id" WHERE username_id = '''+ "'" + self.request.query_params["username"]+ "'" +''') AS myselect

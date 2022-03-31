@@ -1,4 +1,4 @@
-from ..models import AssignmentStudent, GroupStudent, Student
+from ..models import AssignmentStudent, GroupStudent, Student, Teacher, Assignment
 from ..serializers import AssignmentStudentSerializer
 
 import os
@@ -33,6 +33,20 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
             groupsList.sort(key=lambda x: x.Assignment.dateAssignment, reverse=True)
 
             return groupsList
+
+        elif Teacher.objects.filter(username=self.request.query_params["username"]).exists():
+
+            AssignmentObject = Assignment.objects.get(idAssignment=self.request.query_params["assignment"])
+            
+            querysetAS = AssignmentStudent.objects.filter(Assignment=AssignmentObject)
+            assignmentsList = []
+            #assignmentsList.append(AssignmentObject)
+            
+            for element in querysetAS:
+
+                assignmentsList.append(element)
+
+            return assignmentsList
 
         # Return None if student does not have assignments
         return None

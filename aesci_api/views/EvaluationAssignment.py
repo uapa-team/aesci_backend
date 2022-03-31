@@ -173,9 +173,47 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
 
         return Response("Calificación exitosa", status=status.HTTP_200_OK)
 
-	#This is not done yet
-    def update(self, request, *args, **kwargs):
-        files = request.FILES.getlist('file')
+    def patch(self, request, *args, **kwargs):
+
+        #Get data from request
+
+        qualifier = self.request.data["qualifier"]
+        evaluationType = self.request.data["evaluationType"]
+        isNumber = self.request.data["isNumber"]
+        assignment = self.request.data["assignment"]
+        group = self.request.data["group"]
+
+        #Create lists for indicators, measures and grades (if they exist)
+
+        indicators =''.join(request.data["indicator"])
+        indicatorsString1 = indicators.replace('[','')
+        indicatorsString2 = indicatorsString1.replace(']','')
+        indicatorsString3 = indicatorsString2.replace('"','')
+        indicatorsString4 = indicatorsString3.replace(' ','')
+        indicatorsList = list(indicatorsString4.split(","))
+
+        measures =''.join(request.data["measure"])
+        measuresString1 = measures.replace('[','')
+        measuresString2 = measuresString1.replace(']','')
+        measuresString3 = measuresString2.replace('"','')
+        measuresString4 = measuresString3.replace(' ','')
+        if measuresString4!='':
+            measuresList = list(measuresString4.split(","))
+        else:
+            measuresList = []
+
+        grades =''.join(request.data["grade"])
+        gradesString1 = grades.replace('[','')
+        gradesString2 = gradesString1.replace(']','')
+        gradesString3 = gradesString2.replace('"','')
+        gradesString4 = gradesString3.replace(' ','')
+        if gradesString4!='':
+            gradesList = list(gradesString4.split(","))
+        else:
+            gradesList = []
+
+        username = self.request.data["studentUsername"]
+        files = self.request.FILES.getlist('documentAttached')
         documentsAttached = []
 
         for fil in files:
@@ -209,28 +247,81 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
             # Remove file from storage
             os.remove(tmp_file)
 
-        # Get partial value
-        partial = kwargs.pop('partial', False)
-        
-        # Get object with pk
-		#PROBABLY PROBLEM HERE
-        instance = self.get_object()
+        for i in range(0,len(indicatorsList)):
 
-        # Merge old documentsAttached  with new ones        
-        if instance.documentAttached is None:
-            data = documentsAttached
-        else:
-            data = instance.documentAttached + documentsAttached
-        data = { "documentAttached":data }
-        
-        # Set up serializer
-        serializer = self.get_serializer(instance, data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        
-        # Execute serializer
-        self.perform_update(serializer)
+            # Get partial value
+            partial = kwargs.pop('partial', False)
 
-        return Response(serializer.data)
+            #Change grade into measure if the grade is a normal number
+
+            if isNumber == "True":
+
+                if float(gradesList[i]) < 2.1:
+                    measuresList.append("1")
+                elif float(gradesList[i]) < 3.0:
+                    measuresList.append("2")
+                elif float(gradesList[i]) < 4.3:
+                    measuresList.append("3")
+                else:
+                    measuresList.append("4")
+
+            #Get the indicatorAsignment and assignmentStudent objects with info from the request
+            #Get the current EvaluationAssignment Id to update
+
+            with connection.cursor() as cursor:
+                query=f'SELECT "idIndicatorAssignment" FROM aesci_api_indicatorassignment WHERE "assignment_id" = \'{assignment}\' and "indicatorGroup_id" = (SELECT "idIndicatorGroup" FROM aesci_api_indicatorgroup WHERE "numGroup_id"=\'{group}\' AND "performanceIndicator_id"=\'{indicatorsList[i]}\')'
+                cursor.execute(query)
+                result1=cursor.fetchone()
+                print(result1)
+                query2=f'SELECT "idAssignmentStudent" FROM aesci_api_assignmentStudent WHERE "Assignment_id" = \'{assignment}\' and "GroupStudent_id" = (SELECT "idGroupStudent" FROM aesci_api_groupstudent WHERE "numGroup_id"=\'{group}\' AND "username_id"=\'{username}\')'
+                cursor.execute(query2)
+                result2=cursor.fetchone()
+                print(result2)
+                query3=f'SELECT "idEvaluationAssignment" FROM aesci_api_evaluationassignment WHERE "assignmentStudent_id"= \'{result2[0]}\' and "indicatorAssignment_id"=\'{result1[0]}\''
+                cursor.execute(query3)
+                result3=cursor.fetchone()
+                print(result3)
+
+            instance = EvaluationAssignment.objects.get(pk=result3[0])
+
+            if documentsAttached == [] and gradesList == []:
+                data = {"indicatorAssignment":result1[0],
+                    "assignmentStudent":result2[0],
+                    "qualifier":qualifier,
+                    "evaluationType":evaluationType,
+                    "codeMeasure":measuresList[i] }                        
+            elif documentsAttached == []:
+                data = {"indicatorAssignment":result1[0],
+                    "assignmentStudent":result2[0],
+                    "qualifier":qualifier,
+                    "evaluationType":evaluationType,
+                    "codeMeasure":measuresList[i],
+                    "grade":gradesList[i] }
+            elif gradesList == []:
+                data = {"indicatorAssignment":result1[0],
+                    "assignmentStudent":result2[0],
+                    "qualifier":qualifier,
+                    "evaluationType":evaluationType,
+                    "codeMeasure":measuresList[i],
+                    "documentAttached": documentsAttached[0] }
+            else:
+                data = {"indicatorAssignment":result1[0],
+                    "assignmentStudent":result2[0],
+                    "qualifier":qualifier,
+                    "evaluationType":evaluationType,
+                    "codeMeasure":measuresList[i],
+                    "grade":gradesList[i],
+                    "documentAttached": documentsAttached[0]}                        
+
+            #print(data)
+            # Set up serializer
+            serializer = self.get_serializer(instance, data, partial=partial)
+            serializer.is_valid(raise_exception=True)
+
+            # Execute serializer
+            self.perform_update(serializer)
+
+        return Response("Actualización exitosa",status=status.HTTP_200_OK)
 
     def destroy(self, request, pk=None):                   		
         instance = self.get_object()
