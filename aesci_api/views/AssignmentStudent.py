@@ -64,7 +64,7 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
         linksString4 = linksString3.replace(' ','')
         currentLinksList = list(linksString4.split(","))
 
-        if len(instance.link)<=8:
+        if (instance.link is None) or len(instance.link)<=8:
 
             for fil in files:
                 path = default_storage.save("tmp", ContentFile(fil.read()))
