@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 
 from django.db import connection
 
-from ..models import GroupCo, GroupStudent, Student
+from ..models import GroupCo, GroupStudent, Student, Assignment
 
 class AssignmentGroupView(APIView):
     """Create relations between groups and students"""
@@ -35,6 +35,9 @@ class AssignmentGroupView(APIView):
                     aux['name'] = element[4]
                     aux['description'] = element[5]
                     aux['idAssignment'] = element[6]
+                    assignmentObject = Assignment.objects.get(idAssignment=element[6])
+                    assignmentObject.link
+                    aux['assignmentLinks'] = assignmentObject.link
                     res[result[0]].append(aux)
                 else:
                     aux = {}
@@ -44,6 +47,9 @@ class AssignmentGroupView(APIView):
                     aux['name'] = element[4]
                     aux['description'] = element[5]
                     aux['idAssignment'] = element[6]
+                    assignmentObject = Assignment.objects.get(idAssignment=element[6])
+                    assignmentObject.link
+                    aux['assignmentLinks'] = assignmentObject.link					
                     res[result[0]].append(aux)
             
             res = list(res.items())
