@@ -5,6 +5,7 @@ from django.db import connection
 
 from ..models import Rubric
 from ..serializers import RubricSerializer
+from ..helpers import *
 
 # create rubric
 class RubricViewSet(viewsets.ModelViewSet):
@@ -25,8 +26,8 @@ class RubricViewSet(viewsets.ModelViewSet):
         departmentRubricString1 = departmentRubric.replace('[','')
         departmentRubricString2 = departmentRubricString1.replace(']','')
         departmentRubricString3 = departmentRubricString2.replace('"','')
-        departmentRubricString4 = departmentRubricString3.replace(' ','')
-        departmentRubricList = list(departmentRubricString4.split(","))
+        #departmentRubricString4 = departmentRubricString3.replace(' ','')
+        departmentRubricList = list(departmentRubricString3.split(","))
 
         with connection.cursor() as cursor:
             #Get the greatest idRubric to assign the next number to new assignment
@@ -34,8 +35,15 @@ class RubricViewSet(viewsets.ModelViewSet):
             cursor.execute(query)
             result=cursor.fetchone()
 
+        departmentCodes = []
+
+        for element0 in departmentRubricList:
+            for element1 in CARRER_CHOICES:
+                if element1[1]==element0:
+                    departmentCodes.append(element1[0])
+
         obj, _ = Rubric.objects.get_or_create(idRubric=result[0] + 1, codeRubric=codeRubric,
-        description=description,isActive=isActive, departmentRubric=departmentRubricList)
+        description=description,isActive=isActive, departmentRubric=departmentCodes)
 
         return Response("Rúbrica creada", status=status.HTTP_200_OK)
 
@@ -49,15 +57,21 @@ class RubricViewSet(viewsets.ModelViewSet):
         departmentRubricString1 = departmentRubric.replace('[','')
         departmentRubricString2 = departmentRubricString1.replace(']','')
         departmentRubricString3 = departmentRubricString2.replace('"','')
-        departmentRubricString4 = departmentRubricString3.replace(' ','')
-        departmentRubricList = list(departmentRubricString4.split(","))
+        departmentRubricList = list(departmentRubricString3.split(","))
+
+        departmentCodes = []
+
+        for element0 in departmentRubricList:
+            for element1 in CARRER_CHOICES:
+                if element1[1]==element0:
+                    departmentCodes.append(element1[0])
 
         partial = kwargs.pop('partial', False)
 
         instance = Rubric.objects.get(pk=kwargs['pk'])
 
         data = {"codeRubric":codeRubric,"description":description,"isActive":isActive,
-            "departmentRubric":departmentRubricList}
+            "departmentRubric":departmentCodes}
 
         # Set up serializer
         serializer = self.get_serializer(instance, data, partial=partial)
