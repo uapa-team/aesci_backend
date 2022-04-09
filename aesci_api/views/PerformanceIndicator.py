@@ -50,10 +50,7 @@ class PerformanceIndicatorViewSet(viewsets.ModelViewSet):
         codeSORequest = request.data["codeSO"]  
         isActiveRequest = request.data["isActive"]
 
-        partial = kwargs.pop('partial', False)           
-
-		#Get the StudentOutcome with the id
-        #studentOutcomeObject = StudentOutcome.objects.get(idStudentOutcome=codeSORequest)    
+        partial = kwargs.pop('partial', False)           		
 
         data = {"codePI":codePIRequest,"description":descriptionRequest,"codeSO":codeSORequest,"isActive":isActiveRequest}
 
