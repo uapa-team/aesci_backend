@@ -191,7 +191,8 @@ class PerformanceIndicator(models.Model):
     idPerformanceIndicator = models.AutoField(primary_key=True)
     codeSO = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
     codePI = models.CharField(max_length=10)
-    description = models.TextField()    
+    description = models.TextField()
+    isActive = models.CharField(max_length=60,default='')
 
     def __str__(self):
         """String for representing the Model object."""

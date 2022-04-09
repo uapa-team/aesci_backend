@@ -71,7 +71,7 @@ class IndicatorMeasureSerializer(serializers.ModelSerializer):
 class PerformanceIndicatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = PerformanceIndicator
-        fields = ['idPerformanceIndicator','codePI','description','codeSO']
+        fields = ['idPerformanceIndicator','codePI','description','codeSO', "isActive"]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
