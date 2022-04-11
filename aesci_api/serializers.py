@@ -25,6 +25,11 @@ class TeacherSerializer(serializers.ModelSerializer):
         model = Teacher
         fields = '__all__'
 
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = '__all__'
+
 class AssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assignment
@@ -57,6 +62,11 @@ class GroupStudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupStudent
         fields = '__all__'
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response["username"] = StudentSerializer(instance.username).data
+        return response
 
 class GroupTeacherSerializer(serializers.ModelSerializer):
     class Meta:
