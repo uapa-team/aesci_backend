@@ -36,15 +36,15 @@ class RubricViewSet(viewsets.ModelViewSet):
             cursor.execute(query)
             result=cursor.fetchone()
 
-        departmentCodes = []
-
-        for element0 in departmentRubricList:
-            for element1 in CARRER_CHOICES:
-                if element1[1]==element0:
-                    departmentCodes.append(element1[0])
+        #departmentCodes = []
+#
+        #for element0 in departmentRubricList:
+        #    for element1 in CARRER_CHOICES:
+        #        if element1[1]==element0:
+        #            departmentCodes.append(element1[0])
 
         obj, _ = Rubric.objects.get_or_create(idRubric=result[0] + 1, codeRubric=codeRubric,
-        description=description,isActive=isActive, departmentRubric=departmentCodes)
+        description=description,isActive=isActive, departmentRubric=departmentRubricList)
 
         return Response("Rúbrica creada", status=status.HTTP_200_OK)
 
@@ -62,19 +62,19 @@ class RubricViewSet(viewsets.ModelViewSet):
         departmentRubricString5 = departmentRubricString4.replace('"','')
         departmentRubricList = list(departmentRubricString5.split(","))
 
-        departmentCodes = []
-
-        for element0 in departmentRubricList:
-            for element1 in CARRER_CHOICES:
-                if element1[1]==element0:
-                    departmentCodes.append(element1[0])
+        #departmentCodes = []
+#
+        #for element0 in departmentRubricList:
+        #    for element1 in CARRER_CHOICES:
+        #        if element1[1]==element0:
+        #            departmentCodes.append(element1[0])
 
         partial = kwargs.pop('partial', False)
 
         instance = Rubric.objects.get(pk=kwargs['pk'])
 
         data = {"codeRubric":codeRubric,"description":description,"isActive":isActive,
-            "departmentRubric":departmentCodes}
+            "departmentRubric":departmentRubricList}
 
         # Set up serializer
         serializer = self.get_serializer(instance, data, partial=partial)
