@@ -30,6 +30,8 @@ class Student(models.Model):
     email = models.CharField(max_length = 60)
     name = models.CharField(max_length = 60)
     departmentCourse = models.CharField(max_length = 60, choices = CARRER_CHOICES, default='2542')
+    documentType = models.CharField(max_length = 60)
+    document = models.IntegerField()
 
     def save(self, *args, **kwargs):
         user = User.objects.create(username = self.username )
@@ -45,7 +47,7 @@ class Teacher(models.Model):
     username = models.CharField(max_length = 60, primary_key=True)
     email = models.CharField(max_length = 60)
     name = models.CharField(max_length = 60)
-    departmentDoc = models.CharField(max_length = 60)
+    departmentDoc = models.CharField(max_length = 60)	
 
     def save(self, *args, **kwargs):
         user = User.objects.create(username = self.username )
