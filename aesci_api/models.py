@@ -224,6 +224,7 @@ class IndicatorMeasure(models.Model):
     codeMeasure = models.IntegerField(
         choices=MEASURES,
     )
+    levelMeasure = models.TextField()	
     description = models.TextField()
 
     def __str__(self):
