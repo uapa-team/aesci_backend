@@ -30,6 +30,8 @@ class Student(models.Model):
     email = models.CharField(max_length = 60)
     name = models.CharField(max_length = 60)
     departmentCourse = models.CharField(max_length = 60, choices = CARRER_CHOICES, default='2542')
+    documentType = models.CharField(max_length = 60)
+    document = models.IntegerField()
 
     def save(self, *args, **kwargs):
         user = User.objects.create(username = self.username )
@@ -45,7 +47,7 @@ class Teacher(models.Model):
     username = models.CharField(max_length = 60, primary_key=True)
     email = models.CharField(max_length = 60)
     name = models.CharField(max_length = 60)
-    departmentDoc = models.CharField(max_length = 60)
+    departmentDoc = models.CharField(max_length = 60)	
 
     def save(self, *args, **kwargs):
         user = User.objects.create(username = self.username )
@@ -101,6 +103,7 @@ class Rubric(models.Model):
     idRubric = models.AutoField(primary_key=True)
     codeRubric = models.CharField(max_length=60)
     description = models.TextField()
+    isActive = models.CharField(max_length=60,default='')
     departmentRubric = ArrayField(
             models.CharField(max_length = 60, choices = CARRER_CHOICES, default='2542'),
             size=4,
@@ -114,6 +117,7 @@ class Rubric(models.Model):
 class StudentOutcome(models.Model):
     idStudentOutcome = models.AutoField(primary_key=True)
     codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
+    isActive = models.CharField(max_length=60,default='')
     description = models.TextField()
     
     def __str__(self):
@@ -129,9 +133,10 @@ class Assignment(models.Model):
     dateLimitAssignment = models.DateTimeField(default=now)
     description = models.TextField()	
     link = ArrayField(
-            models.CharField(max_length=200),
-            size=2,
-            null=True
+            models.CharField(max_length=200, blank=True),
+#            size=2,
+            null=True,
+			blank=True
         )
 
     def __str__(self):
@@ -158,8 +163,8 @@ class AssignmentStudent(models.Model):
     GroupStudent = models.ForeignKey(GroupStudent, on_delete=models.CASCADE, default=None)
     link = ArrayField(
             models.CharField(max_length=200),
-            size=8,
-            null=True
+#            size=8,
+            null=True            
         )
 
     def __str__(self):
@@ -167,7 +172,7 @@ class AssignmentStudent(models.Model):
         return self.Assignment.nameAssignment  
 
 class ImprovementPlan(models.Model):
-    idImprovementPlan = models.AutoField(primary_key=True)
+    idImprovementPlan = models.AutoField
     planPeriod = models.CharField(max_length = 60)
     codeResult = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
     username = models.ForeignKey(Teacher, on_delete=models.CASCADE)
@@ -188,7 +193,8 @@ class PerformanceIndicator(models.Model):
     idPerformanceIndicator = models.AutoField(primary_key=True)
     codeSO = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
     codePI = models.CharField(max_length=10)
-    description = models.TextField()    
+    description = models.TextField()
+    isActive = models.CharField(max_length=60,default='')
 
     def __str__(self):
         """String for representing the Model object."""
@@ -248,3 +254,4 @@ class EvaluationAssignment(models.Model):
         choices=MEASURES,
     )
     grade = models.FloatField(default=None, null=True)
+

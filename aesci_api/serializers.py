@@ -25,6 +25,11 @@ class TeacherSerializer(serializers.ModelSerializer):
         model = Teacher
         fields = '__all__'
 
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = '__all__'
+
 class AssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assignment
@@ -44,6 +49,7 @@ class AssignmentStudentSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response["Assignment"] = AssignmentSerializer(instance.Assignment).data
+        response["GroupStudent"] = GroupStudentSerializer(instance.GroupStudent).data
         return response
 
 
@@ -56,6 +62,11 @@ class GroupStudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupStudent
         fields = '__all__'
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response["username"] = StudentSerializer(instance.username).data
+        return response
 
 class GroupTeacherSerializer(serializers.ModelSerializer):
     class Meta:
@@ -70,17 +81,17 @@ class IndicatorMeasureSerializer(serializers.ModelSerializer):
 class PerformanceIndicatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = PerformanceIndicator
-        fields = ['id','codePI','description','codeSO']
+        fields = ['idPerformanceIndicator','codePI','description','codeSO', "isActive"]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        levels = IndicatorMeasure.objects.filter(performanceIndicator=instance.id)
+        levels = IndicatorMeasure.objects.filter(performanceIndicator=instance.idPerformanceIndicator)
         arr_levels = levels.values_list()
         final_levels = []
 
         # Get dict from indicators' measure 
         for element in arr_levels:
-            level_element = {'id':element[0],
+            level_element = {'idIndicatorMeasure':element[0],
                 'codeMeasure':element[1],
                 'description':element[2],
                 'performanceIndicator':element[3]

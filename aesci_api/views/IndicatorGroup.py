@@ -13,8 +13,9 @@ class IndicatorGroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self, pk=None):
+        print(self.request.query_params["numgroup"])
         if IndicatorGroup.objects.filter(numGroup=self.request.query_params["numgroup"]).exists():
-            # Return assignments related to Teacher
+            # Return assignments related to Teacher            
             return IndicatorGroup.objects.all().filter(numGroup=self.request.query_params["numgroup"])
         else:
             return None
@@ -29,11 +30,11 @@ class IndicatorGroupViewSet(viewsets.ModelViewSet):
         # Search and store valid indicators
         for indicator in indicators:
             try:
-                validatedIndicator = PerformanceIndicator.objects.get( id = indicator)
+                validatedIndicator = PerformanceIndicator.objects.get( idPerformanceIndicator = indicator)
             except:
                 continue
 
-            data.append(validatedIndicator.id)
+            data.append(validatedIndicator.idPerformanceIndicator)
 
         for group in numGroup:
             # Save indicators for each group
