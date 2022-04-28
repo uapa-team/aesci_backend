@@ -22,6 +22,7 @@ class IndicatorMeasureViewSet(viewsets.ModelViewSet):
         performanceIndicatorRequest = request.data["performanceIndicator"]
         descriptionRequest = request.data["description"]
         codeMeasureRequest = request.data["codeMeasure"]        
+        levelRequest = request.data["level"]		
     
         with connection.cursor() as cursor:
             #Get the greatest idIndicatorMeasure to assign the next number to new indicatorMeasure
@@ -33,7 +34,7 @@ class IndicatorMeasureViewSet(viewsets.ModelViewSet):
         performanceIndicatorObject = PerformanceIndicator.objects.get(idPerformanceIndicator=performanceIndicatorRequest)          
 
         obj, _ = IndicatorMeasure.objects.get_or_create(idIndicatorMeasure=result[0] + 1, performanceIndicator=performanceIndicatorObject, description=descriptionRequest,
-         codeMeasure=codeMeasureRequest)
+         codeMeasure=codeMeasureRequest, levelMeasure=levelRequest)
 
         return Response("Medida del indicador creada exitosamente", status=status.HTTP_200_OK)
 
@@ -46,12 +47,13 @@ class IndicatorMeasureViewSet(viewsets.ModelViewSet):
 
         performanceIndicatorRequest = request.data["performanceIndicator"]
         descriptionRequest = request.data["description"]
-        codeMeasureRequest = request.data["codeMeasure"]  
+        codeMeasureRequest = request.data["codeMeasure"]
+        levelRequest = request.data["level"]		 
 
         partial = kwargs.pop('partial', False)           
 		
 
-        data = {"performanceIndicator":performanceIndicatorRequest,"description":descriptionRequest,"codeMeasure":codeMeasureRequest}
+        data = {"performanceIndicator":performanceIndicatorRequest,"description":descriptionRequest,"codeMeasure":codeMeasureRequest,"levelMeasure":levelRequest}
 
         # Set up serializer
         serializer = self.get_serializer(instance, data, partial=partial)
