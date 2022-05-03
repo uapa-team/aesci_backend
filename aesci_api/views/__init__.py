@@ -14,5 +14,6 @@ from .PerformanceIndicator import *
 from .Rubric import *
 from .StudentOutcome import *
 from .UploadStudents import *
+from .UploadRubrics import *
 from .UpdateStudents import *
 from .CreateStudents import *

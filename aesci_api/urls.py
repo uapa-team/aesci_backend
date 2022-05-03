@@ -32,6 +32,7 @@ urlpatterns = [
     path('assignmentgroups/', AssignmentGroupView.as_view()),
     path('assignmentgroupsteacher/', AssignmentGroupTeacher.AssignmentGroupTeacherView.as_view()),
     path('uploadstudents/', UploadStudentsView.as_view()),
+	path('uploadrubrics/', UploadRubricsView.as_view()),
     path('updatestudents/', UpdateStudentsView.as_view()),
     path('createstudents/', CreateStudentsView.as_view()),
     path('createassignment/', CreateAssignment.CreateAssignmentView.as_view()),
