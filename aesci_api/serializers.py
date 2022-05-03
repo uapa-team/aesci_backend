@@ -93,8 +93,8 @@ class PerformanceIndicatorSerializer(serializers.ModelSerializer):
         for element in arr_levels:
             level_element = {'idIndicatorMeasure':element[0],
                 'codeMeasure':element[1],
-                'description':element[2],
-                'performanceIndicator':element[3]
+                'performanceIndicator':element[3],
+                'description':element[2]
             }
             final_levels.append(level_element)
         
