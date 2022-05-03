@@ -220,12 +220,12 @@ class IndicatorAssignment(models.Model):
 
 class IndicatorMeasure(models.Model):
     idIndicatorMeasure = models.AutoField(primary_key=True)
-    performanceIndicator = models.ForeignKey(PerformanceIndicator, on_delete=models.CASCADE)
     codeMeasure = models.IntegerField(
         choices=MEASURES,
     )
-    levelMeasure = models.TextField()	
     description = models.TextField()
+    performanceIndicator = models.ForeignKey(PerformanceIndicator, on_delete=models.CASCADE)
+    levelMeasure = models.TextField()	
 
     def __str__(self):
         """String for representing the Model object."""
