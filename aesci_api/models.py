@@ -256,3 +256,17 @@ class EvaluationAssignment(models.Model):
     )
     grade = models.FloatField(default=None, null=True)
 
+class Program(models.Model):
+    idProgram = models.AutoField(primary_key=True, choices = CARRER_CHOICES)
+    name = models.TextField()
+    aims = ArrayField(
+        models.TextField(),
+        null=True,
+		blank=True
+    )
+    learningOutcomes = ArrayField(
+        models.TextField(),
+        null=True,
+		blank=True
+    )
+    matrix = models.TextField()

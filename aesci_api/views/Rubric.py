@@ -25,10 +25,10 @@ class RubricViewSet(viewsets.ModelViewSet):
         departmentRubric =''.join(request.data["departmentRubric"])
         departmentRubricString1 = departmentRubric.replace('[','')
         departmentRubricString2 = departmentRubricString1.replace(']','')
-        departmentRubricString3 = departmentRubricString2.replace(' ','')
+        departmentRubricString3 = departmentRubricString2.replace(' ',' ')
         departmentRubricString4 = departmentRubricString3.replace('"','')
         print(departmentRubricString4)
-        departmentRubricList = list(departmentRubricString4.split(","))
+        departmentRubricList = list(departmentRubricString4.split(";"))
 
         with connection.cursor() as cursor:
             #Get the greatest idRubric to assign the next number to new assignment
