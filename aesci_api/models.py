@@ -100,7 +100,7 @@ class GroupCo(models.Model):
         return  nameGroup
 
 class Rubric(models.Model):
-    idRubric = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     codeRubric = models.CharField(max_length=60)
     description = models.TextField()
     isActive = models.CharField(max_length=60,default='')
@@ -115,14 +115,18 @@ class Rubric(models.Model):
         return self.description
 
 class StudentOutcome(models.Model):
-    idStudentOutcome = models.AutoField(primary_key=True)
-    codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
+    id = models.AutoField(primary_key=True)
     isActive = models.CharField(max_length=60,default='')
     description = models.TextField()
     
     def __str__(self):
         """String for representing the Model object."""
         return self.description
+
+class RubricStudentOutcome(models.Model):
+    idRubricStudentOutcome = models.AutoField(primary_key=True)
+    codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
+    codeStudentOutcome = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
 
 class Assignment(models.Model):
     idAssignment = models.AutoField(primary_key=True)

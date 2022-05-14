@@ -36,7 +36,7 @@ class UploadRubricsView(APIView):
 
         with connection.cursor() as cursor:
             #Get the greatest idAssignment to assign the next number to new assignment
-            query='SELECT "idRubric" FROM aesci_api_rubric WHERE "idRubric" = (SELECT max("idRubric") from aesci_api_rubric)'
+            query='SELECT "id" FROM aesci_api_rubric WHERE "id" = (SELECT max("id") from aesci_api_rubric)'
             cursor.execute(query)
             result=cursor.fetchone()
 
@@ -46,12 +46,12 @@ class UploadRubricsView(APIView):
         for i in range(len(rubricsCode)):	
             if pandas.isnull(rubricsCode[i]) != True:
                 createdRubricsCounter += 1						
-                obj, _ = Rubric.objects.get_or_create(idRubric=greatestRubricId + (createdRubricsCounter), codeRubric=rubricsCode[i], description=rubricsDescription[i],isActive='True',departmentRubric=['2549'])
+                obj, _ = Rubric.objects.get_or_create(id=greatestRubricId + (createdRubricsCounter), codeRubric=rubricsCode[i], description=rubricsDescription[i],isActive='True',departmentRubric=['2549'])
                 createdRubricsInfo.append((greatestRubricId + createdRubricsCounter))
 
         with connection.cursor() as cursor:
             #Get the greatest idAssignment to assign the next number to new assignment
-            query='SELECT "idStudentOutcome" FROM aesci_api_studentoutcome WHERE "idStudentOutcome" = (SELECT max("idStudentOutcome") from aesci_api_studentoutcome)'
+            query='SELECT "id" FROM aesci_api_studentoutcome WHERE "id" = (SELECT max("id") from aesci_api_studentoutcome)'
             cursor.execute(query)
             result=cursor.fetchone()
 
@@ -90,7 +90,7 @@ class UploadRubricsView(APIView):
                 createdPerformanceIndicatorsCounter += 1
                 if pandas.isnull(studentOutcomesDescription[i]) != True:
                     currentStudentOutcome += 1
-                currentStudentOutcomeObject = StudentOutcome.objects.get(idStudentOutcome=createdStudentOutcomeInfo[currentStudentOutcome-1])
+                currentStudentOutcomeObject = StudentOutcome.objects.get(id=createdStudentOutcomeInfo[currentStudentOutcome-1])
                 obj, _ = PerformanceIndicator.objects.get_or_create(idPerformanceIndicator=greatestPerformanceIndicatorId + (createdPerformanceIndicatorsCounter), codeSO=currentStudentOutcomeObject, codePI= PerformanceIndicatorsCode[i], description=PerformanceIndicatorsDescription[i], isActive='True')
                 createdPerformanceIndicatorInfo.append((greatestPerformanceIndicatorId + createdPerformanceIndicatorsCounter))
 

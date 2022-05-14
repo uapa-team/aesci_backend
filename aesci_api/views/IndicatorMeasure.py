@@ -19,22 +19,28 @@ class IndicatorMeasureViewSet(viewsets.ModelViewSet):
     def create(self, request):
         #Get all the data from the request
 
-        performanceIndicatorRequest = request.data["performanceIndicator"]
+        indicators =''.join(request.data["performanceIndicator"])
+        indicatorsString1 = indicators.replace('[','')
+        indicatorsString2 = indicatorsString1.replace(']','')
+        indicatorsString3 = indicatorsString2.replace('"','')
+        indicatorsString4 = indicatorsString3.replace(' ','')
+        indicatorsList = list(indicatorsString4.split(","))
         descriptionRequest = request.data["description"]
         codeMeasureRequest = request.data["codeMeasure"]        
         levelRequest = request.data["level"]		
     
-        with connection.cursor() as cursor:
-            #Get the greatest idIndicatorMeasure to assign the next number to new indicatorMeasure
-            query='SELECT "idIndicatorMeasure" FROM aesci_api_indicatormeasure WHERE "idIndicatorMeasure" = (SELECT max("idIndicatorMeasure") from aesci_api_indicatormeasure)'
-            cursor.execute(query)
-            result=cursor.fetchone()  
+        for i in indicatorsList:
+            with connection.cursor() as cursor:
+                #Get the greatest idIndicatorMeasure to assign the next number to new indicatorMeasure
+                query='SELECT "idIndicatorMeasure" FROM aesci_api_indicatormeasure WHERE "idIndicatorMeasure" = (SELECT max("idIndicatorMeasure") from aesci_api_indicatormeasure)'
+                cursor.execute(query)
+                result=cursor.fetchone()  
 
-		#Get the PerformanceIndicator with the id
-        performanceIndicatorObject = PerformanceIndicator.objects.get(idPerformanceIndicator=performanceIndicatorRequest)          
+            #Get the PerformanceIndicator with the id
+            performanceIndicatorObject = PerformanceIndicator.objects.get(idPerformanceIndicator=i)          
 
-        obj, _ = IndicatorMeasure.objects.get_or_create(idIndicatorMeasure=result[0] + 1, performanceIndicator=performanceIndicatorObject, description=descriptionRequest,
-         codeMeasure=codeMeasureRequest, levelMeasure=levelRequest)
+            obj, _ = IndicatorMeasure.objects.get_or_create(idIndicatorMeasure=result[0] + 1, performanceIndicator=performanceIndicatorObject, description=descriptionRequest,
+            codeMeasure=codeMeasureRequest, levelMeasure=levelRequest)
 
         return Response("Medida del indicador creada exitosamente", status=status.HTTP_200_OK)
 
