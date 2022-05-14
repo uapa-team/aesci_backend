@@ -64,9 +64,16 @@ class UploadRubricsView(APIView):
                 createdStudentOutcomesCounter += 1
                 if pandas.isnull(rubricsCode[i]) != True:
                     currentRubric += 1
+                    #create the weak entity 
+                #now student outcome won't take the id of the rubric but of the weak entity
                 currentRubricObject = Rubric.objects.get(idRubric=createdRubricsInfo[currentRubric-1])
                 obj, _ = StudentOutcome.objects.get_or_create(idStudentOutcome=greatestStudentOutcomeId + (createdStudentOutcomesCounter), codeRubric=currentRubricObject, isActive='True', description=studentOutcomesDescription[i])
                 createdStudentOutcomeInfo.append((greatestStudentOutcomeId + createdStudentOutcomesCounter))
+            else:
+                if pandas.isnull(rubricsCode[i]) != True:
+                    currentRubric += 1
+                    #create week entity using current rubric and current studentOutcome
+	
 
         with connection.cursor() as cursor:
             #Get the greatest idAssignment to assign the next number to new assignment
