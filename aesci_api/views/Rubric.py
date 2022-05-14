@@ -32,7 +32,7 @@ class RubricViewSet(viewsets.ModelViewSet):
 
         with connection.cursor() as cursor:
             #Get the greatest idRubric to assign the next number to new assignment
-            query='SELECT "idRubric" FROM aesci_api_rubric WHERE "idRubric" = (SELECT max("idRubric") from aesci_api_rubric)'
+            query='SELECT "id" FROM aesci_api_rubric WHERE "id" = (SELECT max("id") from aesci_api_rubric)'
             cursor.execute(query)
             result=cursor.fetchone()
 
@@ -43,7 +43,7 @@ class RubricViewSet(viewsets.ModelViewSet):
         #        if element1[1]==element0:
         #            departmentCodes.append(element1[0])
 
-        obj, _ = Rubric.objects.get_or_create(idRubric=result[0] + 1, codeRubric=codeRubric,
+        obj, _ = Rubric.objects.get_or_create(id=result[0] + 1, codeRubric=codeRubric,
         description=description,isActive=isActive, departmentRubric=departmentRubricList)
 
         return Response("Rúbrica creada", status=status.HTTP_200_OK)

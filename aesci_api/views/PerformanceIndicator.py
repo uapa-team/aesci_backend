@@ -31,7 +31,7 @@ class PerformanceIndicatorViewSet(viewsets.ModelViewSet):
             result=cursor.fetchone()  
 
 		#Get the StudentOutcome with the id
-        studentOutcomeObject = StudentOutcome.objects.get(idStudentOutcome=codeSORequest)          
+        studentOutcomeObject = StudentOutcome.objects.get(id=codeSORequest)          
 
         obj, _ = PerformanceIndicator.objects.get_or_create(idPerformanceIndicator=result[0] + 1, codePI=codePIRequest, description=descriptionRequest,
          codeSO=studentOutcomeObject, isActive= isActiveRequest)

@@ -26,17 +26,17 @@ class StudentOutcomeViewSet(viewsets.ModelViewSet):
 
         with connection.cursor() as cursor:
             #Get the greatest idStudentOutcome to assign the next number to new studentoutcome
-            query='SELECT "idStudentOutcome" FROM aesci_api_studentoutcome WHERE "idStudentOutcome" = (SELECT max("idStudentOutcome") from aesci_api_studentoutcome)'
+            query='SELECT "id" FROM aesci_api_studentoutcome WHERE "id" = (SELECT max("id") from aesci_api_studentoutcome)'
             cursor.execute(query)
             result=cursor.fetchone()
         
 		#Get the codeRubric object related with the new studentoutcome
 
-        rubric = Rubric.objects.get(idRubric=codeRubric)
+        rubric = Rubric.objects.get(id=codeRubric)
 
         #Create the studentoutcome object in database
 
-        obj, _ = StudentOutcome.objects.get_or_create(idStudentOutcome=result[0] + 1,description=description, codeRubric=rubric,isActive=isActive)
+        obj, _ = StudentOutcome.objects.get_or_create(id=result[0] + 1,description=description, codeRubric=rubric,isActive=isActive)
 
         return Response("Resultado creado exitosamente", status=status.HTTP_200_OK)
 
