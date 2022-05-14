@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
-from ..models import Rubric, StudentOutcome, PerformanceIndicator, IndicatorMeasure
+from ..models import Rubric, StudentOutcome, PerformanceIndicator, IndicatorMeasure, RubricStudentOutcome
 # Create your views here.
 
 class UploadRubricsView(APIView):
@@ -55,23 +55,39 @@ class UploadRubricsView(APIView):
             cursor.execute(query)
             result=cursor.fetchone()
 
-        currentRubric = 0
         greatestStudentOutcomeId = result[0]
+
+        with connection.cursor() as cursor:
+            #Get the greatest idRubricStudentOutcome to assign the next number to new RubricStudentOutcomes raws
+            query='SELECT "idRubricStudentOutcome" FROM aesci_api_rubricstudentoutcome WHERE "idRubricStudentOutcome" = (SELECT max("idRubricStudentOutcome") from aesci_api_rubricstudentoutcome)'
+            cursor.execute(query)
+            result=cursor.fetchone()
+
+
+        currentRubric = 0
+        currentRubricStudentOutcome = result[0]
         createdStudentOutcomesCounter = 0
         createdStudentOutcomeInfo = []
         for i in range(len(studentOutcomesDescription)):			
             if pandas.isnull(studentOutcomesDescription[i]) != True:
+                currentRubricStudentOutcome += 1
                 createdStudentOutcomesCounter += 1
                 if pandas.isnull(rubricsCode[i]) != True:
                     currentRubric += 1
                     #create the weak entity 
                 #now student outcome won't take the id of the rubric but of the weak entity
-                currentRubricObject = Rubric.objects.get(idRubric=createdRubricsInfo[currentRubric-1])
-                obj, _ = StudentOutcome.objects.get_or_create(idStudentOutcome=greatestStudentOutcomeId + (createdStudentOutcomesCounter), codeRubric=currentRubricObject, isActive='True', description=studentOutcomesDescription[i])
+                currentRubricObject = Rubric.objects.get(id=createdRubricsInfo[currentRubric-1])
+                obj, _ = StudentOutcome.objects.get_or_create(id=greatestStudentOutcomeId + (createdStudentOutcomesCounter), isActive='True', description=studentOutcomesDescription[i])
+				#Create weak entity
+                obj, _ = RubricStudentOutcome.objects.get_or_create(idRubricStudentOutcome=currentRubricStudentOutcome, codeRubric=currentRubricObject, codeStudentOutcome= obj)
                 createdStudentOutcomeInfo.append((greatestStudentOutcomeId + createdStudentOutcomesCounter))
             else:
                 if pandas.isnull(rubricsCode[i]) != True:
                     currentRubric += 1
+                    currentRubricStudentOutcome += 1
+                    currentRubricObject = Rubric.objects.get(id=createdRubricsInfo[currentRubric-1])
+                    currentStudentOutcomeObject = StudentOutcome.objects.get(id=greatestStudentOutcomeId + (createdStudentOutcomesCounter))
+                    obj, _ = RubricStudentOutcome.objects.get_or_create(idRubricStudentOutcome=currentRubricStudentOutcome, codeRubric=currentRubricObject, codeStudentOutcome= currentStudentOutcomeObject)
                     #create week entity using current rubric and current studentOutcome
 	
 
