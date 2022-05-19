@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
-from ..models import Rubric, StudentOutcome, PerformanceIndicator, IndicatorMeasure
+from ..models import Rubric, StudentOutcome, PerformanceIndicator, IndicatorMeasure, RubricStudentOutcome
 # Create your views here.
 
 class UploadRubricsView(APIView):
@@ -36,7 +36,7 @@ class UploadRubricsView(APIView):
 
         with connection.cursor() as cursor:
             #Get the greatest idAssignment to assign the next number to new assignment
-            query='SELECT "idRubric" FROM aesci_api_rubric WHERE "idRubric" = (SELECT max("idRubric") from aesci_api_rubric)'
+            query='SELECT "id" FROM aesci_api_rubric WHERE "id" = (SELECT max("id") from aesci_api_rubric)'
             cursor.execute(query)
             result=cursor.fetchone()
 
@@ -46,27 +46,50 @@ class UploadRubricsView(APIView):
         for i in range(len(rubricsCode)):	
             if pandas.isnull(rubricsCode[i]) != True:
                 createdRubricsCounter += 1						
-                obj, _ = Rubric.objects.get_or_create(idRubric=greatestRubricId + (createdRubricsCounter), codeRubric=rubricsCode[i], description=rubricsDescription[i],isActive='True',departmentRubric=['2549'])
+                obj, _ = Rubric.objects.get_or_create(id=greatestRubricId + (createdRubricsCounter), codeRubric=rubricsCode[i], description=rubricsDescription[i],isActive='True',departmentRubric=['2549'])
                 createdRubricsInfo.append((greatestRubricId + createdRubricsCounter))
 
         with connection.cursor() as cursor:
             #Get the greatest idAssignment to assign the next number to new assignment
-            query='SELECT "idStudentOutcome" FROM aesci_api_studentoutcome WHERE "idStudentOutcome" = (SELECT max("idStudentOutcome") from aesci_api_studentoutcome)'
+            query='SELECT "id" FROM aesci_api_studentoutcome WHERE "id" = (SELECT max("id") from aesci_api_studentoutcome)'
             cursor.execute(query)
             result=cursor.fetchone()
 
-        currentRubric = 0
         greatestStudentOutcomeId = result[0]
+
+        with connection.cursor() as cursor:
+            #Get the greatest idRubricStudentOutcome to assign the next number to new RubricStudentOutcomes raws
+            query='SELECT "idRubricStudentOutcome" FROM aesci_api_rubricstudentoutcome WHERE "idRubricStudentOutcome" = (SELECT max("idRubricStudentOutcome") from aesci_api_rubricstudentoutcome)'
+            cursor.execute(query)
+            result=cursor.fetchone()
+
+
+        currentRubric = 0
+        currentRubricStudentOutcome = result[0]
         createdStudentOutcomesCounter = 0
         createdStudentOutcomeInfo = []
         for i in range(len(studentOutcomesDescription)):			
             if pandas.isnull(studentOutcomesDescription[i]) != True:
+                currentRubricStudentOutcome += 1
                 createdStudentOutcomesCounter += 1
                 if pandas.isnull(rubricsCode[i]) != True:
                     currentRubric += 1
-                currentRubricObject = Rubric.objects.get(idRubric=createdRubricsInfo[currentRubric-1])
-                obj, _ = StudentOutcome.objects.get_or_create(idStudentOutcome=greatestStudentOutcomeId + (createdStudentOutcomesCounter), codeRubric=currentRubricObject, isActive='True', description=studentOutcomesDescription[i])
+                    #create the weak entity 
+                #now student outcome won't take the id of the rubric but of the weak entity
+                currentRubricObject = Rubric.objects.get(id=createdRubricsInfo[currentRubric-1])
+                obj, _ = StudentOutcome.objects.get_or_create(id=greatestStudentOutcomeId + (createdStudentOutcomesCounter), isActive='True', description=studentOutcomesDescription[i])
+				#Create weak entity
+                obj, _ = RubricStudentOutcome.objects.get_or_create(idRubricStudentOutcome=currentRubricStudentOutcome, codeRubric=currentRubricObject, codeStudentOutcome= obj)
                 createdStudentOutcomeInfo.append((greatestStudentOutcomeId + createdStudentOutcomesCounter))
+            else:
+                if pandas.isnull(rubricsCode[i]) != True:
+                    currentRubric += 1
+                    currentRubricStudentOutcome += 1
+                    currentRubricObject = Rubric.objects.get(id=createdRubricsInfo[currentRubric-1])
+                    currentStudentOutcomeObject = StudentOutcome.objects.get(id=greatestStudentOutcomeId + (createdStudentOutcomesCounter))
+                    obj, _ = RubricStudentOutcome.objects.get_or_create(idRubricStudentOutcome=currentRubricStudentOutcome, codeRubric=currentRubricObject, codeStudentOutcome= currentStudentOutcomeObject)
+                    #create week entity using current rubric and current studentOutcome
+	
 
         with connection.cursor() as cursor:
             #Get the greatest idAssignment to assign the next number to new assignment
@@ -83,7 +106,7 @@ class UploadRubricsView(APIView):
                 createdPerformanceIndicatorsCounter += 1
                 if pandas.isnull(studentOutcomesDescription[i]) != True:
                     currentStudentOutcome += 1
-                currentStudentOutcomeObject = StudentOutcome.objects.get(idStudentOutcome=createdStudentOutcomeInfo[currentStudentOutcome-1])
+                currentStudentOutcomeObject = StudentOutcome.objects.get(id=createdStudentOutcomeInfo[currentStudentOutcome-1])
                 obj, _ = PerformanceIndicator.objects.get_or_create(idPerformanceIndicator=greatestPerformanceIndicatorId + (createdPerformanceIndicatorsCounter), codeSO=currentStudentOutcomeObject, codePI= PerformanceIndicatorsCode[i], description=PerformanceIndicatorsDescription[i], isActive='True')
                 createdPerformanceIndicatorInfo.append((greatestPerformanceIndicatorId + createdPerformanceIndicatorsCounter))
 
