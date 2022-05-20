@@ -23,7 +23,6 @@ class UploadRubricsView(APIView):
     """Create student's users"""
     def post(self, request, *args, **kwargs):
         file = request.FILES['file']
-        print("hola rubrics")
         path = default_storage.save("tmp", ContentFile(file.read()))
         
         data_frame_rubricsInfo = pandas.read_excel(path, sheet_name='Rubrica')
@@ -41,7 +40,10 @@ class UploadRubricsView(APIView):
             cursor.execute(query)
             result=cursor.fetchone()
 
-        greatestRubricId = result[0]	
+        try:
+            greatestRubricId = result[0]	
+        except:
+            greatestRubricId = 0	
         createdRubricsCounter = 0
         createdRubricsInfo = []
         for i in range(len(rubricsCode)):	
@@ -56,7 +58,10 @@ class UploadRubricsView(APIView):
             cursor.execute(query)
             result=cursor.fetchone()
 
-        greatestStudentOutcomeId = result[0]
+        try:
+            greatestStudentOutcomeId = result[0]	
+        except:
+            greatestStudentOutcomeId = 0	
 
         with connection.cursor() as cursor:
             #Get the greatest idRubricStudentOutcome to assign the next number to new RubricStudentOutcomes raws
@@ -66,7 +71,10 @@ class UploadRubricsView(APIView):
 
 
         currentRubric = 0
-        currentRubricStudentOutcome = result[0]
+        try:
+            currentRubricStudentOutcome = result[0]
+        except:
+            currentRubricStudentOutcome = 0	        
         createdStudentOutcomesCounter = 0
         createdStudentOutcomeInfo = []
         for i in range(len(studentOutcomesDescription)):			
@@ -99,7 +107,10 @@ class UploadRubricsView(APIView):
             result=cursor.fetchone()
 
         currentStudentOutcome = 0
-        greatestPerformanceIndicatorId = result[0]
+        try:
+            greatestPerformanceIndicatorId = result[0]
+        except:
+            greatestPerformanceIndicatorId = 0	                
         createdPerformanceIndicatorsCounter = 0
         createdPerformanceIndicatorInfo = []
         for i in range(len(PerformanceIndicatorsCode)):			
@@ -118,7 +129,10 @@ class UploadRubricsView(APIView):
             result=cursor.fetchone()
 
         currentPerformanceIndicator = 0
-        greatestIndicatorMeasureId = result[0]
+        try:
+            greatestIndicatorMeasureId = result[0]
+        except:
+            greatestIndicatorMeasureId = 0
         createdIndicatorMeasuresCounter = 0
         currentCodeMeasure = 4
         currentLevelMeasure = 'Experto'
@@ -159,13 +173,15 @@ class UploadRubricsView(APIView):
             cursor.execute(query)
             result=cursor.fetchone()
 
-        currentMaxIndicatorGroup = result[0]
+        try:
+            currentMaxIndicatorGroup = result[0]
+        except:
+            currentMaxIndicatorGroup = 0        
 
         for i in range(len(courseCode)):	
             if pandas.isnull(courseCode[i]) != True:
                 try:
                   courseTest = Course.objects.get(codeCourse=courseCode[i])
-                  print("The course exists")
                 except:
                   courseTest, _ = Course.objects.get_or_create(codeCourse=courseCode[i], nameCourse=courseName[i], departmentCourse= [program[i]])                
 				#Search for each course its groupCo related rows
