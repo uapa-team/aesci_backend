@@ -130,6 +130,7 @@ class RubricStudentOutcome(models.Model):
     codeRubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
     codeStudentOutcome = models.ForeignKey(StudentOutcome, on_delete=models.CASCADE)
 
+
 class Assignment(models.Model):
     idAssignment = models.AutoField(primary_key=True)
     usernameTeacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)

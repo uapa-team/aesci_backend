@@ -141,6 +141,11 @@ class ProgramSerializer(serializers.ModelSerializer):
         model = Program
         fields = '__all__'
 
+class RubricStudentOutcomeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RubricStudentOutcome
+        fields = '__all__'    
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):

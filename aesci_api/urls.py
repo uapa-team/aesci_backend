@@ -5,6 +5,8 @@ from rest_framework_simplejwt.views import (
 )
 from rest_framework import routers
 
+from aesci_api.views.RubricStudentOutcome import RubricStudentOutcomeViewSet
+
 from .views import *
 from .views import CreateAssignment
 from .views import AssignmentGroupTeacher
@@ -19,13 +21,13 @@ router.register(r'groupstudents', GroupStudentViewSet, basename="groupstudent")
 router.register(r'groupteachers', GroupTeacherViewSet, basename="groupteacher")
 router.register(r'rubrics', RubricViewSet, basename="rubric")
 router.register(r'studentoutcomes', StudentOutcomeViewSet, basename="studentoutcome")
-router.register(r'rubricsstudentoutcomes', RubricsStudentOutcomeViewSet, basename="rubricsstudentoutcomes")
 router.register(r'performanceindicators', PerformanceIndicatorViewSet, basename="performanceindicator")
 router.register(r'indicatormeasures', IndicatorMeasureViewSet, basename="indicatormeasure")
 router.register(r'programs', ProgramViewSet, basename="program")
 router.register(r'indicatorgroups', IndicatorGroupViewSet, basename="indicatorgroup")
 router.register(r'indicatorassignments', IndicatorAssignmentViewSet, basename="indicatorassignment")
 router.register(r'evaluationassignments', EvaluationAssignmentViewSet, basename="evaluationassignment")
+router.register(r'rubricstudentoutcomes', RubricStudentOutcomeViewSet, basename="rubricstudentoutcome")
 
 
 urlpatterns = [

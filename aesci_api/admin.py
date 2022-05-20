@@ -11,5 +11,4 @@ admin.site.register(GroupCo)
 admin.site.register(GroupStudent)
 admin.site.register(GroupTeacher)
 admin.site.register(Course)
-admin.site.register(RubricStudentOutcome)
 
