@@ -96,8 +96,10 @@ class GroupCo(models.Model):
 
     def __str__(self):
         """String for representing the Model object."""
-        nameGroup = f"{self.course.nameCourse} - {self.numGroup}"  
-        return  nameGroup
+        groupCoId = f"{self.idGroupCo}"  
+        return  groupCoId
+#        nameGroup = f"{self.course.nameCourse} - {self.numGroup}"  
+#        return  nameGroup
 
 class Rubric(models.Model):
     id = models.AutoField(primary_key=True)

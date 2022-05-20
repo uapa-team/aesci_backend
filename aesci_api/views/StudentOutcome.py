@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
 
-from ..models import StudentOutcome, Rubric
+from ..models import StudentOutcome, Rubric, RubricStudentOutcome
 from ..serializers import StudentOutcomeSerializer
 
 from django.db import connection
@@ -36,7 +36,15 @@ class StudentOutcomeViewSet(viewsets.ModelViewSet):
 
         #Create the studentoutcome object in database
 
-        obj, _ = StudentOutcome.objects.get_or_create(id=result[0] + 1,description=description, codeRubric=rubric,isActive=isActive)
+        objs, _ = StudentOutcome.objects.get_or_create(id=result[0] + 1,description=description,isActive=isActive)
+
+        with connection.cursor() as cursor:
+            #Get the greatest idRubricStudentOutcome to assign the next number to new RubricStudentOutcomes raws
+            query='SELECT "idRubricStudentOutcome" FROM aesci_api_rubricstudentoutcome WHERE "idRubricStudentOutcome" = (SELECT max("idRubricStudentOutcome") from aesci_api_rubricstudentoutcome)'
+            cursor.execute(query)
+            result=cursor.fetchone()
+
+        obj, _ = RubricStudentOutcome.objects.get_or_create(idRubricStudentOutcome=result[0] + 1,codeRubric=rubric,codeStudentOutcome=objs)
 
         return Response("Resultado creado exitosamente", status=status.HTTP_200_OK)
 
