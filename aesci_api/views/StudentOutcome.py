@@ -105,7 +105,7 @@ class StudentOutcomeViewSet(viewsets.ModelViewSet):
 
         instance = StudentOutcome.objects.get(pk=kwargs['pk'])
 
-        data = {"codeRubric":instance.codeRubric_id,"description":instance.description,"isActive":"False"}
+        data = {"description":instance.description,"isActive":"False"}
 
         # Set up serializer
         serializer = self.get_serializer(instance, data, partial=partial)
