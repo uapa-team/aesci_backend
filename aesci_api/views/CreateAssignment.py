@@ -136,7 +136,10 @@ class CreateAssignmentView(APIView):
             query='SELECT "idAssignmentStudent" FROM aesci_api_assignmentstudent WHERE "idAssignmentStudent" = (SELECT max("idAssignmentStudent") from aesci_api_assignmentstudent)'
             cursor.execute(query)
             maxIdAssignmentStudent=cursor.fetchone()
-            maxIdAssignmentStudent=maxIdAssignmentStudent[0]
+            try:
+                maxIdAssignmentStudent=maxIdAssignmentStudent[0]
+            except:
+                maxIdAssignmentStudent=0
             #print("F")
             #print(maxIdAssignmentStudent)
 
