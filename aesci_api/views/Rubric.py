@@ -43,7 +43,13 @@ class RubricViewSet(viewsets.ModelViewSet):
         #        if element1[1]==element0:
         #            departmentCodes.append(element1[0])
 
-        obj, _ = Rubric.objects.get_or_create(id=result[0] + 1, codeRubric=codeRubric,
+        try:    
+		#Save the idAssignment to later create the assignmentStudent tuple after creating the assignment
+            idNewRubric = result[0] + 1
+        except:
+            idNewRubric = 1
+
+        obj, _ = Rubric.objects.get_or_create(id=idNewRubric, codeRubric=codeRubric,
         description=description,isActive=isActive, departmentRubric=departmentRubricList)
 
         return Response("Rúbrica creada", status=status.HTTP_200_OK)
