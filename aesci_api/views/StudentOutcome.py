@@ -38,18 +38,30 @@ class StudentOutcomeViewSet(viewsets.ModelViewSet):
             cursor.execute(query2)
             result2=cursor.fetchone()
 
+        try:    
+		#Save the idAssignment to later create the assignmentStudent tuple after creating the assignment
+            idNewStudentOutcome = result1[0] + 1
+        except:
+            idNewStudentOutcome = 1
+
+        try:    
+		#Save the idAssignment to later create the assignmentStudent tuple after creating the assignment
+            idNewRubricStudentOutcome = result2[0] + 1
+        except:
+            idNewRubricStudentOutcome = 1
+
         #Create the studentoutcome object in database
         #Create the object in weak entity, too
 
-        obj, _ = StudentOutcome.objects.get_or_create(id=result1[0] + 1,description=description,isActive=isActive)
+        obj, _ = StudentOutcome.objects.get_or_create(id=idNewStudentOutcome,description=description,isActive=isActive)
         
-        studentOutcomeCreated= StudentOutcome.objects.get(id=result1[0] + 1)
+        studentOutcomeCreated= StudentOutcome.objects.get(id=idNewStudentOutcome)
         
         count=1
 
         for i in rubricsList:
             rubricObject = Rubric.objects.get(id=i)
-            obj, _ = RubricStudentOutcome.objects.get_or_create(idRubricStudentOutcome=result2[0] + count,codeRubric=rubricObject, codeStudentOutcome=studentOutcomeCreated)
+            obj, _ = RubricStudentOutcome.objects.get_or_create(idRubricStudentOutcome=idNewRubricStudentOutcome + count,codeRubric=rubricObject, codeStudentOutcome=studentOutcomeCreated)
             count = count +1
 
         return Response("Resultado creado exitosamente", status=status.HTTP_200_OK)
@@ -88,13 +100,19 @@ class StudentOutcomeViewSet(viewsets.ModelViewSet):
                 cursor.execute(query2)
                 result2=cursor.fetchone()
 
-        count=1
+        try:    
+		#Save the idAssignment to later create the assignmentStudent tuple after creating the assignment
+            idNewRubricStudentOutcome = result2[0] + 1
+        except:
+            idNewRubricStudentOutcome = 1
+
+        count=0
         
         #Create new relations with data given in the request
         for i in rubricsList:
             rubricObject = Rubric.objects.get(id=i)
             studentOutcomeObject = StudentOutcome.objects.get(id=pk)
-            obj, _ = RubricStudentOutcome.objects.get_or_create(idRubricStudentOutcome=result2[0] + count,codeRubric=rubricObject, codeStudentOutcome=studentOutcomeObject)
+            obj, _ = RubricStudentOutcome.objects.get_or_create(idRubricStudentOutcome=idNewRubricStudentOutcome + count,codeRubric=rubricObject, codeStudentOutcome=studentOutcomeObject)
             count = count +1
 
         return Response("Resultado de formación actualizado", status=status.HTTP_200_OK)
@@ -105,7 +123,7 @@ class StudentOutcomeViewSet(viewsets.ModelViewSet):
 
         instance = StudentOutcome.objects.get(pk=kwargs['pk'])
 
-        data = {"codeRubric":instance.codeRubric_id,"description":instance.description,"isActive":"False"}
+        data = {"description":instance.description,"isActive":"False"}
 
         # Set up serializer
         serializer = self.get_serializer(instance, data, partial=partial)

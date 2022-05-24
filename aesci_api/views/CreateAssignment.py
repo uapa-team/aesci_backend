@@ -103,21 +103,24 @@ class CreateAssignmentView(APIView):
                 result2 = cursor.fetchone()
                 indicatorGroup_list.append(result2)
             
+        try:    
 		#Save the idAssignment to later create the assignmentStudent tuple after creating the assignment
-        idNewAssignment = result[0] + 1
+            idNewAssignment = result[0] + 1
+        except:
+            idNewAssignment = 1
 
         #Create the assignment object in database
         #print("D")
         if links == []:
-            obj, _ = Assignment.objects.get_or_create(idAssignment=result[0] + 1,usernameTeacher=teacherObject, nameAssignment=name,
+            obj, _ = Assignment.objects.get_or_create(idAssignment=idNewAssignment,usernameTeacher=teacherObject, nameAssignment=name,
          numGroup=groupObject, dateAssignment=date, dateLimitAssignment=dateLimit, description=description)
         else:
-            obj, _ = Assignment.objects.get_or_create(idAssignment=result[0] + 1 ,usernameTeacher=teacherObject, nameAssignment=name,
+            obj, _ = Assignment.objects.get_or_create(idAssignment=idNewAssignment ,usernameTeacher=teacherObject, nameAssignment=name,
          numGroup=groupObject, dateAssignment=date, dateLimitAssignment=dateLimit, description=description, link=links)
         
         #Create the indicatorAssignment objects in database
 
-        assignmentObject = Assignment.objects.get(idAssignment=result[0] + 1)
+        assignmentObject = Assignment.objects.get(idAssignment=idNewAssignment)
         #print("E")
         for element in indicatorGroup_list:
             indicatorGroupObject = IndicatorGroup.objects.get(idIndicatorGroup=element[0])
@@ -133,7 +136,10 @@ class CreateAssignmentView(APIView):
             query='SELECT "idAssignmentStudent" FROM aesci_api_assignmentstudent WHERE "idAssignmentStudent" = (SELECT max("idAssignmentStudent") from aesci_api_assignmentstudent)'
             cursor.execute(query)
             maxIdAssignmentStudent=cursor.fetchone()
-            maxIdAssignmentStudent=maxIdAssignmentStudent[0]
+            try:
+                maxIdAssignmentStudent=maxIdAssignmentStudent[0]
+            except:
+                maxIdAssignmentStudent=0
             #print("F")
             #print(maxIdAssignmentStudent)
 
