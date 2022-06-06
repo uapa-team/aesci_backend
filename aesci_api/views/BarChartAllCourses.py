@@ -7,17 +7,29 @@ from django.db import connection
 
 from ..models import GroupCo, PerformanceIndicator, IndicatorGroup, IndicatorAssignment, EvaluationAssignment
 
-class BarChartView(APIView):
+class BarChartAllCoursesView(APIView):
     """Create relations between groups and students"""
     
     def get(self, request):
         studentOutcomeId = request.data['studentOutcome']
         semester = request.data['semester']
-        courseId = request.data['course']
-		#Get all performanceIndicator objects of selected studentOutcome
-        performanceIndicators = PerformanceIndicator.objects.all().filter(codeSO=studentOutcomeId)
-		#get all groups of the requested course in the requested semester
-        groups = GroupCo.objects.all().filter(course=courseId,periodPlan=semester)
+        performanceIndicators = []
+		#We'll evaluate if the request needs the statistics of some performanceIndicators of selected StudentOutcome
+		#or if the request needs the statistics for all performanceIndicators of selected StudentOutcome
+        if request.data["performanceIndicators"] != "[]":
+            indicators =''.join(request.data["performanceIndicators"])
+            indicatorsString1 = indicators.replace('[','')
+            indicatorsString2 = indicatorsString1.replace(']','')
+            indicatorsString3 = indicatorsString2.replace('"','')
+            indicatorsString4 = indicatorsString3.replace(' ','')
+            indicatorsList = list(indicatorsString4.split(","))
+            for x in indicatorsList:
+                performanceIndicators.append(PerformanceIndicator.objects.get(idPerformanceIndicator=x))
+        else:
+		    #Get all performanceIndicator objects of selected studentOutcome        
+            performanceIndicators = PerformanceIndicator.objects.all().filter(codeSO=studentOutcomeId)
+		#Get all courses of selected semester
+        groups = GroupCo.objects.all().filter(periodPlan=semester)
 
         indicatorsGroupList = []
 		#get indicatorGroup objects that have one performance indicator in our performanceIndicators list

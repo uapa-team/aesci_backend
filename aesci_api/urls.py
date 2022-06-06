@@ -5,6 +5,7 @@ from rest_framework_simplejwt.views import (
 )
 from rest_framework import routers
 from aesci_api.views.BarChart import BarChartView
+from aesci_api.views.BarChartAllCourses import BarChartAllCoursesView
 
 from aesci_api.views.RubricStudentOutcome import RubricStudentOutcomeViewSet
 
@@ -44,4 +45,5 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('login/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('barchart/', BarChartView.as_view()),
+    path('barchartallcourses/', BarChartAllCoursesView.as_view()),
 ]
