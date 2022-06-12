@@ -11,13 +11,13 @@ class BarChartAllCoursesView(APIView):
     """Create relations between groups and students"""
     
     def get(self, request):
-        studentOutcomeId = request.data['studentOutcome']
-        semester = request.data['semester']
+        studentOutcomeId = self.request.query_params['studentOutcome']
+        semester = self.request.query_params['semester']
         performanceIndicators = []
 		#We'll evaluate if the request needs the statistics of some performanceIndicators of selected StudentOutcome
 		#or if the request needs the statistics for all performanceIndicators of selected StudentOutcome
-        if request.data["performanceIndicators"] != "[]":
-            indicators =''.join(request.data["performanceIndicators"])
+        if self.request.query_params["performanceIndicators"] != "[]":
+            indicators =''.join(self.request.query_params["performanceIndicators"])
             indicatorsString1 = indicators.replace('[','')
             indicatorsString2 = indicatorsString1.replace(']','')
             indicatorsString3 = indicatorsString2.replace('"','')

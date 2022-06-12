@@ -12,7 +12,7 @@ class GetCourseOutcomesView(APIView):
     
     def get(self, request):
 		#get requested course
-        courseId = request.data['course']
+        courseId = self.request.query_params['course']
 
 		#get course groups
         groups = GroupCo.objects.all().filter(course=courseId)

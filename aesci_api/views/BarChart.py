@@ -11,9 +11,9 @@ class BarChartView(APIView):
     """Create relations between groups and students"""
     
     def get(self, request):
-        studentOutcomeId = request.data['studentOutcome']
-        semester = request.data['semester']
-        courseId = request.data['course']
+        studentOutcomeId = self.request.query_params['studentOutcome']
+        semester = self.request.query_params['semester']
+        courseId = self.request.query_params['course']
 		#Get all performanceIndicator objects of selected studentOutcome
         performanceIndicators = PerformanceIndicator.objects.all().filter(codeSO=studentOutcomeId)
 		#get all groups of the requested course in the requested semester
