@@ -13,6 +13,7 @@ from aesci_api.views.RubricStudentOutcome import RubricStudentOutcomeViewSet
 from .views import *
 from .views import CreateAssignment
 from .views import AssignmentGroupTeacher
+from .views import PieChart
 
 router = routers.DefaultRouter()
 
@@ -38,6 +39,7 @@ urlpatterns = [
     path('login/', LoginView.as_view()),
     path('assignmentgroups/', AssignmentGroupView.as_view()),
     path('assignmentgroupsteacher/', AssignmentGroupTeacher.AssignmentGroupTeacherView.as_view()),
+    path('piechart/', PieChart.PieChartView.as_view()),
     path('uploadstudents/', UploadStudentsView.as_view()),
 	path('uploadrubrics/', UploadRubricsView.as_view()),
     path('updatestudents/', UpdateStudentsView.as_view()),
