@@ -7,10 +7,9 @@ from django.db import connection
 class PieChartView(APIView):
     
 	def get(self, request, *args, **kwargs):
-
-		courseId = request.data["courseId"]
-		period = request.data["period"]
-		studentOutcome = request.data["studentOutcome"]
+		courseId = self.request.query_params['courseId']
+		period = self.request.query_params['period']
+		studentOutcome = self.request.query_params['studentOutcome']
 
 		with connection.cursor() as cursor:
             #Get the Ids of the groups to evaluate
