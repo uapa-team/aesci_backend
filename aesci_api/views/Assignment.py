@@ -221,8 +221,30 @@ class AssignmentViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
     
-    def destroy(self, request, pk=None):                   		
+    def destroy(self, request, pk=None):  
+        #file1 = drive.CreateFile({'id': <file-id>})
+        #file1['id'] get file id
+        #file1.Trash()  # Move file to trash.
+        #file1.UnTrash()  # Move file out of trash.
+        #file1.Delete()  # Permanently delete the file.                 		
+        gauth = GoogleAuth()
+        gauth.LoadCredentialsFile("./aesci_api/views/credentials.json")
+        if gauth.credentials is None:
+            # Authenticate if they're not there
+            gauth.LocalWebserverAuth()
+        elif gauth.access_token_expired:
+            gauth.Refresh()
+        else: 
+            gauth.Authorize()
+        drive = GoogleDrive(gauth)
         instance = self.get_object()
+        link=instance.link
+        if link!=[]:
+            print('a')
+            print(link)
+            linkList = list(link[0].split(";"))
+            file1 = drive.CreateFile({'id': linkList[2]})
+            file1.Delete()
         instance.delete()                	
             #self.perform_destroy(instance)        
         return Response("Tarea eliminada exitosamente", status=status.HTTP_200_OK)
