@@ -68,7 +68,7 @@ class CreateAssignmentView(APIView):
             file1.SetContentFile(path)
             file1.Upload()
 
-            linkPlusFileName = file1['alternateLink'] + ';' + fil.name
+            linkPlusFileName = file1['alternateLink'] + ';' + fil.name + ';' + file1['id']
 
             #print(file1['id'])
             links.append(linkPlusFileName)

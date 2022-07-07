@@ -97,7 +97,7 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
             file1.Upload()
             
             #print(file1['id'])
-            linkPlusFileName = file1['alternateLink'] + ';' + fil.name
+            linkPlusFileName = file1['alternateLink'] + ';' + fil.name + ';' + file1['id']
 			
             links.append(linkPlusFileName)
             # Remove file from storage
@@ -232,7 +232,7 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
             drive = GoogleDrive(gauth)
 
             # Set up folder ID 
-            studentFiles = os.environ.get('ASSIGNMENT_FOLDER')
+            studentFiles = os.environ.get('EVALUATIONASSIGNMENT_FOLDER')
             # Path to temp file
             tmp_file = os.path.join(settings.MEDIA_ROOT, path)
 
@@ -241,7 +241,7 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
             file1.SetContentFile(path)
             file1.Upload()
 
-            linkPlusFileName = file1['alternateLink'] + ';' + fil.name
+            linkPlusFileName = file1['alternateLink'] + ';' + fil.name + ';' + file1['id']
             
             documentsAttached.append(linkPlusFileName)
             # Remove file from storage
@@ -284,6 +284,15 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
 
             instance = EvaluationAssignment.objects.get(pk=result3[0])
 
+            if instance.documentAttached != None:
+                link=instance.documentAttached
+                print('a')
+                print(link)
+                linkList = list(link.split(";"))
+                print(linkList)
+                file1 = drive.CreateFile({'id': linkList[2]})
+                file1.Delete()
+
             if documentsAttached == [] and gradesList == []:
                 data = {"indicatorAssignment":result1[0],
                     "assignmentStudent":result2[0],
@@ -323,8 +332,25 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
 
         return Response("Actualización exitosa",status=status.HTTP_200_OK)
 
-    def destroy(self, request, pk=None):                   		
+    def destroy(self, request, pk=None):
+        gauth = GoogleAuth()
+        gauth.LoadCredentialsFile("./aesci_api/views/credentials.json")
+        if gauth.credentials is None:
+            # Authenticate if they're not there
+            gauth.LocalWebserverAuth()
+        elif gauth.access_token_expired:
+            gauth.Refresh()
+        else: 
+            gauth.Authorize()
+        drive = GoogleDrive(gauth)
         instance = self.get_object()
+        link=instance.documentAttached
+        if link!=[]:
+            print('a')
+            print(link)
+            linkList = list(link.split(";"))
+            file1 = drive.CreateFile({'id': linkList[2]})
+            file1.Delete()
         instance.delete()                 
             #self.perform_destroy(instance)        
         return Response("Calificación eliminada exitosamente", status=status.HTTP_200_OK)
