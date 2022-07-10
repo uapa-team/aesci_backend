@@ -51,6 +51,10 @@ class AssignmentStudentSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         response["Assignment"] = AssignmentSerializer(instance.Assignment).data
         response["GroupStudent"] = GroupStudentSerializer(instance.GroupStudent).data
+        if EvaluationAssignment.objects.filter(assignmentStudent=instance.idAssignmentStudent).exists():
+            response["Evaluated"] = "True"
+        else:
+            response["Evaluated"] = "False"
         return response
 
 

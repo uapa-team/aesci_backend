@@ -9,6 +9,7 @@ from pydrive.drive import GoogleDrive
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
+from django.db.models import F
 
 class AssignmentStudentViewSet(viewsets.ModelViewSet):
     """
@@ -39,13 +40,15 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
             AssignmentObject = Assignment.objects.get(idAssignment=self.request.query_params["assignment"])
             
             querysetAS = AssignmentStudent.objects.filter(Assignment=AssignmentObject)
+            print(querysetAS)
             assignmentsList = []
             #assignmentsList.append(AssignmentObject)
             
             for element in querysetAS:
-
                 assignmentsList.append(element)
-
+                #assignmentsList.append([element, "True"])
+                print(element)
+            print(assignmentsList)
             return assignmentsList
 
         # Return None if student does not have assignments
