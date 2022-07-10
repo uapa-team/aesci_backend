@@ -42,13 +42,9 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
             querysetAS = AssignmentStudent.objects.filter(Assignment=AssignmentObject)
             print(querysetAS)
             assignmentsList = []
-            #assignmentsList.append(AssignmentObject)
             
             for element in querysetAS:
                 assignmentsList.append(element)
-                #assignmentsList.append([element, "True"])
-                print(element)
-            print(assignmentsList)
             return assignmentsList
 
         # Return None if student does not have assignments

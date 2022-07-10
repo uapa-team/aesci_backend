@@ -128,6 +128,13 @@ class IndicatorAssignmentSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         response["indicatorGroup"] = IndicatorGroupSerializer(instance.indicatorGroup).data
         response["assignment"] = AssignmentSerializer(instance.assignment).data
+        try:
+            if EvaluationAssignment.objects.filter(indicatorAssignment=instance.idIndicatorAssignment, assignmentStudent=self.context['request'].query_params["assignmentStudent"]).exists():
+                response["grade"] = EvaluationAssignment.objects.get(indicatorAssignment=instance.idIndicatorAssignment, assignmentStudent=self.context['request'].query_params["assignmentStudent"]).codeMeasure
+            else:
+                response["grade"] = -1
+        except:
+            print("There are none")
         return response
 
 
