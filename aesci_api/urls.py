@@ -7,6 +7,7 @@ from rest_framework import routers
 from aesci_api.views.BarChart import BarChartView
 from aesci_api.views.BarChartAllCourses import BarChartAllCoursesView
 from aesci_api.views.GetCourseOutcomes import GetCourseOutcomesView
+from aesci_api.views.IndicatorGroupBySO import IndicatorGroupBySOView
 
 from aesci_api.views.RubricStudentOutcome import RubricStudentOutcomeViewSet
 
@@ -44,6 +45,7 @@ urlpatterns = [
 	path('uploadrubrics/', UploadRubricsView.as_view()),
     path('updatestudents/', UpdateStudentsView.as_view()),
     path('createstudents/', CreateStudentsView.as_view()),
+    path('indicatorgroupsbyso/', IndicatorGroupBySOView.as_view()),
     path('createassignment/', CreateAssignment.CreateAssignmentView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('login/verify/', TokenVerifyView.as_view(), name='token_verify'),
