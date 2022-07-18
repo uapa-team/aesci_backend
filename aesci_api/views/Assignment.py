@@ -86,7 +86,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
             file1.SetContentFile(path)
             file1.Upload()
 
-            linkPlusFileName = file1['alternateLink'] + ';' + fil.name
+            linkPlusFileName = file1['alternateLink'] + ';' + fil.name + ';' + file1['id']
                         
             links.append(linkPlusFileName)
             # Remove file from storage
@@ -239,10 +239,12 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         drive = GoogleDrive(gauth)
         instance = self.get_object()
         link=instance.link
-        if link!=[]:
+        print(link)
+        if link!=None:
             print('a')
             print(link)
             linkList = list(link[0].split(";"))
+            print(linkList)
             file1 = drive.CreateFile({'id': linkList[2]})
             file1.Delete()
         instance.delete()                	
