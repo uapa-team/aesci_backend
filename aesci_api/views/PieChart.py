@@ -75,6 +75,7 @@ class PieChartView(APIView):
 			currentStudent=first[0]
 			measureSum=0
 			measureCount=0
+			studentCount=0
 
 			for element in query_result:
 				if element[0]==currentStudent:
@@ -83,6 +84,7 @@ class PieChartView(APIView):
 					print(measureCount)
 					print(measureSum)
 				elif element[0]!='-1':
+					studentCount=studentCount+1
 					currentStudent=int(element[0])
 					averageMeasure=measureSum/measureCount
 					measureSum=int(element[1])
@@ -96,6 +98,7 @@ class PieChartView(APIView):
 					elif averageMeasure > 3 and averageMeasure <= 4:
 						res[0]=res[0]+1
 				else:
+					studentCount=studentCount+1
 					averageMeasure=measureSum/measureCount
 					measureSum=int(element[1])
 					measureCount=1
@@ -107,4 +110,10 @@ class PieChartView(APIView):
 						res[1]=res[1]+1
 					elif averageMeasure > 3 and averageMeasure <= 4:
 						res[0]=res[0]+1
-		return Response(res, status=status.HTTP_200_OK)
+			finalRes = [0,0,0,0]
+			finalCount= 0
+			for el in res:
+				finalRes[finalCount]=(el/studentCount)*100
+				finalCount=finalCount+1
+			print(finalRes)
+		return Response([studentCount,res,finalRes], status=status.HTTP_200_OK)

@@ -68,6 +68,7 @@ class BarChartView(APIView):
             for x in indicatorGradesList:     
     			#Each indicator has 4 percentages corresponding to the 4 possible indicators       
                 currentIndicatorPercentages = [0,0,0,0]
+                currentIndicatorStudents = [0,0,0,0]
                 numberEvaluations = 0
                 for y in x[1]:
     				#save the number of grades of assignments related with current performanceIndicator
@@ -75,6 +76,7 @@ class BarChartView(APIView):
                     for z in y:
     					#We'll add 1 to the index of the measure of current assignment 
                         currentIndicatorPercentages[(int(z.codeMeasure))-1]=currentIndicatorPercentages[(int(z.codeMeasure))-1]+1
+                        currentIndicatorStudents[(int(z.codeMeasure))-1]=currentIndicatorStudents[(int(z.codeMeasure))-1]+1
     			#Sometimes, indicators don't have yet any assignment, so that numberEvaluations=0 then the percentage we'll be 0 as
     			#we've defined initially in the array
     			#If there is any assignment related with the performance indicator that has been grade then
@@ -82,7 +84,7 @@ class BarChartView(APIView):
                 if numberEvaluations!=0 :
                     currentIndicatorPercentages = [w/numberEvaluations for w in currentIndicatorPercentages]
     			#Now add the id of the performanceIndicator along with its correspondant percentages
-                indicatorPercentagesList.append([x[0].idPerformanceIndicator, currentIndicatorPercentages])
+                indicatorPercentagesList.append([x[0].idPerformanceIndicator, currentIndicatorPercentages, currentIndicatorStudents])
             return Response(indicatorPercentagesList, status=status.HTTP_200_OK)
         else:
             semestersStatistics = []
@@ -151,6 +153,7 @@ class BarChartView(APIView):
                                 gradesSPA.append([[student.username,assignment],z.codeMeasure])
         		#Now, let's calculate the level of each student in their respective assignments
                 percentages = [0,0,0,0]
+                students = [0,0,0,0]
                 numberEvaluations = 0
                 print(gradesSPA)
                 for x in gradesSPA:     
@@ -162,9 +165,10 @@ class BarChartView(APIView):
                     averageGrade = round(sum/(len(x)-1))
         				#We'll add 1 to the index of the level of current student
                     percentages[averageGrade-1]=percentages[averageGrade-1]+1
+                    students[averageGrade-1]=students[averageGrade-1]+1
                 if len(gradesSPA)!=0 :
                     percentages = [w/len(gradesSPA) for w in percentages]
-                semestersStatistics.append([w, percentages])
+                semestersStatistics.append([w, percentages, students])
             return Response(semestersStatistics, status=status.HTTP_200_OK)
 
 
