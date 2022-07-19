@@ -113,7 +113,8 @@ class PieChartView(APIView):
 			finalRes = [0,0,0,0]
 			finalCount= 0
 			for el in res:
-				finalRes[finalCount]=(el/studentCount)*100
+				if studentCount!=0:
+					finalRes[finalCount]=(el/studentCount)*100
 				finalCount=finalCount+1
 			print(finalRes)
 		return Response([studentCount,res,finalRes], status=status.HTTP_200_OK)
