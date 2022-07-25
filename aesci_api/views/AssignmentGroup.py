@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 
 from django.db import connection
 
-from ..models import GroupCo, GroupStudent, Student, Assignment
+from ..models import GroupCo, GroupStudent, Student, Assignment, AssignmentStudent, EvaluationAssignment
 
 class AssignmentGroupView(APIView):
     """Create relations between groups and students"""
@@ -38,6 +38,14 @@ class AssignmentGroupView(APIView):
                     assignmentObject = Assignment.objects.get(idAssignment=element[6])
                     assignmentObject.link
                     aux['assignmentLinks'] = assignmentObject.link
+					#Now, let's see if this assignment of this student was already evaluated by looking
+					#for any evaluatioon for the assignmentStudent object related
+                    groupStudent = GroupStudent.objects.get(username= element[2], numGroup=element[1])
+                    assignmentStudent = AssignmentStudent.objects.get(GroupStudent= groupStudent.idGroupStudent, Assignment=element[6])
+                    if EvaluationAssignment.objects.filter(assignmentStudent=assignmentStudent.idAssignmentStudent).exists():
+                        aux['evaluated'] = "True"
+                    else:
+                        aux['evaluated'] = "False"
                     res[result[0]].append(aux)
                 else:
                     aux = {}
@@ -50,6 +58,14 @@ class AssignmentGroupView(APIView):
                     assignmentObject = Assignment.objects.get(idAssignment=element[6])
                     assignmentObject.link
                     aux['assignmentLinks'] = assignmentObject.link					
+					#Now, let's see if this assignment of this student was already evaluated by looking
+					#for any evaluatioon for the assignmentStudent object related
+                    groupStudent = GroupStudent.objects.get(username= element[2], numGroup=element[1])
+                    assignmentStudent = AssignmentStudent.objects.get(GroupStudent= groupStudent.idGroupStudent, Assignment=element[6])
+                    if EvaluationAssignment.objects.filter(assignmentStudent=assignmentStudent.idAssignmentStudent).exists():
+                        aux['evaluated'] = "True"
+                    else:
+                        aux['evaluated'] = "False"
                     res[result[0]].append(aux)
             
             res = list(res.items())
