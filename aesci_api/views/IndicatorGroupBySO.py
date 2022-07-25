@@ -56,9 +56,9 @@ class IndicatorGroupBySOView(APIView):
                         IndicatorsGroupByStudentOutcome[0].append(serializer.data)
                         serializer = PerformanceIndicatorSerializer(PerformanceIndicator.objects.get(idPerformanceIndicator = x.performanceIndicator.idPerformanceIndicator))
                         if IndicatorAssignment.objects.filter(indicatorGroup=x.idIndicatorGroup, assignment=self.request.query_params["assignment"]).exists():
-                            IndicatorsGroupByStudentOutcome.append([serializer.data,"True"])
+                            IndicatorsGroupByStudentOutcome.append([[serializer.data,"True"]])
                         else:
-                            IndicatorsGroupByStudentOutcome.append([serializer.data,"False"])
+                            IndicatorsGroupByStudentOutcome.append([[serializer.data,"False"]])
                 return Response(IndicatorsGroupByStudentOutcome, status=status.HTTP_200_OK)
             else:
                 return Response("No hay ningún indicator asociado a ese grupo", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
