@@ -254,7 +254,7 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
 
             #Change grade into measure if the grade is a normal number
 
-            if isNumber == "True":
+            if isNumber.lower() == "True".lower():
 
                 if float(gradesList[i]) < 2.1:
                     measuresList.append("1")
