@@ -75,7 +75,7 @@ class BarChartAllCoursesView(APIView):
             numberEvaluations = 0
             for y in x[1]:
 				#save the number of grades of assignments related with current performanceIndicator
-                numberEvaluations = y.count()
+                numberEvaluations = numberEvaluations+y.count()
                 for z in y:
 					#We'll add 1 to the index of the measure of current assignment 
                     currentIndicatorPercentages[(int(z.codeMeasure))-1]=currentIndicatorPercentages[(int(z.codeMeasure))-1]+1
@@ -88,7 +88,6 @@ class BarChartAllCoursesView(APIView):
                 currentIndicatorPercentages = [w/numberEvaluations for w in currentIndicatorPercentages]
 			#Now add the id of the performanceIndicator along with its correspondant percentages
             indicatorPercentagesList.append([x[0].idPerformanceIndicator, currentIndicatorPercentages, currentIndicatorStudents])
-
         return Response(indicatorPercentagesList, status=status.HTTP_200_OK)
 
 

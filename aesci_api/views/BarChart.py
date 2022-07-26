@@ -72,7 +72,7 @@ class BarChartView(APIView):
                 numberEvaluations = 0
                 for y in x[1]:
     				#save the number of grades of assignments related with current performanceIndicator
-                    numberEvaluations = y.count()
+                    numberEvaluations = numberEvaluations+y.count()
                     for z in y:
     					#We'll add 1 to the index of the measure of current assignment 
                         currentIndicatorPercentages[(int(z.codeMeasure))-1]=currentIndicatorPercentages[(int(z.codeMeasure))-1]+1
@@ -163,7 +163,7 @@ class BarChartView(APIView):
 						#remember the tuple that tell us in which student and assignment we're currently at is x[0]
                         sum += int(x[y+1])
                     averageGrade = round(sum/(len(x)-1))
-        				#We'll add 1 to the index of the level of current student
+        			#We'll add 1 to the index of the level of current student
                     percentages[averageGrade-1]=percentages[averageGrade-1]+1
                     students[averageGrade-1]=students[averageGrade-1]+1
                 if len(gradesSPA)!=0 :
