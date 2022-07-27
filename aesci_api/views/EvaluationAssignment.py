@@ -12,7 +12,7 @@ from django.core.files.base import ContentFile
 
 from django.db import connection
 
-from ..models import EvaluationAssignment, IndicatorAssignment, AssignmentStudent
+from ..models import EvaluationAssignment, IndicatorAssignment, AssignmentStudent, GroupTeacher, GroupStudent
 from ..serializers import EvaluationAssignmentSerializer
 from ..helpers import EVTYPES
 
@@ -34,6 +34,7 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
         isNumber = self.request.data["isNumber"]
         assignment = self.request.data["assignment"]
         group = self.request.data["group"]
+        evaluator = self.request.data["evaluator"]
 
         #Create lists for indicators, measures and grades (if they exist)
 
@@ -124,11 +125,11 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
                 query=f'SELECT "idIndicatorAssignment" FROM aesci_api_indicatorassignment WHERE "assignment_id" = \'{assignment}\' and "indicatorGroup_id" = (SELECT "idIndicatorGroup" FROM aesci_api_indicatorgroup WHERE "numGroup_id"=\'{group}\' AND "performanceIndicator_id"=\'{indicatorsList[i]}\')'
                 cursor.execute(query)
                 result1=cursor.fetchone()
-                print(result1)
+                #print(result1)
                 query2=f'SELECT "idAssignmentStudent" FROM aesci_api_assignmentStudent WHERE "Assignment_id" = \'{assignment}\' and "GroupStudent_id" = (SELECT "idGroupStudent" FROM aesci_api_groupstudent WHERE "numGroup_id"=\'{group}\' AND "username_id"=\'{username}\')'
                 cursor.execute(query2)
                 result2=cursor.fetchone()
-                print(result2)
+                #print(result2)
 
             IndicatorAssignmentObject = IndicatorAssignment.objects.get(idIndicatorAssignment=result1[0])
             AssignmentStudentObject = AssignmentStudent.objects.get(idAssignmentStudent=result2[0])
@@ -136,40 +137,84 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
             #Create EvaluationStudent objects depending if documents and grades exist
 
             if links == [] and gradesList == []:
-
-                EvaluationAssignment.objects.create(indicatorAssignment=IndicatorAssignmentObject,
-                    assignmentStudent=AssignmentStudentObject,
-                    qualifier=qualifier,
-                    evaluationType=evaluationType,
-                    codeMeasure=measuresList[i])
+                if (evaluationType == "EVAL") or (evaluationType == "COTE"):
+                    evaluator = GroupTeacher.objects.get(idGroupTeacher = evaluator)
+                    EvaluationAssignment.objects.create(indicatorAssignment=IndicatorAssignmentObject,
+                        assignmentStudent=AssignmentStudentObject,
+                        qualifier=qualifier,
+                        evaluationType=evaluationType,
+                        codeMeasure=measuresList[i],
+                        teacherEvaluator=evaluator)
+                else:
+                    evaluator = GroupStudent.objects.get(idGroupStudent = evaluator)
+                    EvaluationAssignment.objects.create(indicatorAssignment=IndicatorAssignmentObject,
+                        assignmentStudent=AssignmentStudentObject,
+                        qualifier=qualifier,
+                        evaluationType=evaluationType,
+                        codeMeasure=measuresList[i],
+                        studentEvaluator=evaluator)
 
             elif links == []:
-
-                EvaluationAssignment.objects.create(indicatorAssignment=IndicatorAssignmentObject,
-                    assignmentStudent=AssignmentStudentObject,
-                    qualifier=qualifier,
-                    evaluationType=evaluationType,
-                    codeMeasure=measuresList[i],
-                    grade=gradesList[i])
+                if (evaluationType == "EVAL") or (evaluationType == "COTE"):
+                    evaluator = GroupTeacher.objects.get(idGroupTeacher = evaluator)
+                    EvaluationAssignment.objects.create(indicatorAssignment=IndicatorAssignmentObject,
+                        assignmentStudent=AssignmentStudentObject,
+                        qualifier=qualifier,
+                        evaluationType=evaluationType,
+                        codeMeasure=measuresList[i],
+                        grade=gradesList[i],
+                        teacherEvaluator=evaluator)
+                else:
+                    evaluator = GroupStudent.objects.get(idGroupStudent = evaluator)
+                    EvaluationAssignment.objects.create(indicatorAssignment=IndicatorAssignmentObject,
+                        assignmentStudent=AssignmentStudentObject,
+                        qualifier=qualifier,
+                        evaluationType=evaluationType,
+                        codeMeasure=measuresList[i],
+                        grade=gradesList[i],
+                        studentEvaluator=evaluator)
 
             elif gradesList == []:
-
-                EvaluationAssignment.objects.create(indicatorAssignment=IndicatorAssignmentObject,
-                    assignmentStudent=AssignmentStudentObject,
-                    qualifier=qualifier,
-                    evaluationType=evaluationType,
-                    codeMeasure=measuresList[i],
-                    documentAttached= links[0])
+                if (evaluationType == "EVAL") or (evaluationType == "COTE"):
+                    evaluator = GroupTeacher.objects.get(idGroupTeacher = evaluator)
+                    EvaluationAssignment.objects.create(indicatorAssignment=IndicatorAssignmentObject,
+                        assignmentStudent=AssignmentStudentObject,
+                        qualifier=qualifier,
+                        evaluationType=evaluationType,
+                        codeMeasure=measuresList[i],
+                        documentAttached= links[0],
+                        teacherEvaluator=evaluator)
+                else:
+                    evaluator = GroupStudent.objects.get(idGroupStudent = evaluator)
+                    EvaluationAssignment.objects.create(indicatorAssignment=IndicatorAssignmentObject,
+                        assignmentStudent=AssignmentStudentObject,
+                        qualifier=qualifier,
+                        evaluationType=evaluationType,
+                        codeMeasure=measuresList[i],
+                        documentAttached= links[0],
+                        studentEvaluator=evaluator)
 
             else:
-
-                EvaluationAssignment.objects.create(indicatorAssignment=IndicatorAssignmentObject,
-                    assignmentStudent=AssignmentStudentObject,
-                    qualifier=qualifier,
-                    evaluationType=evaluationType,
-                    codeMeasure=measuresList[i],
-                    grade=gradesList[i],
-                    documentAttached= links[0])
+                if (evaluationType == "EVAL") or (evaluationType == "COTE"):
+                    evaluator = GroupTeacher.objects.get(idGroupTeacher = evaluator)
+                    EvaluationAssignment.objects.create(indicatorAssignment=IndicatorAssignmentObject,
+                        assignmentStudent=AssignmentStudentObject,
+                        qualifier=qualifier,
+                        evaluationType=evaluationType,
+                        codeMeasure=measuresList[i],
+                        grade=gradesList[i],
+                        documentAttached= links[0],
+                        teacherEvaluator=evaluator)
+                else:
+                    evaluator = GroupStudent.objects.get(idGroupStudent = evaluator)
+                    EvaluationAssignment.objects.create(indicatorAssignment=IndicatorAssignmentObject,
+                        assignmentStudent=AssignmentStudentObject,
+                        qualifier=qualifier,
+                        evaluationType=evaluationType,
+                        codeMeasure=measuresList[i],
+                        grade=gradesList[i],
+                        documentAttached= links[0],
+                        studentEvaluator=evaluator)
 
         return Response("Calificación exitosa", status=status.HTTP_200_OK)
 
@@ -182,6 +227,7 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
         isNumber = self.request.data["isNumber"]
         assignment = self.request.data["assignment"]
         group = self.request.data["group"]
+        evaluator = self.request.data["evaluator"]
 
         #Create lists for indicators, measures and grades (if they exist)
 
@@ -272,55 +318,103 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
                 query=f'SELECT "idIndicatorAssignment" FROM aesci_api_indicatorassignment WHERE "assignment_id" = \'{assignment}\' and "indicatorGroup_id" = (SELECT "idIndicatorGroup" FROM aesci_api_indicatorgroup WHERE "numGroup_id"=\'{group}\' AND "performanceIndicator_id"=\'{indicatorsList[i]}\')'
                 cursor.execute(query)
                 result1=cursor.fetchone()
-                print(result1)
+                #print(result1)
                 query2=f'SELECT "idAssignmentStudent" FROM aesci_api_assignmentStudent WHERE "Assignment_id" = \'{assignment}\' and "GroupStudent_id" = (SELECT "idGroupStudent" FROM aesci_api_groupstudent WHERE "numGroup_id"=\'{group}\' AND "username_id"=\'{username}\')'
                 cursor.execute(query2)
                 result2=cursor.fetchone()
-                print(result2)
+                #print(result2)
                 query3=f'SELECT "idEvaluationAssignment" FROM aesci_api_evaluationassignment WHERE "assignmentStudent_id"= \'{result2[0]}\' and "indicatorAssignment_id"=\'{result1[0]}\''
                 cursor.execute(query3)
                 result3=cursor.fetchone()
-                print(result3)
+                #print(result3)
 
             instance = EvaluationAssignment.objects.get(pk=result3[0])
 
             if instance.documentAttached != None:
                 link=instance.documentAttached
-                print('a')
-                print(link)
+                #print('a')
+                #print(link)
                 linkList = list(link.split(";"))
-                print(linkList)
+                #print(linkList)
                 file1 = drive.CreateFile({'id': linkList[2]})
                 file1.Delete()
 
             if documentsAttached == [] and gradesList == []:
-                data = {"indicatorAssignment":result1[0],
-                    "assignmentStudent":result2[0],
-                    "qualifier":qualifier,
-                    "evaluationType":evaluationType,
-                    "codeMeasure":measuresList[i] }                        
+                if (evaluationType == "EVAL") or (evaluationType == "COTE"):
+                    #evaluator = GroupTeacher.objects.get(idGroupTeacher = evaluator)
+                    data = {"indicatorAssignment":result1[0],
+                        "assignmentStudent":result2[0],
+                        "qualifier":qualifier,
+                        "evaluationType":evaluationType,
+                        "codeMeasure":measuresList[i],
+                        "teacherEvaluator":evaluator }
+                else:
+                    #evaluator = GroupStudent.objects.get(idGroupStudent = evaluator)
+                    data = {"indicatorAssignment":result1[0],
+                        "assignmentStudent":result2[0],
+                        "qualifier":qualifier,
+                        "evaluationType":evaluationType,
+                        "codeMeasure":measuresList[i],
+                        "studentEvaluator":evaluator }
             elif documentsAttached == []:
-                data = {"indicatorAssignment":result1[0],
-                    "assignmentStudent":result2[0],
-                    "qualifier":qualifier,
-                    "evaluationType":evaluationType,
-                    "codeMeasure":measuresList[i],
-                    "grade":gradesList[i] }
+                if (evaluationType == "EVAL") or (evaluationType == "COTE"):
+                    #evaluator = GroupTeacher.objects.get(idGroupTeacher = evaluator)
+                    data = {"indicatorAssignment":result1[0],
+                        "assignmentStudent":result2[0],
+                        "qualifier":qualifier,
+                        "evaluationType":evaluationType,
+                        "codeMeasure":measuresList[i],
+                        "grade":gradesList[i],
+                        "teacherEvaluator":evaluator }
+                else:
+                    #evaluator = GroupStudent.objects.get(idGroupStudent = evaluator)
+                    data = {"indicatorAssignment":result1[0],
+                        "assignmentStudent":result2[0],
+                        "qualifier":qualifier,
+                        "evaluationType":evaluationType,
+                        "codeMeasure":measuresList[i],
+                        "grade":gradesList[i],
+                        "studentEvaluator":evaluator }
             elif gradesList == []:
-                data = {"indicatorAssignment":result1[0],
-                    "assignmentStudent":result2[0],
-                    "qualifier":qualifier,
-                    "evaluationType":evaluationType,
-                    "codeMeasure":measuresList[i],
-                    "documentAttached": documentsAttached[0] }
+                if (evaluationType == "EVAL") or (evaluationType == "COTE"):
+                    evaluator = GroupTeacher.objects.get(idGroupTeacher = evaluator)
+                    data = {"indicatorAssignment":result1[0],
+                        "assignmentStudent":result2[0],
+                        "qualifier":qualifier,
+                        "evaluationType":evaluationType,
+                        "codeMeasure":measuresList[i],
+                        "documentAttached": documentsAttached[0],
+                        "teacherEvaluator":evaluator }
+                else:
+                    #evaluator = GroupStudent.objects.get(idGroupStudent = evaluator)
+                    data = {"indicatorAssignment":result1[0],
+                        "assignmentStudent":result2[0],
+                        "qualifier":qualifier,
+                        "evaluationType":evaluationType,
+                        "codeMeasure":measuresList[i],
+                        "documentAttached": documentsAttached[0],
+                        "studentEvaluator":evaluator }
             else:
-                data = {"indicatorAssignment":result1[0],
-                    "assignmentStudent":result2[0],
-                    "qualifier":qualifier,
-                    "evaluationType":evaluationType,
-                    "codeMeasure":measuresList[i],
-                    "grade":gradesList[i],
-                    "documentAttached": documentsAttached[0]}                        
+                if (evaluationType == "EVAL") or (evaluationType == "COTE"):
+                    #evaluator = GroupTeacher.objects.get(idGroupTeacher = evaluator)
+                    data = {"indicatorAssignment":result1[0],
+                        "assignmentStudent":result2[0],
+                        "qualifier":qualifier,
+                        "evaluationType":evaluationType,
+                        "codeMeasure":measuresList[i],
+                        "grade":gradesList[i],
+                        "documentAttached": documentsAttached[0],
+                        "teacherEvaluator":evaluator }
+                else:
+                    #evaluator = GroupStudent.objects.get(idGroupStudent = evaluator)
+                    data = {"indicatorAssignment":result1[0],
+                        "assignmentStudent":result2[0],
+                        "qualifier":qualifier,
+                        "evaluationType":evaluationType,
+                        "codeMeasure":measuresList[i],
+                        "grade":gradesList[i],
+                        "documentAttached": documentsAttached[0],
+                        "studentEvaluator":evaluator }                        
 
             #print(data)
             # Set up serializer
