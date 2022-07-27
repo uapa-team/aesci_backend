@@ -77,25 +77,19 @@ class CreateAssignmentView(APIView):
             os.remove(tmp_file)
 
         #Get teacher and group objects to create assignment instance later
-        
-        #print("A")
 
         teacherObject = Teacher.objects.get(username=teacher)
         groupObject = GroupCo.objects.get(idGroupCo=numGroup)
 
-        #Conusult the database
+        #Conusult the database for some of the data to create the assignment instance later
 
         indicatorGroup_list = []
-
-        #print("B")
 
         with connection.cursor() as cursor:
             #Get the greatest idAssignment to assign the next number to new assignment
             query='SELECT "idAssignment" FROM aesci_api_assignment WHERE "idAssignment" = (SELECT max("idAssignment") from aesci_api_assignment)'
             cursor.execute(query)
             result=cursor.fetchone()
-            #print("C")
-            #print(result)
             #Get the indicatorGroup id with the group and indicators ids
             for i in indicatorsList:
                 query2=f'SELECT "idIndicatorGroup" FROM aesci_api_indicatorgroup WHERE "performanceIndicator_id" = \'{i}\' and "numGroup_id" = \'{numGroup}\''
@@ -110,7 +104,6 @@ class CreateAssignmentView(APIView):
             idNewAssignment = 1
 
         #Create the assignment object in database
-        #print("D")
         if links == []:
             obj, _ = Assignment.objects.get_or_create(idAssignment=idNewAssignment,usernameTeacher=teacherObject, nameAssignment=name,
          numGroup=groupObject, dateAssignment=date, dateLimitAssignment=dateLimit, description=description)
@@ -121,7 +114,6 @@ class CreateAssignmentView(APIView):
         #Create the indicatorAssignment objects in database
 
         assignmentObject = Assignment.objects.get(idAssignment=idNewAssignment)
-        #print("E")
         for element in indicatorGroup_list:
             indicatorGroupObject = IndicatorGroup.objects.get(idIndicatorGroup=element[0])
             obj, _ = IndicatorAssignment.objects.get_or_create(indicatorGroup=indicatorGroupObject,assignment=assignmentObject)
@@ -132,7 +124,7 @@ class CreateAssignmentView(APIView):
         idGroupStudent_list = []
 
         with connection.cursor() as cursor:
-            #Get the greatest idAssignment to assign the next number to new assignment
+            #Get the greatest idAssignmentStudent to assign the next number to new assignmentStudent
             query='SELECT "idAssignmentStudent" FROM aesci_api_assignmentstudent WHERE "idAssignmentStudent" = (SELECT max("idAssignmentStudent") from aesci_api_assignmentstudent)'
             cursor.execute(query)
             maxIdAssignmentStudent=cursor.fetchone()
@@ -140,8 +132,6 @@ class CreateAssignmentView(APIView):
                 maxIdAssignmentStudent=maxIdAssignmentStudent[0]
             except:
                 maxIdAssignmentStudent=0
-            #print("F")
-            #print(maxIdAssignmentStudent)
 
             #Get the idGroupStudent of tuples from aesci_api_groupstudent whose attribute numGroup_id has the value
 			#numGroup sent via the request 

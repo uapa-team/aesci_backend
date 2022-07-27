@@ -17,6 +17,7 @@ from ..models import Student
 class CreateStudentsView(APIView):
     """Create student's users"""
     def post(self, request, *args, **kwargs):
+        #Take the excel file from the request
         file = request.FILES['file']
         codCareer = request.data['codCareer']
 

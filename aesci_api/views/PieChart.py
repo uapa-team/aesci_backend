@@ -12,7 +12,9 @@ class PieChartView(APIView):
 		studentOutcome = self.request.query_params['studentOutcome']
 
 		with connection.cursor() as cursor:
-            #Get the Ids of the groups to evaluate
+            #The query takes information from a course, a period and a student outcome, and returns a table
+			#with two columns: the first have the student id and the second all the grades from the student.
+			#This table does not have the information regarding the nature of the evaluation, only the grades.
 			query=f'''SELECT  seis."idGroupStudent",
 	        aesci_api_evaluationAssignment."codeMeasure"
             FROM (aesci_api_evaluationAssignment
@@ -69,20 +71,25 @@ class PieChartView(APIView):
             # Get all rows of query
 			query_result = cursor.fetchall()
 			res=[0,0,0,0]
+			#Append the values -1 to the end of the list to signal the finalization of the data
 			query_result.append(('-1','-1'))
-			print(query_result)
+			#Create the currentStudent as the first student. This will change as the code iterates the list created by the query
 			first=query_result[0]
 			currentStudent=first[0]
+			#Create the counters
 			measureSum=0
 			measureCount=0
 			studentCount=0
 
 			for element in query_result:
+				#If the student in element is the current student, only update the counters
 				if element[0]==currentStudent:
 					measureSum=measureSum+int(element[1])
 					measureCount=measureCount+1
 					print(measureCount)
 					print(measureSum)
+				#Use the counters to calculate the averages of the last student
+				#and add to the res list, depending on their value
 				elif element[0]!='-1':
 					studentCount=studentCount+1
 					currentStudent=int(element[0])
@@ -97,6 +104,7 @@ class PieChartView(APIView):
 						res[1]=res[1]+1
 					elif averageMeasure > 3 and averageMeasure <= 4:
 						res[0]=res[0]+1
+				#Otherwise, if the student is -1, this is the end of the list. Calculate the last student's average and update the res list
 				else:
 					studentCount=studentCount+1
 					averageMeasure=measureSum/measureCount
@@ -110,6 +118,7 @@ class PieChartView(APIView):
 						res[1]=res[1]+1
 					elif averageMeasure > 3 and averageMeasure <= 4:
 						res[0]=res[0]+1
+			#Calculate the percentage in each categorie of the res list to create the finalRes list
 			finalRes = [0,0,0,0]
 			finalCount= 0
 			for el in res:
