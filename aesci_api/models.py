@@ -262,6 +262,9 @@ class EvaluationAssignment(models.Model):
         choices=MEASURES,
     )
     grade = models.FloatField(default=None, null=True)
+    studentEvaluator = models.ForeignKey(GroupStudent, on_delete=models.CASCADE, null=True)
+    teacherEvaluator = models.ForeignKey(GroupTeacher, on_delete=models.CASCADE, null=True)
+	
 
 class Program(models.Model):
     idProgram = models.AutoField(primary_key=True, choices = CARRER_CHOICES)
