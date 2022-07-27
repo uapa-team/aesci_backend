@@ -19,6 +19,7 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
+        #If the parameters have a student, return the assignments from that student
         if Student.objects.filter(username=self.request.query_params["username"]).exists():
         # Return assignments related to Student
             querysetGS = GroupStudent.objects.filter(username=self.request.query_params["username"])
@@ -34,7 +35,7 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
             groupsList.sort(key=lambda x: x.Assignment.dateAssignment, reverse=True)
 
             return groupsList
-
+        #Otherwise, if the paremters have a teacher, return the assignmentStudent objects associated to the assignment 
         elif Teacher.objects.filter(username=self.request.query_params["username"]).exists():
 
             AssignmentObject = Assignment.objects.get(idAssignment=self.request.query_params["assignment"])
@@ -51,11 +52,13 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
         return None
 
     def update(self, request, *args, **kwargs):
+        #Get the files from the request
         files = request.FILES.getlist('file')
         links = []
 
         # Get object with pk
         instance = AssignmentStudent.objects.get(pk=kwargs['pk'])
+        #Transforms the link string into a list
         currentLinks =''.join(request.data["links"])
         linksString1 = currentLinks.replace('[','')
         linksString2 = linksString1.replace(']','')
@@ -63,11 +66,13 @@ class AssignmentStudentViewSet(viewsets.ModelViewSet):
         linksString4 = linksString3.replace(' ','')
         currentLinksList = list(linksString4.split(","))
 
+        #Upload files only if there are less than 8 files associated with this assignmentStudent object
         if (instance.link is None) or len(instance.link)<=8:
 
             for fil in files:
                 path = default_storage.save("tmp", ContentFile(fil.read()))
 
+                #Autenticate in Google with the credentials.json file
                 gauth = GoogleAuth()
                 gauth.LoadCredentialsFile("./aesci_api/views/credentials.json")
                 if gauth.credentials is None:

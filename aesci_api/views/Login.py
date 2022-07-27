@@ -29,6 +29,7 @@ class LoginView(APIView):
         except User.DoesNotExist:
             return Response({"Error":"El usuario no existe"}, status=status.HTTP_401_UNAUTHORIZED)
 
+        #Alow access if the user is a test user
         testUsers = ["usertest1","usertest2","usertest3","usertest4","usertest5"]
         if username in testUsers:
             res = MyTokenObtainPairSerializer.get_token(user)

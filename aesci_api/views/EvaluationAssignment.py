@@ -343,14 +343,14 @@ class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
         else: 
             gauth.Authorize()
         drive = GoogleDrive(gauth)
+        #Get the object from the database to delete the files on Drive
         instance = self.get_object()
         link=instance.documentAttached
         if link!=[]:
-            print('a')
-            print(link)
+            #Split the link string to get the Drive Id for the file
             linkList = list(link.split(";"))
+            #Get the drive file object using the Id and then delete it
             file1 = drive.CreateFile({'id': linkList[2]})
             file1.Delete()
-        instance.delete()                 
-            #self.perform_destroy(instance)        
+        instance.delete()       
         return Response("Calificación eliminada exitosamente", status=status.HTTP_200_OK)

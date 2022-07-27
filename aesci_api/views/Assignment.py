@@ -34,7 +34,8 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         # Get object with pk
         instance = self.get_object()                
 
-        #print(request.data["nameAssignment"])
+        #Get the data from the request. 
+        #The data given as lists from the frontend have to be converted into python lists
 
         name = request.data["nameAssignment"]
         date = request.data["dateAssignment"]
@@ -58,11 +59,17 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         linksString4 = linksString3.replace(' ','')
         currentLinksList = list(linksString4.split(","))        
         
+        #Upload the files from the endpoint to Google Drive.
+        #The links from these files are saved in the array and later in the database
+
         links = []
         
+        #Iterate through the files
+
         for fil in files:
             path = default_storage.save("tmp", ContentFile(fil.read()))
 
+            #Autenticate in Google with the credentials.json file
             gauth = GoogleAuth()
             gauth.LoadCredentialsFile("./aesci_api/views/credentials.json")
             if gauth.credentials is None:
@@ -114,6 +121,8 @@ class AssignmentViewSet(viewsets.ModelViewSet):
 #                    print("%s is gonna be deleted", y) 
 #                    currentLinksList.remove(y)
 
+
+        #Save the data from the files' links in fileData
         fileData = []
         if instance.link is None:
             fileData = links
@@ -123,6 +132,8 @@ class AssignmentViewSet(viewsets.ModelViewSet):
             else:                
                 fileData = currentLinksList + links     
 
+
+        #Create the data list to serialize the data given
         if fileData == []:
             data = {"usernameTeacher":teacher,"nameAssignment":name,"numGroup":numGroup,"dateAssignment":date,
             "dateLimitAssignment":dateLimit,"description":description }                        
@@ -226,7 +237,8 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         #file1['id'] get file id
         #file1.Trash()  # Move file to trash.
         #file1.UnTrash()  # Move file out of trash.
-        #file1.Delete()  # Permanently delete the file.                 		
+        #file1.Delete()  # Permanently delete the file.  
+        # Authenticate in Google Drive               		
         gauth = GoogleAuth()
         gauth.LoadCredentialsFile("./aesci_api/views/credentials.json")
         if gauth.credentials is None:
@@ -237,16 +249,15 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         else: 
             gauth.Authorize()
         drive = GoogleDrive(gauth)
+
+        #Get the object from the database to delete the files on Drive
         instance = self.get_object()
         link=instance.link
-        print(link)
         if link!=None:
-            print('a')
-            print(link)
+            #Split the link string to get the Drive Id for the file
             linkList = list(link[0].split(";"))
-            print(linkList)
+            #Get the drive file object using the Id and then delete it
             file1 = drive.CreateFile({'id': linkList[2]})
             file1.Delete()
-        instance.delete()                	
-            #self.perform_destroy(instance)        
+        instance.delete()     
         return Response("Tarea eliminada exitosamente", status=status.HTTP_200_OK)
