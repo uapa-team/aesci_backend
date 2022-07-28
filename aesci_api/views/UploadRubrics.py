@@ -20,7 +20,7 @@ from ..models import Rubric, StudentOutcome, PerformanceIndicator, IndicatorMeas
 # Create your views here.
 
 class UploadRubricsView(APIView):
-    """Create student's users"""
+    """Upload the rubrics from an excel files"""
     def post(self, request, *args, **kwargs):
         file = request.FILES['file']
         path = default_storage.save("tmp", ContentFile(file.read()))

@@ -22,6 +22,9 @@ from ..serializers import PerformanceIndicatorSerializer, StudentOutcomeSerializ
 # Create your views here.
 
 class IndicatorGroupBySOView(APIView):
+    """
+    Allows to get the IndicatorGroup objects from a Student Outcome.
+    """
     def get(self, pk=None):
         print(self.request.query_params["numgroup"])
         #Check for the purpose of the query

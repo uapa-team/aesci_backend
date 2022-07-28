@@ -18,7 +18,7 @@ import os
 
 class AssignmentViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows teachers to create assignments.
+    Endpoints for retrieve, update and delete assignment objects.
     """
     serializer_class = AssignmentSerializer
     permission_classes = [permissions.IsAuthenticated]    

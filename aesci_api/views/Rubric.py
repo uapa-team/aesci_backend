@@ -10,7 +10,7 @@ from ..helpers import *
 # create rubric
 class RubricViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows admin to create rubric.
+    Access to the rubric table.
     """
     queryset = Rubric.objects.all()
     serializer_class = RubricSerializer

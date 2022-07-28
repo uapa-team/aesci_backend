@@ -8,7 +8,7 @@ from ..serializers import GroupStudentSerializer
 
 class GroupStudentViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows admin to create groups.
+    API endpoint that allows admin to create groupsStudents.
     """
     queryset = GroupStudent.objects.all()
     serializer_class = GroupStudentSerializer

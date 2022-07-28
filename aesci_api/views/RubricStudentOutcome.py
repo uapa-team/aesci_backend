@@ -11,7 +11,7 @@ from rest_framework.response import Response
 # create Student Outcomes
 class RubricStudentOutcomeViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows admin to create student outcomes.
+    Acces to the relation between rubrics and student outcomes
     """
     queryset = RubricStudentOutcome.objects.all()
     serializer_class = RubricStudentOutcomeSerializer

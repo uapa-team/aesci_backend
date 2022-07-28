@@ -7,6 +7,10 @@ from django.db import connection
 class PieChartView(APIView):
     
 	def get(self, request, *args, **kwargs):
+		"""
+    	Gets the information to create the pie chart. Uses a course, a term and a student Outcome
+		and gives an array with the total amount in each measure. 
+    	"""
 		courseId = self.request.query_params['courseId']
 		period = self.request.query_params['period']
 		studentOutcome = self.request.query_params['studentOutcome']

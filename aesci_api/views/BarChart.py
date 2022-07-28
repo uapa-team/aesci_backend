@@ -9,7 +9,10 @@ from django.db import connection
 from ..models import GroupCo, PerformanceIndicator, IndicatorGroup, IndicatorAssignment, EvaluationAssignment, Assignment, AssignmentStudent, GroupStudent, Student
 
 class BarChartView(APIView):
-    """Create relations between groups and students"""
+    """
+    Gives the information to generate the bar charts. Receives a course, a term and a student outcome,
+    and gives an array with the students on each performance indicator level.
+    """
     
     def get(self, request):
         studentOutcomeId = self.request.query_params['studentOutcome']

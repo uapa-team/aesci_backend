@@ -8,7 +8,9 @@ from django.db import connection
 from ..models import GroupCo, PerformanceIndicator, IndicatorGroup, Course, EvaluationAssignment, Student, StudentOutcome
 
 class GetCourseOutcomesView(APIView):
-    """Create relations between groups and students"""
+    """
+    Get the student outcomes from the indicatorGroup objects associated with a group.
+    """
     
     def get(self, request):
 		#get requested course

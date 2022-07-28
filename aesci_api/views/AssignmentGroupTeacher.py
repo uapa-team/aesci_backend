@@ -7,7 +7,9 @@ from django.db import connection
 from ..models import GroupCo, GroupStudent, Student
 
 class AssignmentGroupTeacherView(APIView):
-    """Create relations between groups and students"""
+    """
+    Retrieve the assignments from the groups a teacher is in
+    """
     
     def get(self, request):
         with connection.cursor() as cursor:

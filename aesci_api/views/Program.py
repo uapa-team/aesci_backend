@@ -10,7 +10,7 @@ from ..serializers import ProgramSerializer
 # create indicator measure
 class ProgramViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows admin to create indicator measure.
+    Access to the program table in the database
     """
     queryset = Program.objects.all()
     serializer_class = ProgramSerializer

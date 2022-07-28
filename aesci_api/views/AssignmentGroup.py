@@ -8,8 +8,10 @@ from ..models import GroupCo, GroupStudent, Student, Assignment, AssignmentStude
 
 
 class AssignmentGroupView(APIView):
-    """Create relations between groups and students"""
-
+    """
+    Retrieve the information of all the assignments from the groups a student is in
+    """
+    
     def get(self, request):
         with connection.cursor() as cursor:
             # The query searches for the group a certain student is in,

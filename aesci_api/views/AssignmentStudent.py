@@ -13,7 +13,12 @@ from django.db.models import F
 
 class AssignmentStudentViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows student to update urls on assignments.
+    Allows to access the student's response to an assignment. The get for students
+    returns assignments, and for teachers returms the assignmentStudent objects related
+    to a certain assignment.
+
+    The update allows to change an assignmentStudent to add documents up to 8 for each
+    assignment.
     """
     serializer_class = AssignmentStudentSerializer
     permission_classes = [permissions.AllowAny]

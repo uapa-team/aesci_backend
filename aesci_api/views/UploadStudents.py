@@ -14,7 +14,7 @@ from ..models import GroupCo, GroupStudent, Student
 # Create your views here.
 
 class UploadStudentsView(APIView):
-    """Create relations between groups and students"""
+    """Upload students from excel files"""
     def post(self, request, *args, **kwargs):
         file = request.FILES['file']
         cod_asignatura = request.data['codAsignatura']

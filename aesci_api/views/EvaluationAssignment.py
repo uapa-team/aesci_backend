@@ -19,7 +19,7 @@ from ..helpers import EVTYPES
 # create evaluation to assignments
 class EvaluationAssignmentViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows admin to create evaluation to assignments.
+    API endpoint that allows teachers to create, update or delete evaluations to assignments.
     """
     queryset = EvaluationAssignment.objects.all()
     serializer_class = EvaluationAssignmentSerializer

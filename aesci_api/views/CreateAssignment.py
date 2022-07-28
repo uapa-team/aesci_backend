@@ -16,7 +16,10 @@ from pydrive.drive import GoogleDrive
 from ..models import Assignment, Teacher, GroupCo, IndicatorAssignment, IndicatorGroup, AssignmentStudent, GroupStudent
 
 class CreateAssignmentView(APIView):
-
+    """
+    Allows to create assignments and all the objects derived from it, 
+    the assignmentStudent objects and the indicatorAssignment object.
+    """
     def post(self, request, *args, **kwargs):
 
         #Get all the data from the request

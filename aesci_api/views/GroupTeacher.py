@@ -8,7 +8,7 @@ from ..serializers import GroupTeacherSerializer
 
 class GroupTeacherViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows admin to create groups.
+    API endpoint that allows admin to create groupTeacher objects.
     """
     queryset = GroupTeacher.objects.all()
     serializer_class = GroupTeacherSerializer
