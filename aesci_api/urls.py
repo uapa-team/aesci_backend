@@ -15,6 +15,8 @@ from .views import *
 from .views import CreateAssignment
 from .views import AssignmentGroupTeacher
 from .views import PieChart
+from .views import AssignmentStudentById
+from .views import AssignmentById
 
 router = routers.DefaultRouter()
 
@@ -38,7 +40,9 @@ router.register(r'rubricstudentoutcomes', RubricStudentOutcomeViewSet, basename=
 urlpatterns = [
     path('', include(router.urls)),
     path('login/', LoginView.as_view()),
+    path('assignmentbyid/', AssignmentById.AssignmentByIdView.as_view()),
     path('assignmentgroups/', AssignmentGroupView.as_view()),
+    path('assignmentstudentbyid/', AssignmentStudentById.AssignmentStudentByIdView.as_view()),
     path('assignmentgroupsteacher/', AssignmentGroupTeacher.AssignmentGroupTeacherView.as_view()),
     path('piechart/', PieChart.PieChartView.as_view()),
     path('uploadstudents/', UploadStudentsView.as_view()),
