@@ -31,7 +31,7 @@ class RubricViewSet(viewsets.ModelViewSet):
         departmentRubricList = list(departmentRubricString4.split(","))
 
         with connection.cursor() as cursor:
-            #Get the greatest idRubric to assign the next number to new assignment
+            #Get the greatest idRubric to assign the next number to new rubric
             query='SELECT "id" FROM aesci_api_rubric WHERE "id" = (SELECT max("id") from aesci_api_rubric)'
             cursor.execute(query)
             result=cursor.fetchone()
